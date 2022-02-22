@@ -6,11 +6,24 @@ output: beamer_presentation
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.pos = "center")
+```
+
+## Idea
+
+Exploit the 2021 heatwave on the North American west coast
+
+
+```{r out.width="250px", fig.cap="Temperature Anomalies in June/July 2021"}
+knitr::include_graphics("TempAnomMap.png")
 ```
 
 
-## Data
+
+
+
+## Data for outcome
 
 * Commuting data: 
   + Detailed commuting data is available in the [American Community Survey (ACS)](https://data.census.gov/cedsci/table?q=ACS%20commuting&g=0100000US%240500000&tid=ACSST1Y2019.S0802), but only yearly and only up to 2019
