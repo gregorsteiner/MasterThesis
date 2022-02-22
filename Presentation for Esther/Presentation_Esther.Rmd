@@ -16,3 +16,6 @@ knitr::opts_chunk$set(echo = FALSE)
   + Detailed commuting data is available in the [American Community Survey (ACS)](https://data.census.gov/cedsci/table?q=ACS%20commuting&g=0100000US%240500000&tid=ACSST1Y2019.S0802), but only yearly and only up to 2019
   + Maybe fuel consumption could be an alternative? That is available monthly from the [EIA](https://www.eia.gov/opendata/qb.php?category=401685), but only for PADD regions
 
+* Sick leave data:
+  + Available by county and month from the [Current Population Survey (CPS)](https://www.census.gov/data/datasets/time-series/demo/cps/cps-basic.html) 
+  + Easy access with the R package [**cpsR**](https://github.com/matt-saenz/cpsR)
