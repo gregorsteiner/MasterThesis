@@ -1,0 +1,18 @@
+---
+title: "Ideas for my Master Thesis"
+author: "Gregor Steiner"
+date: "`r format(Sys.Date(), format = '%m/%d/%Y')`"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Data
+
+* Commuting data: 
+  + Detailed commuting data is available in the [American Community Survey (ACS)](https://data.census.gov/cedsci/table?q=ACS%20commuting&g=0100000US%240500000&tid=ACSST1Y2019.S0802), but only yearly and only up to 2019
+  + Maybe fuel consumption could be an alternative? That is available monthly from the [EIA](https://www.eia.gov/opendata/qb.php?category=401685), but only for PADD regions
+
