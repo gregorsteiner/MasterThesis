@@ -30,5 +30,9 @@ knitr::include_graphics("TempAnomMap.png")
   + Maybe fuel consumption could be an alternative? That is available monthly from the [EIA](https://www.eia.gov/opendata/qb.php?category=401685), but only for PADD regions
 
 * Sick leave data:
-  + Available by county and month from the [Current Population Survey (CPS)](https://www.census.gov/data/datasets/time-series/demo/cps/cps-basic.html) 
+  + Available by county and month from the [Current Population Survey (CPS)](https://www.census.gov/data/datasets/time-series/demo/cps/cps-basic.html), but county is often missing
   + Easy access with the R package [**cpsR**](https://github.com/matt-saenz/cpsR)
+  
+* Crime Data:
+  + Data of all recorded incidents (> 5 Mill.) in a given year is available [here](https://www.icpsr.umich.edu/web/NACJD/series/128?start=0&SERIESQ=128&ARCHIVE=NACJD&PUBLISH_STATUS=PUBLISHED&sort=DATEUPDATED%20desc&rows=50). This includes the exact date und state and county numbers. But most recent year is 2016.
+  + More recent statistics are available for some major cities (e.g. New York, Portland)
