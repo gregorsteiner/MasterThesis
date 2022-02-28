@@ -25,14 +25,14 @@ knitr::include_graphics("TempAnomMap.png")
 
 ## Data for outcome
 
-* Commuting data: 
-  + Detailed commuting data is available in the [American Community Survey (ACS)](https://data.census.gov/cedsci/table?q=ACS%20commuting&g=0100000US%240500000&tid=ACSST1Y2019.S0802), but only yearly and only up to 2019
-  + Maybe fuel consumption could be an alternative? That is available monthly from the [EIA](https://www.eia.gov/opendata/qb.php?category=401685), but only for PADD regions
 
 * Sick leave data:
-  + Available by county and month from the [Current Population Survey (CPS)](https://www.census.gov/data/datasets/time-series/demo/cps/cps-basic.html), but county is often missing
-  + Easy access with the R package [**cpsR**](https://github.com/matt-saenz/cpsR)
-  
+  + Monthly data from the [Current Population Survey (CPS)](https://www.census.gov/data/datasets/time-series/demo/cps/cps-basic.html), but county is often missing
+
+* Commuting data: 
+  + [American Community Survey (ACS)](https://data.census.gov/cedsci/table?q=ACS%20commuting&g=0100000US%240500000&tid=ACSST1Y2019.S0802) or [Longitudinal Employer-Household Dynamics (LEHD)](https://lehd.ces.census.gov/data/), but only yearly
+  + Maybe fuel consumption could be an alternative? That is available monthly from the [EIA](https://www.eia.gov/opendata/qb.php?category=401685), but only for PADD regions
+
 * Crime Data:
-  + Data of all recorded incidents (> 5 Mill.) in a given year is available [here](https://www.icpsr.umich.edu/web/NACJD/series/128?start=0&SERIESQ=128&ARCHIVE=NACJD&PUBLISH_STATUS=PUBLISHED&sort=DATEUPDATED%20desc&rows=50). This includes the exact date und state and county numbers. But most recent year is 2016.
-  + More recent statistics are available for some major cities (e.g. New York, Portland)
+  + Data of all recorded incidents (> 5 Mill.) in a given year is available [here](https://www.icpsr.umich.edu/web/NACJD/series/128?start=0&SERIESQ=128&ARCHIVE=NACJD&PUBLISH_STATUS=PUBLISHED&sort=DATEUPDATED%20desc&rows=50) or [here](https://crime-data-explorer.app.cloud.gov/pages/downloads). This includes the exact date and state and county numbers, but 2021 is not yet available.
+
