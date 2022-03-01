@@ -2,7 +2,11 @@
 title: "Ideas for my Master Thesis"
 author: "Gregor Steiner"
 date: "`r format(Sys.Date(), format = '%m/%d/%Y')`"
-output: beamer_presentation
+header-includes: 
+  - \usepackage{tikz}
+  - \usetikzlibrary{positioning}
+output:
+  beamer_presentation
 ---
 
 ```{r setup, include=FALSE}
@@ -35,4 +39,32 @@ knitr::include_graphics("TempAnomMap.png")
 
 * Crime Data:
   + Data of all recorded incidents (> 5 Mill.) in a given year is available [here](https://www.icpsr.umich.edu/web/NACJD/series/128?start=0&SERIESQ=128&ARCHIVE=NACJD&PUBLISH_STATUS=PUBLISHED&sort=DATEUPDATED%20desc&rows=50) or [here](https://crime-data-explorer.app.cloud.gov/pages/downloads). This includes the exact date and state and county numbers, but 2021 is not yet available.
+
+
+## Sick Leaves Identification
+
+\begin{figure}
+	\large{\begin{tikzpicture}[%
+		->,
+		>=stealth,
+		node distance=1cm,
+		pil/.style={
+			->,
+			thick,
+			shorten =2pt,}
+		]
+		\node (1) {Heat};
+		\node[right=of 1] (2) {Health};
+		\node[right=of 2] (3) {Sick Leave};
+		\node[above = of 1] (4) {Geography};
+		\draw [->] (1) to (2);
+		\draw [->] (2) to (3);
+		\draw [->] (4) to (1);
+		\draw [->] (4) to (2);
+	\end{tikzpicture}}
+	
+	\caption{Causal effect of heat on sick leaves}
+\end{figure}
+
+
 
