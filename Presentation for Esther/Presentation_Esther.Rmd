@@ -27,18 +27,51 @@ knitr::include_graphics("TempAnomMap.png")
 
 
 
-## Data for outcome
+## Sick leave data:
+
+* [Current Population Survey (CPS)](https://www.census.gov/data/datasets/time-series/demo/cps/cps-basic.html):
+  + Available monthly (refers to the week inlcuding the 12th of that month)
+  + Includes state and county information, but county is often missing
+
+## Commuting data: 
+* [American Community Survey (ACS)](https://data.census.gov/cedsci/table?q=ACS%20commuting&g=0100000US%240500000&tid=ACSST1Y2019.S0802): Yearly survey about commuting habits
+
+* [Longitudinal Employer-Household Dynamics (LEHD)](https://lehd.ces.census.gov/data/): Only yearly as well
+
+* Maybe fuel consumption could be an alternative? That is available monthly from the [EIA](https://www.eia.gov/opendata/qb.php?category=401685), but only for PADD regions
+
+## Crime Data:
+* Data of all recorded incidents (> 5 Mill.) in a given year is available [here](https://www.icpsr.umich.edu/web/NACJD/series/128?start=0&SERIESQ=128&ARCHIVE=NACJD&PUBLISH_STATUS=PUBLISHED&sort=DATEUPDATED%20desc&rows=50) or [here](https://crime-data-explorer.app.cloud.gov/pages/downloads):
+  + Includes the exact date
+  + Includes state and county numbers
+  + But 2021 is not yet available.
 
 
-* Sick leave data:
-  + Monthly data from the [Current Population Survey (CPS)](https://www.census.gov/data/datasets/time-series/demo/cps/cps-basic.html), but county is often missing
 
-* Commuting data: 
-  + [American Community Survey (ACS)](https://data.census.gov/cedsci/table?q=ACS%20commuting&g=0100000US%240500000&tid=ACSST1Y2019.S0802) or [Longitudinal Employer-Household Dynamics (LEHD)](https://lehd.ces.census.gov/data/), but only yearly
-  + Maybe fuel consumption could be an alternative? That is available monthly from the [EIA](https://www.eia.gov/opendata/qb.php?category=401685), but only for PADD regions
+## Crime Identification
 
-* Crime Data:
-  + Data of all recorded incidents (> 5 Mill.) in a given year is available [here](https://www.icpsr.umich.edu/web/NACJD/series/128?start=0&SERIESQ=128&ARCHIVE=NACJD&PUBLISH_STATUS=PUBLISHED&sort=DATEUPDATED%20desc&rows=50) or [here](https://crime-data-explorer.app.cloud.gov/pages/downloads). This includes the exact date and state and county numbers, but 2021 is not yet available.
+\begin{figure}
+	\large{\begin{tikzpicture}[%
+		->,
+		>=stealth,
+		node distance=1cm,
+		pil/.style={
+			->,
+			thick,
+			shorten =2pt,}
+		]
+		\node (1) {Heat};
+		\node[right=of 1] (2) {Aggression};
+		\node[right=of 2] (3) {Crime};
+		\node[above left = of 3] (4) {X};
+		\draw [->] (1) to (2);
+		\draw [->] (2) to (3);
+		\draw [->] (4) to (2);
+		\draw [->] (4) to (3);
+	\end{tikzpicture}}
+	
+	\caption{Causal effect of heat on crimes with some confounders X}
+\end{figure}
 
 
 ## Sick Leaves Identification
