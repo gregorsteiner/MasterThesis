@@ -1,12 +1,13 @@
 ---
 title: "Ideas for my Master Thesis"
 author: "Gregor Steiner"
-date: "`r format(Sys.Date(), format = '%m/%d/%Y')`"
+date: "March 4, 2022"
 header-includes: 
   - \usepackage{tikz}
   - \usetikzlibrary{positioning}
 output:
   beamer_presentation
+urlcolor: blue
 ---
 
 ```{r setup, include=FALSE}
@@ -32,18 +33,23 @@ knitr::include_graphics("TempAnomMap.png")
   + So the effect (if there is one) should be visible in the July 2021 data
   + Includes state and county information, but county is often missing
 
+* [Small Business Pulse Survey](https://www.census.gov/data/experimental-data-products/small-business-pulse-survey.html):
+  + Includes questions about workers' availability to work
+  + Weekly data
+  + Available by state or by metropolitan area
+
 ## Commuting data
 * [American Community Survey (ACS)](https://data.census.gov/cedsci/table?q=ACS%20commuting&g=0100000US%240500000&tid=ACSST1Y2019.S0802): Yearly survey including questions about commuting habits
 
-* [Longitudinal Employer-Household Dynamics (LEHD)](https://lehd.ces.census.gov/data/): Only yearly as well
+* [Longitudinal Employer-Household Dynamics (LEHD)](https://lehd.ces.census.gov/data/): Includes geographic information on workplace and residency, but only yearly as well
 
-* Maybe fuel consumption could be an alternative? That is available monthly from the [EIA](https://www.eia.gov/opendata/qb.php?category=401685), but only for PADD regions
+* Maybe fuel consumption could be a good proxy for commuting behavior? That is available monthly from the [EIA](https://www.eia.gov/opendata/qb.php?category=401685), but only for PADD regions
 
 ## Crime Data
 * Data of all recorded incidents (> 5 Mill.) in a given year is available from the FBI ([here](https://www.icpsr.umich.edu/web/NACJD/series/128?start=0&SERIESQ=128&ARCHIVE=NACJD&PUBLISH_STATUS=PUBLISHED&sort=DATEUPDATED%20desc&rows=50) or [here](https://crime-data-explorer.app.cloud.gov/pages/downloads)):
   + Includes the exact date
   + Includes state and county numbers
-  + 2021 is not yet available. But there was another big heatwave in 2016, which could work as well
+  + 2021 is not yet available. But there was another big heatwave in 2016, which could work as well (see [here](https://www.climate.gov/news-features/event-tracker/scorching-heat-bakes-southwest-mid-june-2016))
 
 
 ## Another idea: Data from business tool providers
@@ -79,7 +85,6 @@ knitr::include_graphics("TempAnomMap.png")
 
 <!-- 	\caption{Causal effect of heat on crimes with some confounders X} -->
 <!-- \end{figure} -->
-
 
 
 
