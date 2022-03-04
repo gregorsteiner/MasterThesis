@@ -29,9 +29,8 @@ knitr::include_graphics("TempAnomMap.png")
 ## Sick leave data
 
 * [Current Population Survey (CPS)](https://www.census.gov/data/datasets/time-series/demo/cps/cps-basic.html):
-  + Available monthly (refers to the week containing the 12th of that month)
-  + So the effect (if there is one) should be visible in the July 2021 data
-  + Includes state and county information, but county is often missing
+  + Available monthly (refers to the week containing the 12th day of the month)
+  + Includes state and county information, but county is often missing due to confidentiality laws
 
 * [Small Business Pulse Survey](https://www.census.gov/data/experimental-data-products/small-business-pulse-survey.html):
   + Includes questions about workers' availability to work
@@ -56,7 +55,7 @@ knitr::include_graphics("TempAnomMap.png")
 
 * The FED St. Louis uses high frequency data from business tool providers (e.g. [here](https://research.stlouisfed.org/publications/review/2021/08/16/assessing-labor-market-conditions-using-high-frequency-data))
 
-* One such provider is [Homebase](https://joinhomebase.com/) and they even have some data on their website. This could include daily data on hours worked or employees working.
+* One such provider is [Homebase](https://joinhomebase.com/), they provide daily data on hours worked or the number of employees working.
 
 * Such tools are mainly used by restaurants & retailers
 
