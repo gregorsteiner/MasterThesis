@@ -1,7 +1,8 @@
 
+########## Apparent Temperature ##########
 
+url <- "https://www.ncei.noaa.gov/pub/data/uscrn/products/heat01/CRNHE0101-GA_Newton_8_W.csv"
 
-url <- "https://www.ncei.noaa.gov/pub/data/uscrn/products/heat01/CRNHE0101-TN_Crossville_7_NW.csv"
 dat <- read.csv(url)
 
 # create date variable
@@ -36,13 +37,35 @@ dat.agg <- within(dat.agg, {
 })
 
 
-
+heatdates <- dat.agg[dat.agg$Heatwave == 1, "Date"]
 
 
 # make graph
-plot(dat.agg$Date, dat.agg$AppTemp, type = "l",
+plot(dat.agg$Date, dat.agg$AppTemp, type = "n",
      ylab = "Apparent Temperature", xlab = "")
 
+abline(v = heatdates, col = rgb(1, 0, 0, 0.3), lwd = 2)
+lines(dat.agg$Date, dat.agg$AppTemp, lwd = 1)
+
+
+
+########## Daily Data ##########
+
+dat <- do.call(rbind, Map(function(y){
+  # create url
+  url <- paste0("https://www.ncei.noaa.gov/pub/data/uscrn/products/daily01/", y, "/CRND0103-", y, "-AZ_Tucson_11_W.txt")
+  
+  # read data (documentation: https://www.ncei.noaa.gov/pub/data/uscrn/products/daily01/)
+  dat <- read.table(url)
+  
+  # compute apparent temperature
+  dat.out <- data.frame(Date = as.Date(as.character(dat[, 2]), "%Y%m%d"),
+                        HeatIndex = weathermetrics::heat.index(t = dat[, 9], rh = dat[, 18]))
+  
+  # return
+  return(dat.out)
+  
+}, 2002:2021))
 
 
 
