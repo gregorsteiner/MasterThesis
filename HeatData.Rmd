@@ -7,78 +7,116 @@ bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.pos = "center",
+                      fig.width = 8)
 ```
 
 
-Using data provided by the US Climate Reference Network [@Diamond_2013], I identify heatwaves. There are different ways to define heatwaves. Following the National Climate Data Center (NCDC), I use the following definition: A heatwave consists of two or more consecutive days in which the average, minimum or maximum temperature exceeds the 85th percentile of July and August temperatures [@Habeeb_2015]. 
+# Data
+
+Using data provided by the US Climate Reference Network [@Diamond_2013], I identify heatwaves. There are different ways to define heatwaves. Following the National Climate Data Center (NCDC), I use this definition: A heatwave consists of two or more consecutive days in which the average, minimum or maximum temperature exceeds the 85th percentile of July and August temperatures [@Habeeb_2015]. 
 
 ```{r}
 
 
-########## Daily Data ##########
-dat <- do.call(rbind, Map(function(y){
-  # create url
-  url <- paste0("https://www.ncei.noaa.gov/pub/data/uscrn/products/daily01/", y, "/CRND0103-", y, "-AZ_Tucson_11_W.txt")
-  
-  # read data (documentation: https://www.ncei.noaa.gov/pub/data/uscrn/products/daily01/)
-  dat <- read.table(url)
-  
-  # create dataframe
-  dat.out <- data.frame(Date = as.Date(as.character(dat[, 2]), "%Y%m%d"),
-                        AvgTemp = ifelse(dat[, 9] != -9999, dat[, 9], NA),
-                        Name = "Tucson",
-                        Longitude = dat[, 4],
-                        Latitude = dat[, 5])
-  
-  # drop temperature NAs
-  dat.out <- dat.out[!is.na(dat.out[, "AvgTemp"]), ]
-  
-  # return
-  return(dat.out)
-  
-}, 2002:2021))
+########## Daily Temperature Data ##########
+dat.stations <- openxlsx::read.xlsx("weather_stations.xlsx")
 
-
-# Indicate Heatwaves
-# compute threshold (85th percentile of july and august temperatures)
-bool.jul.aug <- format(dat$Date, "%m") %in% c("07", "08") 
-threshhold <- quantile(dat[bool.jul.aug, "AvgTemp"], 0.85, na.rm = TRUE)
-
-# Mark as heatwave all consecutive days that exceed the threshhold
-bool <- dat[, "AvgTemp"] > threshhold
-dat$Heatwave <- 0
-
-for (i in 1:(nrow(dat)-1)) {
-  if(all(bool[i:(i+1)])){
-    dat[i:(i+1), "Heatwave"] <- 1
+# map over stations and row bind everything together
+dat <- do.call(rbind, Map(function(station, name){
+  
+  # map over years and row bind
+  dat <- do.call(rbind, Map(function(y){
+    # create url
+    url <- paste0("https://www.ncei.noaa.gov/pub/data/uscrn/products/daily01/", y, "/CRND0103-", y, "-", station, ".txt")
+    
+    # read data (documentation: https://www.ncei.noaa.gov/pub/data/uscrn/products/daily01/)
+    dat <- read.table(url)
+    
+    # create dataframe
+    dat.out <- data.frame(Date = as.Date(as.character(dat[, 2]), "%Y%m%d"),
+                          AvgTemp = ifelse(dat[, 9] != -9999, dat[, 9], NA),
+                          Name = name,
+                          Longitude = dat[, 4],
+                          Latitude = dat[, 5])
+    
+    # drop temperature NAs
+    dat.out <- dat.out[!is.na(dat.out[, "AvgTemp"]), ]
+    
+    # return
+    return(dat.out)
+    
+  }, 2003:2021))
+  
+  
+  # Indicate Heatwaves
+  # compute threshold (85th percentile of july and august temperatures)
+  bool.jul.aug <- format(dat$Date, "%m") %in% c("07", "08") 
+  threshhold <- quantile(dat[bool.jul.aug, "AvgTemp"], 0.85, na.rm = TRUE)
+  
+  # Mark as heatwave all consecutive days that exceed the threshhold
+  bool <- dat[, "AvgTemp"] > threshhold
+  dat$Heatwave <- 0
+  
+  for (i in 1:(nrow(dat)-1)) {
+    if(all(bool[i:(i+1)])){
+      dat[i:(i+1), "Heatwave"] <- 1
+    }
   }
-}
+  
+  return(dat)
 
-
+},
+dat.stations[, "Station"],
+paste(dat.stations[, "City"], dat.stations[, "State"], sep = ", ")))
 
 ```
 
 
 
-# Visualization
+
+```{r fig.cap = "Daily average temperatures with extreme heat events shaded in red"}
+par(mfrow = c(round(nrow(dat.stations) / 2), 2),
+    mar = c(2, 4, 2, 1))
+
+invisible(lapply(unique(dat$Name), function(name){
+  
+  dat.int <- dat[dat$Name == name, ]  
+  
+  # Get dates with extreme heat
+  heatdates <- dat.int[dat.int$Heatwave == 1, "Date"]
+  
+  # make graph
+  plot(dat.int$Date, dat.int$AvgTemp, type = "n",
+       ylab = "Average Temperature", xlab = "", main = name)
+  
+  abline(v = heatdates, col = rgb(1, 0, 0, 0.3), lwd = 3)
+  lines(dat.int$Date, dat.int$AvgTemp, lwd = 1)
+
+}))
+
+
+```
+
 
 ```{r}
-# Get dates with exte´reme heat
-heatdates <- dat[dat$Heatwave == 1, "Date"]
+########## Fatal Crash Data ##########
+dat.crash <- haven::read_dta("20140100_indiv_records.dta")
 
-# make graph
-plot(dat$Date, dat$AvgTemp, type = "n",
-     ylab = "Average Temperature", xlab = "")
+# only keep relevant dates
+dat.crash <- dat.crash[dat.crash$date >= as.Date("2003-01-01"), ]
 
-abline(v = heatdates, col = rgb(1, 0, 0, 0.3), lwd = 3)
-lines(dat$Date, dat$AvgTemp, lwd = 1)
-
-
-
-
+# aggregate by county and state
+crash.agg <- aggregate(dat.crash$st_case,
+                       by = list(
+                         Date = dat.crash$date,
+                         State = dat.crash$state
+                         ),
+                       FUN = length)
 
 ```
+
 
 
 
