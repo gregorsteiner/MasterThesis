@@ -13,9 +13,9 @@ knitr::opts_chunk$set(echo = FALSE,
 ```
 
 
-# Data
+# Daily Data
 
-Using data provided by the US Climate Reference Network [@Diamond_2013], I identify heatwaves. There are different ways to define heatwaves. Following the National Climate Data Center (NCDC), I use this definition: A heatwave consists of two or more consecutive days in which the average, minimum or maximum temperature exceeds the 85th percentile of July and August temperatures [@Habeeb_2015]. 
+Using data provided by the US Climate Reference Network [@Diamond_2013], I identify extreme heat events in the historical temperature time series. Following the National Climate Data Center (NCDC), I define an extreme heat event as two or more consecutive days in which the average temperature exceeds the 85th percentile of July and August temperatures [@Habeeb_2015]. 
 
 ```{r}
 
@@ -89,15 +89,19 @@ invisible(lapply(unique(dat$Name), function(name){
   
   # make graph
   plot(dat.int$Date, dat.int$AvgTemp, type = "n",
-       ylab = "Average Temperature", xlab = "", main = name)
+       ylab = "Temperature in °C", xlab = "", main = name)
   
-  abline(v = heatdates, col = rgb(1, 0, 0, 0.3), lwd = 3)
+  abline(v = heatdates, col = rgb(1, 0, 0, 0.3), lwd = 1)
   lines(dat.int$Date, dat.int$AvgTemp, lwd = 1)
 
 }))
 
 
 ```
+
+
+
+
 
 
 ```{r}
@@ -108,15 +112,17 @@ dat.crash <- haven::read_dta("20140100_indiv_records.dta")
 dat.crash <- dat.crash[dat.crash$date >= as.Date("2003-01-01"), ]
 
 # aggregate by county and state
-crash.agg <- aggregate(dat.crash$st_case,
+crash.agg <- aggregate(list(Cases = dat.crash$st_case),
                        by = list(
                          Date = dat.crash$date,
-                         State = dat.crash$state
+                         State = dat.crash$state,
+                         County = dat.crash$county
                          ),
                        FUN = length)
+crash.agg <- crash.agg[order(crash.agg$State, crash.agg$County, crash.agg$Date), ]
+
 
 ```
-
 
 
 

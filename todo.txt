@@ -1,5 +1,0 @@
-Make list of recent heatwaves in the US + Figure
-Check car accident data (https://www.aeaweb.org/articles?id=10.1257/app.20140100)
-Check crime data from http://jenniferdoleac.com/wp-content/uploads/2015/03/Doleac_Sanders_DST.pdf
-Check facebook data
-Check farming job openings
