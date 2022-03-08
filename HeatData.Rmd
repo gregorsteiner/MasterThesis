@@ -82,18 +82,20 @@ invisible(lapply(counties, function(x){
 ```
 
 
-
-
+# Fatal Crash Data
 
 ```{r}
-########## Fatal Crash Data ##########
-dat.crash <- data.table(haven::read_dta("20140100_indiv_records.dta"))
+# load crash data
+data.comb <- readRDS("DataCombined.RDS")
 
-# aggregate by county and state
-dat.crash.agg <- dat.crash[, .(FatalAccidents = length(st_case)), by = .(date, state, county)]
+# summary of the crash data
+hist(data.comb$FatalAccidents, freq = FALSE, col = 4,
+     main = "", xlab = "Fatal car accidents")
 
 
 ```
+
+
 
 
 
