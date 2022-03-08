@@ -14,6 +14,15 @@ knitr::opts_chunk$set(echo = FALSE,
 ```
 
 
+
+
+```{r}
+# preliminaries
+library(data.table)
+
+```
+
+
 # Daily Weather Data
 
 Using data provided by the Daily Global Historical Climatology Network [@Menne_2012], I identify extreme heat events in the historical temperature time series. Historical weather data is available for about 1200 measurement stations in the US. Based on the latitude and longitude coordinates I assign each station to the county it belongs to. In case there is more than one station per county, I take the mean among those.
@@ -76,25 +85,15 @@ invisible(lapply(counties, function(x){
 
 
 
-<!-- ```{r} -->
-<!-- ########## Fatal Crash Data ########## -->
-<!-- dat.crash <- haven::read_dta("20140100_indiv_records.dta") -->
+```{r}
+########## Fatal Crash Data ##########
+dat.crash <- data.table(haven::read_dta("20140100_indiv_records.dta"))
 
-<!-- # only keep relevant dates -->
-<!-- dat.crash <- dat.crash[dat.crash$date >= as.Date("2003-01-01"), ] -->
-
-<!-- # aggregate by county and state -->
-<!-- crash.agg <- aggregate(list(Cases = dat.crash$st_case), -->
-<!--                        by = list( -->
-<!--                          Date = dat.crash$date, -->
-<!--                          State = dat.crash$state, -->
-<!--                          County = dat.crash$county -->
-<!--                          ), -->
-<!--                        FUN = length) -->
-<!-- crash.agg <- crash.agg[order(crash.agg$State, crash.agg$County, crash.agg$Date), ] -->
+# aggregate by county and state
+dat.crash.agg <- dat.crash[, .(FatalAccidents = length(st_case)), by = .(date, state, county)]
 
 
-<!-- ``` -->
+```
 
 
 

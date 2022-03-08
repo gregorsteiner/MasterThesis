@@ -23,31 +23,16 @@
 
 \maketitle
 
-\section*{Idea}
+\section*{Idea \& Data}
 
-I would like to estimate the causal effect of heatwaves on labor productivity. My idea is exploiting the 2021 heatwave on the North American west coast (see figure 1). 
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[scale = 0.6]{TempAnomMap}
-	\caption{Mean temperature anomalies in June/July 2021 (Source: \href{https://www.cpc.ncep.noaa.gov/products/tanal/temp_analyses.php}{National Weather Service})}
-\end{figure}
-
+My goal is to estimate the causal effect of heatwaves or extreme heat events on fatal car accidents. I combine weather data provided by the Daily Global Historical Climatology Network \citep{Menne_2012} and data on fatal car accidents by \citet{Smith_2016}. The weather data is measured by more than 1200 stations across the US and they can be aggregated to the county level using the geographic information provided in the stations' metadata. Thus, I have a panel dataset containing at least 10 years of daily county-level data on car accidents and weather.
 
 \section*{Empirical Strategy}
 
-I would like to use a synthetic control approach based on \citet{Abadie2003} and \citet{Abadie2021}. The treated states would be Idaho, Oregon and Washington (maybe also California and Nevada?). For each of those I would create a synthetic control group where the donor pool consists of the other 47 (or 45?) states. If data availability allows, I could incorporate Canadian provinces as well, since British Columbia was also hit hard by the heatwave.
+My next step is thinking about the identification of the causal effect. By surveying the literature on physiological effects of heat, I will try to identify potential confounders. Variation in weather is quasi-random, but due to the high availability of weather forecasts, there may be substantial anticipation effects. For example, people may shift their leisure activities to and therefore drive more on warmer days, which might lead to more fatal accidents, even without a causal effect.
 
-The outcome would be some measure of labor productivity. Unfortunately a traditional output relative to hours worked measure is usually only available quarterly. The effect (if it is there) should be visible in quarter 2 and 3 of 2021 (see figure 2). But since the heatwave was only active for about 2 weeks, this will probably not work.
+A Poisson panel model may be an option, as the number of rare events (like fatal car accidents) tends to follow a Poisson distribution. Another possible approach is utilizing matrix completion methods to estimate the ATT, e.g. as proposed by \citet{Athey_2021}.
 
-That's why I want to use  an unconventional proxy for labor productivity, which is available at a higher frequency. One idea would be Google searches for typical procrastination activities or social media activity during work hours. Of course, such measures would only be applicable to office jobs, where work is predominantly done on a computer (service industry?). 
-
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[scale = 0.8]{ProdMap}
-	\caption{Output per hour worked by state (Source: BLS, FRED and own calculations)}
-\end{figure}
 
 
 
