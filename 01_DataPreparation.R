@@ -136,8 +136,13 @@ dat.comb <- merge(dat.weather, dat.crash.agg,
                   by.y = c("StateCounty", "date"),
                   all.x = TRUE)
 
+# get latest data for which I have crash data
+dat.comb$DATE <- as.Date(dat.comb$DATE)
+crash.data.end <- max(unlist(dat.comb[!is.na(dat.comb$FatalAccidents), "DATE"]))
+
 # add 0s where fatal accidents are NA
-dat.comb[is.na(dat.comb$FatalAccidents), "FatalAccidents"] <- 0
+bool <- is.na(dat.comb$FatalAccidents) & dat.comb$DATE <= crash.data.end
+dat.comb[bool, "FatalAccidents"] <- 0
 
 # delete irrelevant columns
 dat.comb <- within(dat.comb, {
@@ -147,6 +152,9 @@ dat.comb <- within(dat.comb, {
   state <- NULL
   county <- NULL
 })
+
+# delete observations where Fatal car accidents is NA
+dat.comb <- dat.comb[!is.na(dat.comb$FatalAccidents), ]
 
 # save as RDS
 saveRDS(dat.comb, "DataCombined.RDS")
