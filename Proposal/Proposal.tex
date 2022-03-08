@@ -2,7 +2,7 @@
 
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage[margin = 2.5cm]{geometry}
+%\usepackage[margin = 2.5cm]{geometry}
 \usepackage{graphicx}
 
 \usepackage{sectsty}
@@ -25,13 +25,13 @@
 
 \section*{Idea \& Data}
 
-My goal is to estimate the causal effect of heatwaves or extreme heat events on fatal car accidents. I combine weather data provided by the Daily Global Historical Climatology Network \citep{Menne_2012} and data on fatal car accidents by \citet{Smith_2016}. The weather data is measured by more than 1200 stations across the US and they can be aggregated to the county level using the geographic information provided in the stations' metadata. Thus, I have a panel dataset containing daily county-level data on car accidents and weather from 1990 to 2013.
+My goal is to estimate the causal effect of heatwaves or extreme heat events on fatal car accidents. I combine weather data provided by the Daily Global Historical Climatology Network \citep{Menne_2012} and data on fatal car accidents by \citet{Smith_2016}. The weather data is collected by more than 1200 measurement stations across the US and they can be aggregated to the county level using the geographic information provided in the stations' metadata. Thus, I have a panel dataset containing daily county-level data on fatal car accidents and weather from 1990 to 2013.
 
 \section*{Empirical Strategy}
 
-My next step is thinking about the identification of the causal effect. By surveying the literature on physiological effects of heat, I will try to identify potential confounders. Variation in weather is quasi-random, but due to the high availability of weather forecasts, there may be substantial anticipation effects. For example, people may shift their leisure activities to and therefore drive more on warmer days, which might lead to more fatal accidents, even without a causal effect.
+My next step is thinking about the identification of the causal effect. By surveying similar studies, I will try to identify potential confounders. While variation in weather is quasi-random, the high availability of weather forecasts may induce substantial anticipation effects. For example, people may shift their leisure activities to and therefore drive more on warmer days, which might lead to more fatal accidents, even without a causal effect of the heat itself. Thus, there may be selection effects despite quasi-random treatment assignment.
 
-A Poisson panel model may be an option, as the number of rare events (like fatal car accidents) tends to follow a Poisson distribution. Another possible approach is utilizing matrix completion methods to estimate the ATT, e.g. as proposed by \citet{Athey_2021}.
+A Poisson panel model may be an option, as the number of rare events within a given time period (like fatal car accidents per day) tends to follow a Poisson distribution. Another approach I find very interesting is utilizing matrix completion methods to estimate the ATT, e.g. as proposed by \citet{Athey_2021}.
 
 
 
