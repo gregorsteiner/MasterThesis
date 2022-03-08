@@ -9,7 +9,8 @@ bibliography: references.bib
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
                       fig.pos = "center",
-                      fig.width = 8)
+                      fig.width = 8,
+                      fig.height = 6)
 ```
 
 
@@ -24,12 +25,6 @@ Following the National Climate Data Center (NCDC), I define an extreme heat even
 # read data
 data <- readRDS("WeatherDataCounty.RDS")
 
-# Cosmetical Corrections
-data <- within(data, {
-  StateCounty <- sapply(strsplit(StateCounty, ","), function(x) paste0(toupper(x[2]), " COUNTY", ", ", toupper(x[1])))
-  DATE <- as.Date(paste(YEAR, MONTH, DAY, sep = "-"))
-})
-
 
 # Define counties of interest
 counties <- c("JACKSON COUNTY, OREGON", "ONTARIO COUNTY, NEW YORK",
@@ -37,7 +32,7 @@ counties <- c("JACKSON COUNTY, OREGON", "ONTARIO COUNTY, NEW YORK",
              "PIMA COUNTY, ARIZONA", "CHAMPAIGN COUNTY, ILLINOIS")
 
 
-
+# Make plots
 par(mfrow = c(round(length(counties) / 2), 2),
     mar = c(2, 4, 2, 1))
 invisible(lapply(counties, function(x){

@@ -78,6 +78,12 @@ data.agg <- data[, list(PRCP = mean(PRCP.VALUE, na.rm = TRUE),
                  by = list(StateCounty, YEAR, MONTH, DAY)]
 
 
+# Add Date and make the StateCounty look nicer
+data.agg <- within(data.agg, {
+  StateCounty <- sapply(strsplit(StateCounty, ","), function(x) paste0(toupper(x[2]), " COUNTY", ", ", toupper(x[1])))
+  DATE <- as.Date(paste(YEAR, MONTH, DAY, sep = "-"))
+})
+
 
 # save data
 saveRDS(data.agg, "WeatherDataCounty.RDS")
