@@ -1,6 +1,5 @@
-    ## Warning: Paket 'data.table' wurde unter R Version 4.1.1 erstellt
-
-# Daily Weather Data
+In my master thesis I want to explore the causal effect of extreme heat
+events on fatal car accidents.
 
 Using data provided by the Daily Global Historical Climatology Network
 (Menne et al. 2012), I identify extreme heat events in the historical

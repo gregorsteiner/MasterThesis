@@ -10,6 +10,8 @@ bibliography: references.bib
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE,
                       fig.pos = "center",
                       fig.width = 8,
                       fig.height = 6)
@@ -24,8 +26,7 @@ library(data.table)
 
 ```
 
-
-# Daily Weather Data
+In my master thesis I want to explore the causal effect of extreme heat events on fatal car accidents.
 
 Using data provided by the Daily Global Historical Climatology Network [@Menne_2012], I identify extreme heat events in the historical temperature time series. Historical weather data is available for about 1200 measurement stations in the US. Based on the latitude and longitude coordinates I assign each station to the county it belongs to. In case there is more than one station per county, I take the mean among those.
 
@@ -52,7 +53,7 @@ invisible(lapply(counties, function(x){
   
   # Indicate Heatwaves
   # compute threshold (85th percentile of july and august temperatures)
-  bool.jul.aug <- dat$MONTH %in% c(7, 8) 
+  bool.jul.aug <- format(dat$DATE, "%m") %in% c("07", "08") 
   threshhold <- quantile(dat[bool.jul.aug, "TMIN"], 0.85, na.rm = TRUE)
   
   # Mark as heatwave all consecutive days that exceed the threshhold
