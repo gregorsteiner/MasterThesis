@@ -13,9 +13,7 @@ heat event as two or more consecutive days in which the minimum
 temperature exceeds the 85th percentile of July and August minimum
 temperatures (Habeeb, Vargo, and Stone 2015).
 
-![Minimum daily temperatures for selected counties (extreme heat events
-shaded in
-red)](README_files/figure-markdown_github/unnamed-chunk-2-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-2-1.png)
 
 # References
 

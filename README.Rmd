@@ -33,7 +33,7 @@ Using data provided by the Daily Global Historical Climatology Network [@Menne_2
 Following the National Climate Data Center (NCDC), I define an extreme heat event as two or more consecutive days in which the minimum temperature exceeds the 85th percentile of July and August minimum temperatures [@Habeeb_2015]. 
 
 
-```{r fig.cap="Minimum daily temperatures for selected counties (extreme heat events shaded in red)"}
+```{r}
 # read data
 data <- readRDS("DataCombined.RDS")
 
