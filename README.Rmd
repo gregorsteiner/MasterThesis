@@ -26,11 +26,13 @@ library(data.table)
 
 ```
 
+## Extreme Heat Events and Fatal Car Accidents
+
 In my master thesis I want to explore the causal effect of extreme heat events on fatal car accidents.
 
 Using data provided by the Daily Global Historical Climatology Network [@Menne_2012], I identify extreme heat events in the historical temperature time series. Historical weather data is available for about 1200 measurement stations in the US. Based on the latitude and longitude coordinates I assign each station to the county it belongs to. In case there is more than one station per county, I take the mean among those.
 
-Following the National Climate Data Center (NCDC), I define an extreme heat event as two or more consecutive days in which the minimum temperature exceeds the 85th percentile of July and August minimum temperatures [@Habeeb_2015]. 
+Following the National Climate Data Center (NCDC), I define an extreme heat event as two or more consecutive days in which the minimum temperature exceeds the 85th percentile of July and August minimum temperatures [@Habeeb_2015]. Below you can see the historical temperature time series for a few selected counties with such extreme heat events shaded in red.
 
 
 ```{r}
@@ -88,7 +90,7 @@ invisible(lapply(counties, function(x){
 
 
 
-# References
+## References
 
 
 

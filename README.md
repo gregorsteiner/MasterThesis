@@ -1,3 +1,5 @@
+## Extreme Heat Events and Fatal Car Accidents
+
 In my master thesis I want to explore the causal effect of extreme heat
 events on fatal car accidents.
 
@@ -11,11 +13,13 @@ there is more than one station per county, I take the mean among those.
 Following the National Climate Data Center (NCDC), I define an extreme
 heat event as two or more consecutive days in which the minimum
 temperature exceeds the 85th percentile of July and August minimum
-temperatures (Habeeb, Vargo, and Stone 2015).
+temperatures (Habeeb, Vargo, and Stone 2015). Below you can see the
+historical temperature time series for a few selected counties with such
+extreme heat events shaded in red.
 
 ![](README_files/figure-markdown_github/unnamed-chunk-2-1.png)
 
-# References
+## References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
