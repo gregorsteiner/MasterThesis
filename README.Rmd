@@ -32,7 +32,7 @@ In my master thesis I want to explore the causal effect of extreme heat events o
 
 Using data provided by the Daily Global Historical Climatology Network [@Menne_2012], I identify extreme heat events in the historical temperature time series. Historical weather data is available for about 1200 measurement stations in the US. Based on the latitude and longitude coordinates I assign each station to the county it belongs to. In case there is more than one station per county, I take the mean among those.
 
-Following the National Climate Data Center (NCDC), I define an extreme heat event as two or more consecutive days in which the minimum temperature exceeds the 85th percentile of July and August minimum temperatures [@Habeeb_2015]. Below you can see the historical temperature time series for a few selected counties with such extreme heat events shaded in red.
+Following the National Climate Data Center (NCDC), I define an extreme heat event as days in which the maximum or minimum temperature exceed the 85th percentile of July and August maximum or minimum temperatures [@Habeeb_2015]. Below you can see the historical daily maximum temperatures for a few selected counties with such extreme heat events shaded in red.
 
 
 ```{r}
@@ -50,43 +50,24 @@ counties <- c("JACKSON COUNTY, OREGON", "ONTARIO COUNTY, NEW YORK",
 par(mfrow = c(round(length(counties) / 2), 2),
     mar = c(2, 4, 2, 1))
 invisible(lapply(counties, function(x){
-  
+  # Select County
   dat <- data[data$StateCounty == x, ]
   
-  # Indicate Heatwaves
-  # compute threshold (85th percentile of july and august temperatures)
-  bool.jul.aug <- format(dat$DATE, "%m") %in% c("07", "08") 
-  threshhold <- quantile(dat[bool.jul.aug, "TMIN"], 0.85, na.rm = TRUE)
-  
-  # Mark as heatwave all consecutive days that exceed the threshhold
-  bool <- dat[, "TMIN"] > threshhold
-  bool <- ifelse(is.na(bool), FALSE, bool)
-  dat$ExtremeHeatEvent <- 0
-  
-  for (i in 1:(nrow(dat)-1)) {
-    if(all(bool[i:(i+1)])){
-      dat[i:(i+1), "ExtremeHeatEvent"] <- 1
-    }
-  }
-  
   # Get dates with extreme heat
-  heatdates <- unlist(dat[dat$ExtremeHeatEvent == 1, "DATE"])
+  heatdates <- unlist(dat[dat$EHE.MAX == 1, "DATE"])
   
   # make graph
-  plot(dat$DATE, dat$TMIN, type = "n",
+  plot(dat$DATE, dat$TMAX, type = "n",
        ylab = "Temperature in °C", xlab = "", main = x)
   
   abline(v = heatdates, col = rgb(1, 0, 0, 0.3), lwd = 1)
-  lines(dat$DATE, dat$TMIN, lwd = 1)
-  
+  lines(dat$DATE, dat$TMAX, lwd = 1)
   
 }))
 
 
 
 ```
-
-
 
 
 

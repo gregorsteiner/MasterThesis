@@ -11,11 +11,11 @@ coordinates I assign each station to the county it belongs to. In case
 there is more than one station per county, I take the mean among those.
 
 Following the National Climate Data Center (NCDC), I define an extreme
-heat event as two or more consecutive days in which the minimum
-temperature exceeds the 85th percentile of July and August minimum
-temperatures (Habeeb, Vargo, and Stone 2015). Below you can see the
-historical temperature time series for a few selected counties with such
-extreme heat events shaded in red.
+heat event as days in which the maximum or minimum temperature exceed
+the 85th percentile of July and August maximum or minimum temperatures
+(Habeeb, Vargo, and Stone 2015). Below you can see the historical daily
+maximum temperatures for a few selected counties with such extreme heat
+events shaded in red.
 
 ![](README_files/figure-markdown_github/unnamed-chunk-2-1.png)
 
