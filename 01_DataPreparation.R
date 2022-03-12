@@ -156,6 +156,12 @@ dat.comb <- within(dat.comb, {
 # delete observations where Fatal car accidents is NA
 dat.comb <- dat.comb[!is.na(dat.comb$FatalAccidents), ]
 
+
+# add heatwave indicator
+dat.comb[, ":="(EHE.MAX = EHE(TMAX, DATE), EHE.MIN = EHE(TMIN, DATE)), by = .(StateCounty)]
+
+
+
 # save as RDS
 saveRDS(dat.comb, "DataCombined.RDS")
 
