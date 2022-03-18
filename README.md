@@ -33,13 +33,18 @@ national level).
 
 ### Causal Effect?
 
-A naive estimate of the average treatment effect using the estimator
-$\\widehat{\\tau} = \\bar{Y_1} - \\bar{Y_0}$ yields
+A naive estimate of the average treatment effect using the difference of
+conditional means (conditional on treatment) yields positive causal
+effects, that is extreme heat increases the number of fatal car
+accidents.
 
-|                    | widehat(tau) |
-|:-------------------|-------------:|
-| MaximumTemperature |    0.0074828 |
-| MinimumTemperature |    0.0057406 |
+|                    |       ATE |
+|:-------------------|----------:|
+| MaximumTemperature | 0.0074828 |
+| MinimumTemperature | 0.0057406 |
+
+However, this estimator is only useful if there is no selection bias and
+homogenous treatment effects, which is unlikely.
 
 ## References
 
