@@ -71,6 +71,22 @@ invisible(lapply(counties, function(x){
 
 ```
 
+```{r}
+# number of extreme heat events by year
+setDT(data)
+
+# display average number of ehe days in a year, based on both minimum and maximum temperature
+EHEs.yearly <- data[
+  , .(SUM.EHE.MAX = sum(EHE.MAX), SUM.EHE.MIN = sum(EHE.MIN)), by = .(YEAR = format(DATE, "%Y"), StateCounty)
+  ][
+    , .(AVG.EHE.MAX = mean(SUM.EHE.MAX), AVG.EHE.MIN = mean(SUM.EHE.MIN)), by = .(YEAR)
+    ]
+
+# display results as table
+knitr::kable(EHEs.yearly, col.names = c("Year", "EHE days (maximum temperature)", "EHE days (minimum temperature)"))
+
+```
+
 
 ### Car Crash Data
 
