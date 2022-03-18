@@ -71,6 +71,8 @@ invisible(lapply(counties, function(x){
 
 ```
 
+Below you can see the average (across all counties) number of heat days based on minimum and maximum temperatures for each year.
+
 ```{r}
 # number of extreme heat events by year
 setDT(data)
@@ -82,8 +84,15 @@ EHEs.yearly <- data[
     , .(AVG.EHE.MAX = mean(SUM.EHE.MAX), AVG.EHE.MIN = mean(SUM.EHE.MIN)), by = .(YEAR)
     ]
 
-# display results as table
-knitr::kable(EHEs.yearly, col.names = c("Year", "EHE days (maximum temperature)", "EHE days (minimum temperature)"))
+# plot results
+invisible(within(EHEs.yearly, {
+  plot(YEAR, AVG.EHE.MAX, type = "n",
+       xlab = "", ylab = "Average number of extreme heat days")
+  grid()
+  lines(YEAR, AVG.EHE.MAX, col = 2, lwd = 2)
+  lines(YEAR, AVG.EHE.MIN, col = 4, lwd = 2)
+  legend("topleft", fill = c(2, 4), legend = c("Maximum", "Minimum"))
+}))
 
 ```
 
