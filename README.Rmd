@@ -73,7 +73,7 @@ invisible(lapply(counties, function(x){
 
 Below you can see the average (across all counties) number of heat days based on minimum and maximum temperatures for each year.
 
-```{r}
+```{r fig.height=3}
 # number of extreme heat events by year
 setDT(data)
 
@@ -99,6 +99,20 @@ invisible(within(EHEs.yearly, {
 
 ### Car Crash Data
 
+Data on fatal car accidents is available from the [Fatality Analysis Reporting System (FARS)](https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars). Below you can see the number of fatal car accidents for each year (on a national level).
+
+```{r fig.height=3}
+# plot number of fatal car accidents
+FatAccs <- data[, .(FatAccs = sum(FatalAccidents)), by = .(YEAR = format(DATE, "%Y"))]
+
+invisible(within(FatAccs, {
+  plot(YEAR, FatAccs, type = "n",
+       xlab = "", ylab = "Fatal car accidents")
+  grid()
+  lines(YEAR, FatAccs, col = 4, lwd = 2)
+}))
+
+```
 
 
 

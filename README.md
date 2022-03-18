@@ -28,6 +28,14 @@ based on minimum and maximum temperatures for each year.
 
 ### Car Crash Data
 
+Data on fatal car accidents is available from the [Fatality Analysis
+Reporting System
+(FARS)](https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars).
+Below you can see the number of fatal car accidents for each year (on a
+national level).
+
+![](README_files/figure-markdown_github/unnamed-chunk-4-1.png)
+
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
