@@ -31,6 +31,16 @@ national level).
 
 ![](README_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
+### Causal Effect?
+
+A naive estimate of the average treatment effect using the estimator
+$\\widehat{\\tau} = \\bar{Y_1} - \\bar{Y_0}$ yields
+
+|                    | widehat(tau) |
+|:-------------------|-------------:|
+| MaximumTemperature |    0.0074828 |
+| MinimumTemperature |    0.0057406 |
+
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent">

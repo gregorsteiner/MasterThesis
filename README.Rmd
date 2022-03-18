@@ -114,6 +114,28 @@ invisible(within(FatAccs, {
 ```
 
 
+### Causal Effect?
+
+A naive estimate of the average treatment effect using the estimator $\widehat{\tau} = \bar{Y_1} - \bar{Y_0}$ yields 
+
+```{r}
+# reconvert to data.frame to get rid of DT functionality
+data <- as.data.frame(data)
+
+knitr::kable(sapply(c("EHE.MAX", "EHE.MIN"), function(x){
+  # condition on treatment
+  treated <- data[, x] == 1
+  
+  # estimate tau
+  tau.hat <- mean(data[treated, "FatalAccidents"]) - mean(data[!treated, "FatalAccidents"])
+  
+  return(tau.hat)
+}) |> setNames(c("MaximumTemperature", "MinimumTemperature")), col.names = latex2exp::TeX("$\\widehat{\\tau}$"))
+
+
+```
+
+
 
 ## References
 
