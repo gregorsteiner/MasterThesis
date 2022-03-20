@@ -5,7 +5,7 @@ date: "`r format(Sys.Date(), format = '%m/%d/%Y')`"
 output:
   md_document:
     variant: markdown_github
-bibliography: references.bib  
+bibliography: "TeX files/references.bib" 
 ---
 
 ```{r setup, include=FALSE}
@@ -39,7 +39,7 @@ Following the National Climate Data Center (NCDC), I define an extreme heat even
 
 ```{r}
 # read data
-data <- readRDS("DataCombined.RDS")
+data <- readRDS("Code & Data/DataCombined.RDS")
 
 
 # # Define counties of interest
