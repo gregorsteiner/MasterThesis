@@ -1,3 +1,15 @@
 
 \section{Empirical Strategy}
 
+\begin{tikzpicture}
+	\node[state] (heat) at (0,0) {Heat};
+	\node[state] (accs) [right = of heat] {Accidents};
+	\node[state] (time) [above = of heat] {Time};
+	\node[state] (safe) [right = of time] {Safety};
+	
+	\path (heat) edge (accs);
+	\path (time) edge (heat);
+	\path (time) edge (safe);
+	\path (safe) edge (accs);
+\end{tikzpicture}
+
