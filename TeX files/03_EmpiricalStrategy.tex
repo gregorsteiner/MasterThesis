@@ -1,15 +1,33 @@
 
 \section{Empirical Strategy}
 
-\begin{tikzpicture}
-	\node[state] (heat) at (0,0) {Heat};
-	\node[state] (accs) [right = of heat] {Accidents};
-	\node[state] (time) [above = of heat] {Time};
-	\node[state] (safe) [right = of time] {Safety};
-	
-	\path (heat) edge (accs);
-	\path (time) edge (heat);
-	\path (time) edge (safe);
-	\path (safe) edge (accs);
-\end{tikzpicture}
+Variation in weather is quasi-random, but due to the panel nature of the data there may still be confounders. Over time vehicles have become much safer and therefore the number of fatal accidents has decreased substantially. At the same time the frequency of heat events has increased due to climate change \citep[see e.g.][]{Habeeb_2015}. Thus, we need to condition on the point in time to identify the causal effect.
+
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}
+		\node[state] (heat) at (0,0) {Heat};
+		\node[state] (accs) [right = of heat] {Accidents};
+		\node[state] (time) [above = of heat] {Time};
+		\node[state] (safe) [right = of time] {Safety};
+		%\node[state] (pop) [below = of heat] {Population};
+		
+		\path (heat) edge (accs);
+		\path (time) edge (heat);
+		\path (time) edge (safe);
+		\path (safe) edge (accs);
+		%\path (pop) edge (accs);
+	\end{tikzpicture}
+	\caption{Directed acyclic graph of the effect}
+\end{figure}
+
+The number of fatal accidents by day and county closely follows a Poisson distribution (see figure \ref{PoissonGraph}). Thus, a poisson panel model with time fixed effects as proposed by \citet{Hausman_1984} seems to be an attractive option.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale = 0.5]{"../Code & Data/Poisson.png"}
+	\label{PoissonGraph}
+	\caption{Probability mass of fatal car accidents and theoretical Poisson distribution}
+\end{figure}
 
