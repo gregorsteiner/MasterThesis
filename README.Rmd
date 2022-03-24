@@ -137,6 +137,9 @@ knitr::kable(sapply(c("EHE.MAX", "EHE.MIN"), function(x){
 However, this estimator is only useful if there is no selection bias and if treatment effects are homogenous, which is unlikely. Therefore, my next step will be working on a credible identification strategy.
 
 
+
+
+
 ## References
 
 
