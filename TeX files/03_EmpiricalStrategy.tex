@@ -23,6 +23,7 @@ Thus, we need to condition on the point in time and the level of precipitation t
 		\path (time) edge (safe);
 		\path (safe) edge (accs);
 		\path (rain) edge (heat);
+		\path (heat) edge (rain);
 		\path (rain) edge (accs);
 		%\path (rain) edge (dema);
 		%\path (heat) edge (dema);
