@@ -3,7 +3,7 @@
 
 source("00_AuxFunctions.R")
 library(data.table)
-
+library(usmap)
 
 # read data
 data <- readRDS("DataCombined.RDS")
@@ -11,6 +11,8 @@ data <- readRDS("DataCombined.RDS")
 # set parameters for saving plots
 wid <- 600
 hei <- 400
+
+
 
 ######## Fatal Accidents by Year ########
 
@@ -31,6 +33,16 @@ invisible(within(FatAccs, {
 }))
 
 dev.off()
+
+
+######## Map of Weather data ########
+
+data$fips <- data$CountyFIPS
+
+
+
+plot_usmap(data = data[!is.na(data$fips), ], values = "TMAX")
+
 
 
 
