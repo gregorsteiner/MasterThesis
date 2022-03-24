@@ -16,7 +16,7 @@ Thus, we need to condition on the point in time and the level of precipitation t
 		\node[state] (time) [above = of heat] {Time};
 		\node[state] (safe) [right = of time] {Safety};
 		\node[state] (rain) [below left = of accs] {Rain};
-		\node[state] (dema) [left below = of heat] {Travel demand};
+		%\node[state] (dema) [below right = of heat] {Travel demand};
 		
 		\path (heat) edge (accs);
 		\path (time) edge (heat);
@@ -24,9 +24,9 @@ Thus, we need to condition on the point in time and the level of precipitation t
 		\path (safe) edge (accs);
 		\path (rain) edge (heat);
 		\path (rain) edge (accs);
-		\path (rain) edge (dema);
-		\path (heat) edge (dema);
-		%\path (pop) edge (accs);
+		%\path (rain) edge (dema);
+		%\path (heat) edge (dema);
+		%\path (dema) edge (accs);
 	\end{tikzpicture}
 	\caption{Directed acyclic graph of the effect}
 \end{figure}
