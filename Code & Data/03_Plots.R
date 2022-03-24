@@ -9,7 +9,7 @@ library(usmap)
 data <- readRDS("DataCombined.RDS")
 
 # set parameters for saving plots
-wid <- 600
+wid <- 800
 hei <- 400
 
 
@@ -21,6 +21,7 @@ hei <- 400
 
 setDT(data)
 FatAccs <- data[, .(FatAccs = sum(FatalAccidents)), by = .(YEAR = format(DATE, "%Y"))]
+FatAccs <- FatAccs[!is.na(YEAR)]
 
 png("FatalAccidentsYearly.png", width = wid, height = hei)
 
@@ -37,12 +38,20 @@ dev.off()
 
 ######## Map of Weather data ########
 
-data$fips <- data$CountyFIPS
+library(ggplot2)
 
+# choose one point in time
+data.map <- data[DATE == "2015-07-01"]
 
+# the usmap package needs the column name to be fips
+data.map$fips <- data.map$CountyFIPS
 
-plot_usmap(data = data[!is.na(data$fips), ], values = "TMAX")
+plot_usmap(data = data.map, values = "TMAX") +
+  scale_fill_viridis_c(name = "Max. Temperature")
+  
 
+plot_usmap(data = data.map, values = "FatalAccidents") +
+  scale_fill_viridis_c(name = "Max. Temperature")
 
 
 
@@ -50,13 +59,20 @@ plot_usmap(data = data[!is.na(data$fips), ], values = "TMAX")
 ######## Poisson ########
 
 lambda <- mean(data$FatalAccidents)
-empi <- table(data$FatalAccidents) / nrow(data)
+
+# create empirical probability mass
+empi <- rep(0, length(0:max(data$FatalAccidents)))
+names(empi) <- 0:max(data$FatalAccidents)
+tab <- table(data$FatalAccidents) / nrow(data)
+empi[names(tab)] <- tab
+
+# and theoretical from poisson distribution
 theo <- dpois(0:max(data$FatalAccidents), lambda = lambda)
 
 png("Poisson.png", width = wid, height = hei)
 
 par(mar = c(2.5, 4, 1, 1))
-plot(as.numeric(names(empi)), empi, type = "h", lwd = 5, col = 4,
+plot(names(empi), empi, type = "h", lwd = 5, col = 4,
      xlab = "", ylab = "")
 lines(as.numeric(names(empi)) + 0.2, theo, type = "h", lwd = 5, col = 3)
 legend("topright", legend = c("Empirical", "Theoretical Poisson"),
