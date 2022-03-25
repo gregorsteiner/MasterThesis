@@ -114,32 +114,6 @@ invisible(within(FatAccs, {
 ```
 
 
-### Causal Effect?
-
-A naive point estimate of the average treatment effect using the difference of conditional means (conditional on treatment) indicates positive causal effects, that is extreme heat increases the number of fatal car accidents.
-
-```{r}
-# reconvert to data.frame to get rid of DT functionality
-data <- as.data.frame(data)
-
-knitr::kable(sapply(c("EHE.MAX", "EHE.MIN"), function(x){
-  # condition on treatment
-  treated <- data[, x] == 1
-  
-  # estimate tau
-  tau.hat <- mean(data[treated, "FatalAccidents"]) - mean(data[!treated, "FatalAccidents"])
-  
-  return(tau.hat)
-}) |> setNames(c("MaximumTemperature", "MinimumTemperature")), col.names = "ATE")
-
-
-```
-However, this estimator is only useful if there is no selection bias and if treatment effects are homogenous, which is unlikely. Therefore, my next step will be working on a credible identification strategy.
-
-
-
-
-
 ## References
 
 

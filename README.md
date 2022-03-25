@@ -31,22 +31,6 @@ national level).
 
 ![](README_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
-### Causal Effect?
-
-A naive point estimate of the average treatment effect using the
-difference of conditional means (conditional on treatment) indicates
-positive causal effects, that is extreme heat increases the number of
-fatal car accidents.
-
-|                    |       ATE |
-|:-------------------|----------:|
-| MaximumTemperature | 0.0074828 |
-| MinimumTemperature | 0.0057406 |
-
-However, this estimator is only useful if there is no selection bias and
-if treatment effects are homogenous, which is unlikely. Therefore, my
-next step will be working on a credible identification strategy.
-
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
