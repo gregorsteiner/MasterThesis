@@ -3,14 +3,28 @@
 
 Historical weather data is available from the Daily Global Historical Climatology Network \citep{Menne_2012}. This includes daily minimum and maximum temperature and daily precipitation. They provide data for about 1200 measurement stations across the United States. Based on the stations' coordinates they can be matched to the county they are in. Thus, temperature data can easily be aggregated to the county level. For counties with more than one measurement station, I take the mean among those.
 
-Similar to \citet{Habeeb_2015} I define an extreme heat event as any day on which the temperature exceeds the 85th percentile of July and August temperatures. The quantile can be varied as a robustness check.
-
 The National Highway Traffic Safety Administration provides data on fatal car accidents in their Fatality Analysis Reporting System (FARS). This includes every fatal accident between 1975 and 2020, including date and county information.
 
+\begin{table}[!htbp] \centering 
+	\caption{Summary statistics of the relevant variables} 
+	\label{} 
+	\begin{tabular}{@{\extracolsep{5pt}}lcccccc} 
+		\\[-1.8ex]\hline 
+		\hline \\[-1.8ex] 
+		Statistic & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{St. Dev.} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Median} & \multicolumn{1}{c}{Max} \\ 
+		\hline \\[-1.8ex] 
+		FatalAccidents & 12,146,966 & 0.140 & 0.391 & 0 & 0 & 16 \\ 
+		MaximumTemperature & 10,195,638 & 18.488 & 11.562 & $-$45.600 & 20.000 & 56.100 \\ 
+		MinimumTemperature & 10,187,636 & 5.618 & 10.606 & $-$72.800 & 6.100 & 45.000 \\ 
+		Precipitation & 10,288,169 & 2.504 & 8.048 & 0.000 & 0.000 & 767.100 \\ 
+		\hline \\[-1.8ex] 
+	\end{tabular} 
+\end{table}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale = 0.5]{"../Code & Data/FatalAccidentsYearly.png"}
 	\caption{Fatal car accidents by year}
+	\label{YearlyAccs}
 \end{figure} 
 

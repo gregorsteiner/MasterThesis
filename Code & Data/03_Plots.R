@@ -13,6 +13,14 @@ wid <- 800
 hei <- 400
 
 
+######## Table of summary statistics ########
+
+stargazer::stargazer(data[, .(FatalAccidents, MaximumTemperature = TMAX,
+                              MinimumTemperature = TMIN, 
+                              Precipitation = PRCP)],
+                     type = "latex", summary.stat = c("n", "mean", "sd", "min", "median", "max"))
+
+
 
 ######## Fatal Accidents by Year ########
 
@@ -71,9 +79,9 @@ theo <- dpois(0:max(data$FatalAccidents), lambda = lambda)
 
 png("Poisson.png", width = wid, height = hei)
 
-par(mar = c(2.5, 4, 1, 1))
+par(mar = c(4, 4, 1, 1))
 plot(names(empi), empi, type = "h", lwd = 5, col = 4,
-     xlab = "", ylab = "")
+     xlab = "Number of fatal car accidents", ylab = "Probability mass")
 lines(as.numeric(names(empi)) + 0.2, theo, type = "h", lwd = 5, col = 3)
 legend("topright", legend = c("Empirical", "Theoretical Poisson"),
        lty = c(1, 1), lwd = c(3, 3), col = c(4, 3), cex = 1.2)

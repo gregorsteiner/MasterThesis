@@ -42,7 +42,10 @@ bool <- is.na(dat.comb$FatalAccidents) & dat.comb$DATE <= crash.data.end
 dat.comb[bool, "FatalAccidents"] <- 0
 
 # delete observations where Fatal car accidents is NA
-dat.comb <- dat.comb[!is.na(dat.comb$FatalAccidents), ]
+dat.comb <- dat.comb[!is.na(FatalAccidents)]
+
+# delete implausible temperature values
+dat.comb <- dat.comb[is.na(TMAX) | TMAX < 100]
 
 # add heatwave indicator
 setDT(dat.comb)

@@ -1,11 +1,11 @@
 
 \section{Empirical Strategy}
 
-Variation in weather is quasi-random, but due to the panel nature of the data there may still be confounders. Over time vehicles have become much safer and therefore the number of fatal accidents has decreased substantially. At the same time the frequency of heat events has increased due to climate change \citep[see e.g.][]{Habeeb_2015}. 
+Variation in weather is quasi-random, but due to the panel nature of the data there may still be confounders. Over time vehicles have become much safer and therefore the number of fatal accidents has decreased (see figure \ref{YearlyAccs}). At the same time the frequency of heat events has increased due to climate change \citep[see e.g.][]{Habeeb_2015}. 
 
 Rain may be another confounder. Heavy precipitation increases the likelihood of accidents, but there is also a relationship between heat and rain.
 
-Thus, we need to condition on the point in time and the level of precipitation to identify the causal effect.
+Thus, we need to condition on the point in time and the level of precipitation to identify the causal effect. If the treatment is relative to the county (e.g. if the temperature exceeds a given quantile of temperatures in that county), county fixed effects should not be necessary. For an absolute measure of heat (e.g. absolute temperature), on the other hand, conditioning on the geography is necessary.
 
 
 \begin{figure}[h]
@@ -40,4 +40,5 @@ The number of fatal accidents by day and county closely follows a Poisson distri
 	\label{PoissonGraph}
 	\caption{Probability mass of fatal car accidents and theoretical Poisson distribution}
 \end{figure}
+
 
