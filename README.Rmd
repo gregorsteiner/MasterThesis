@@ -83,7 +83,7 @@ EHEs.yearly <- data[
 
 # plot results
 par(mar = c(2.5, 4, 1, 1))
-invisible(within(EHEs.yearly, {
+invisible(within(EHEs.yearly[YEAR >= 1990], {
   plot(YEAR, AVG.EHE.MAX, type = "n",
        xlab = "", ylab = "Number of extreme heat days")
   grid()
@@ -102,6 +102,7 @@ Data on fatal car accidents is available from the [Fatality Analysis Reporting S
 ```{r fig.height=3}
 # plot number of fatal car accidents
 FatAccs <- data[, .(FatAccs = sum(FatalAccidents)), by = .(YEAR = format(DATE, "%Y"))]
+FatAccs <- FatAccs[!is.na(YEAR)]
 
 par(mar = c(2.5, 4, 1, 1))
 invisible(within(FatAccs, {
