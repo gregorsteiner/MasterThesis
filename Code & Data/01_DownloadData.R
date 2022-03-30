@@ -146,3 +146,25 @@ fars.dat.agg <- within(fars.dat.agg, {
 # save data
 saveRDS(fars.dat.agg, "AccidentDataAggregated.RDS")
 
+
+
+
+
+######## FEMA disaster data ########
+
+
+# read data from FEMA 
+fema.dat <- read.csv("https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries.csv")
+
+titles <- levels(factor(fema.dat$declarationTitle))
+fema.dat[fema.dat$declarationTitle %in% titles[grepl("HEAT", titles)], ]
+
+
+
+
+
+
+
+
+
+
