@@ -156,15 +156,30 @@ saveRDS(fars.dat.agg, "AccidentDataAggregated.RDS")
 # read data from FEMA 
 fema.dat <- read.csv("https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries.csv")
 
-titles <- levels(factor(fema.dat$declarationTitle))
-fema.dat[fema.dat$declarationTitle %in% titles[grepl("HEAT", titles)], ]
+types <- levels(factor(fema.dat$incidentType))
+types
+
+fema.dat[fema.dat$incidentType == "Drought", "declarationTitle"]
 
 
 
+######## NOAA weather data using rnoaa ########
+
+library(rnoaa)
 
 
+dat <- rnoaa::ncdc("GHCND", locationid = "FIPS:02",
+                   startdate = "2020-01-01", enddate = "2020-12-31")
 
+stations <- rnoaa::ghcnd_stations()
 
+# only keep us stations
+stations <- stations[grepl("US", stations$id), ]
 
+# filter years
+bool <- stations$first_year <= 1975 & stations$last_year >= 2020
+stations <- stations[bool, ]
+
+# download
 
 

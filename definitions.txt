@@ -1,0 +1,3 @@
+NWS excessive heat watch and warning system: 
+daytime Hi greater than or equal to 40.6C (105F), with nighttime lows greater
+than or equal to 26.7C (80F), for two consecutive days.
