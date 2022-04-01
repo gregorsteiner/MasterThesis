@@ -168,9 +168,6 @@ fema.dat[fema.dat$incidentType == "Drought", "declarationTitle"]
 library(rnoaa)
 
 
-dat <- rnoaa::ncdc("GHCND", locationid = "FIPS:02",
-                   startdate = "2020-01-01", enddate = "2020-12-31")
-
 stations <- rnoaa::ghcnd_stations()
 
 # only keep us stations
