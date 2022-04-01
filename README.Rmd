@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = FALSE,
                       message = FALSE,
                       fig.pos = "center",
                       fig.width = 8,
-                      fig.height = 6)
+                      fig.height = 4)
 ```
 
 
