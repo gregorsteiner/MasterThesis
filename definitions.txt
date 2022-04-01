@@ -1,3 +1,11 @@
+### Heat wave definitions
+
 NWS excessive heat watch and warning system: 
 daytime Hi greater than or equal to 40.6C (105F), with nighttime lows greater
 than or equal to 26.7C (80F), for two consecutive days.
+(Threshholds can vary based on geography)
+
+EPA Climate Change Indicators:
+A heat wave is a period of two or more consecutive days when the daily minimum apparent temperature
+(the actual temperature adjusted for humidity) in a particular city exceeds the 85th percentile
+of historical July and August temperatures (1981–2010) for that city.
