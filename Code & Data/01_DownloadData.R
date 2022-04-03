@@ -170,13 +170,38 @@ library(rnoaa)
 
 stations <- rnoaa::ghcnd_stations()
 
-# only keep us stations
-stations <- stations[grepl("US", stations$id), ]
 
-# filter years
-bool <- stations$first_year <= 1975 & stations$last_year >= 2020
-stations <- stations[bool, ]
+# only keep stations from the countries of interest
+countries <- c("ES", "GT", "HO")
+stations <- stations[substring(stations$id, 1, 2) %in% countries, ]
 
-# download
+
+# download for all stations 
+dat <- data.table::rbindlist(lapply(unique(stations[, "id", drop = TRUE]), function(id){
+  # download
+  dat.list <- rnoaa::ghcnd_search(stationid = id)
+  
+  # Merge all elements of the list
+  dat <- Reduce(function(x, y) merge(x, y, by = c("id", "date")), dat.list)
+  
+  # only keep relevant columns (and check if they are actually in the df)
+  cols <- c("tmin", "tmax", "tavg", "prcp")
+  bool.cols <- cols %in% colnames(dat)
+  dat <- try(dat[, c("id", "date", cols[bool.cols])])
+  
+  # return if data is non-empty
+  if(nrow(dat) > 0)
+    return(dat)
+}), fill = TRUE)
+
+
+
+######## Conflict Data from https://ucdp.uu.se/ ########
+
+dat.conf <- read.csv("gedevents-2022-04-03.csv")
+
+
+
+
 
 
