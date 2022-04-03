@@ -195,10 +195,16 @@ dat <- data.table::rbindlist(lapply(unique(stations[, "id", drop = TRUE]), funct
 }), fill = TRUE)
 
 
+summary(dat)
 
 ######## Conflict Data from https://ucdp.uu.se/ ########
 
-dat.conf <- read.csv("gedevents-2022-04-03.csv")
+dat.conf <- read.csv("gedevents-2022-04-03.csv", encoding = "UTF-8")
+
+# transformations
+dat.conf <- within(dat.conf, {
+  date <- as.Date(substring(date_start, 1, 10), "%m/%d/%Y")
+})
 
 
 
