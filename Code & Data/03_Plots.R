@@ -91,3 +91,15 @@ dev.off()
 
 
 
+######## Map conflict data ########
+
+library(tmap)
+
+dat.raster <- raster::getData("GADM", country = "GTM", level = 1)
+
+data("World")
+tm_shape(nz) +
+  tm_polygons("HPI")
+
+
+

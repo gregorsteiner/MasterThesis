@@ -177,7 +177,7 @@ stations <- stations[substring(stations$id, 1, 2) %in% countries, ]
 
 
 # download for all stations 
-dat <- data.table::rbindlist(lapply(unique(stations[, "id", drop = TRUE]), function(id){
+dat.weather <- data.table::rbindlist(lapply(unique(stations[, "id", drop = TRUE]), function(id){
   # download
   dat.list <- rnoaa::ghcnd_search(stationid = id)
   
@@ -195,16 +195,35 @@ dat <- data.table::rbindlist(lapply(unique(stations[, "id", drop = TRUE]), funct
 }), fill = TRUE)
 
 
-summary(dat)
+# interpolate NAs
+imp <- mice::mice(dat.weather)
+dat.weather.imp <- mice::complete(imp)
+
+summary(dat.weather.imp)
+
 
 ######## Conflict Data from https://ucdp.uu.se/ ########
 
-dat.conf <- read.csv("gedevents-2022-04-03.csv", encoding = "UTF-8")
+dat.conf <- read.csv("gedevents-2022-04-04.csv",
+                     encoding = "UTF-8", row.names = NULL)
+
+# fix column names (they seem to be shifted to the right)
+names <- colnames(dat.conf)
+dat.conf <- dat.conf[, -ncol(dat.conf)]
+colnames(dat.conf) <- names[-1]
 
 # transformations
 dat.conf <- within(dat.conf, {
+  # reformat date
   date <- as.Date(substring(date_start, 1, 10), "%m/%d/%Y")
 })
+
+
+# aggregate by department
+dat.conf.agg <- aggregate(list("Deaths" = dat.conf$best_est),
+                          list("Country" = dat.conf$country,
+                               "Department" = dat.conf$adm_1), sum)
+
 
 
 
