@@ -95,11 +95,8 @@ dev.off()
 
 library(tmap)
 
-dat.raster <- raster::getData("GADM", country = "GTM", level = 1)
+dat.raster <- geodata::gadm("GTM", level = 1, path = "GeoData")
 
-data("World")
-tm_shape(nz) +
-  tm_polygons("HPI")
 
 
 
