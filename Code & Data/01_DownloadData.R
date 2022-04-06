@@ -194,6 +194,10 @@ dat.weather <- data.table::rbindlist(lapply(unique(stations[, "id", drop = TRUE]
     return(dat)
 }), fill = TRUE)
 
+# add coordinates
+dat.weather <- merge(dat.weather, unique(stations[, c("id", "latitude", "longitude")]),
+                     by = "id", all.x = TRUE, all.y = FALSE)
+
 
 # interpolate NAs
 imp <- mice::mice(dat.weather)
@@ -225,8 +229,10 @@ dat.conf.agg <- aggregate(list("Deaths" = dat.conf$best_est),
                                "Department" = dat.conf$adm_1), sum)
 
 
+######## Conflict Data from ACLED ########
 
 
+dat.acled <- read.csv("2019-04-02-2022-04-06-Central_America-El_Salvador-Guatemala-Honduras.csv")
 
 
 
