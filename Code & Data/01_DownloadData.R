@@ -229,10 +229,15 @@ dat.conf.agg <- aggregate(list("Deaths" = dat.conf$best_est),
                                "Department" = dat.conf$adm_1), sum)
 
 
+write.csv(dat.conf.agg, "CumDeathsUCDP.csv")
+
 ######## Conflict Data from ACLED ########
 
 
 dat.acled <- read.csv("2019-04-02-2022-04-06-Central_America-El_Salvador-Guatemala-Honduras.csv")
 
+dat.acled.agg <- aggregate(list("Deaths" = dat.acled$fatalities),
+                           list("Country" = dat.acled$country,
+                                "Department" = dat.acled$admin1), sum)
 
-
+write.csv(dat.acled.agg, "CumDeathsACLED.csv")

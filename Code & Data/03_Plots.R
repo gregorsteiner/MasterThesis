@@ -98,5 +98,11 @@ library(tmap)
 dat.raster <- geodata::gadm("GTM", level = 1, path = "GeoData")
 
 
+dat.clim <- geodata::worldclim_country("GTM", "tavg", "GeoData")
+
+
+
+
+
 
 
