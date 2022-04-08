@@ -95,6 +95,7 @@ dev.off()
 
 library(tmap)
 
+
 dat.raster <- geodata::gadm("GTM", level = 1, path = "GeoData")
 
 
