@@ -149,20 +149,6 @@ saveRDS(fars.dat.agg, "AccidentDataAggregated.RDS")
 
 
 
-
-######## FEMA disaster data ########
-
-
-# read data from FEMA 
-fema.dat <- read.csv("https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries.csv")
-
-types <- levels(factor(fema.dat$incidentType))
-types
-
-fema.dat[fema.dat$incidentType == "Drought", "declarationTitle"]
-
-
-
 ######## NOAA weather data using rnoaa ########
 
 library(rnoaa)
@@ -238,4 +224,34 @@ dat.acled <- read.csv("2019-04-02-2022-04-06-Central_America-El_Salvador-Guatema
 dat.acled.agg <- aggregate(list("Deaths" = dat.acled$fatalities),
                            list("Country" = dat.acled$country,
                                 "Department" = dat.acled$admin1), sum)
+
+
+
+
+
+######## SEDA Testing data ########
+
+# load data
+dat.seda <- read.csv("C:/Users/gregs/OneDrive/Uni/Economics Master/Literatur Masterarbeit/seda_county_long_gcs_4.1.csv")
+#dat.seda <- read.csv("https://stacks.stanford.edu/file/druid:db586ns4974/seda_county_long_gcs_4.1.csv")
+
+
+
+######## FEMA disaster data ########
+
+
+# read data from FEMA 
+fema.disasters <- read.csv("https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries.csv")
+
+
+fema.assistance <- read.csv("https://www.fema.gov/api/open/v1/PublicAssistanceApplicants.csv")
+
+
+# add disaster type to assistance data
+fema.assistance <- merge(fema.assistance,
+                         unique(fema.disasters[, c("disasterNumber", "incidentType", "incidentBeginDate", "incidentEndDate")]),
+                         by = "disasterNumber", all.x = TRUE, all.y = FALSE)
+
+
+
 
