@@ -91,19 +91,17 @@ dev.off()
 
 
 
-######## Map conflict data ########
-
-library(tmap)
+######## Map of test results by state ########
 
 
-dat.raster <- geodata::gadm("GTM", level = 1, path = "GeoData")
+dat.seda$fips <- dat.seda$sedacounty
 
+library(ggplot2)
 
-dat.clim <- geodata::worldclim_country("GTM", "tavg", "GeoData")
-
-
-
-
+# plot
+plot_usmap(data = dat.seda, values = "gcs_mn_all") +
+  scale_fill_viridis_c(name = "Avg. Test Scores") +
+  facet_grid(c("subject", "grade"))
 
 
 

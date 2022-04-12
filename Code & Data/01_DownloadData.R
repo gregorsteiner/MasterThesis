@@ -231,10 +231,15 @@ dat.acled.agg <- aggregate(list("Deaths" = dat.acled$fatalities),
 
 ######## SEDA Testing data ########
 
-# load data
-dat.seda <- read.csv("C:/Users/gregs/OneDrive/Uni/Economics Master/Literatur Masterarbeit/seda_county_long_gcs_4.1.csv")
+# test scores data
+dat.seda.gcs <- read.csv("C:/Users/gregs/OneDrive/Uni/Economics Master/Literatur Masterarbeit/seda_county_long_gcs_4.1.csv")
 #dat.seda <- read.csv("https://stacks.stanford.edu/file/druid:db586ns4974/seda_county_long_gcs_4.1.csv")
 
+# covariates data
+dat.seda.cov <- read.csv("C:/Users/gregs/OneDrive/Uni/Economics Master/Literatur Masterarbeit/seda_cov_county_long_4.1.csv")
+
+# merge
+dat.seda <- merge(dat.seda.gcs, dat.seda.cov)
 
 
 ######## FEMA disaster data ########
