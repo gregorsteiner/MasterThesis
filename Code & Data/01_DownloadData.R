@@ -245,17 +245,19 @@ dat.seda <- merge(dat.seda.gcs, dat.seda.cov)
 ######## FEMA disaster data ########
 
 
-# read data from FEMA 
-fema.disasters <- read.csv("https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries.csv")
+# load data from FEMA 
+fema.disasters <- rfema::open_fema("DisasterDeclarationsSummaries",
+                                   ask_before_call = FALSE)
 
-
-fema.assistance <- read.csv("https://www.fema.gov/api/open/v1/PublicAssistanceApplicants.csv")
+fema.assistance <- rfema::open_fema("PublicAssistanceApplicantsProgramDeliveries",
+                                    ask_before_call = FALSE)
 
 
 # add disaster type to assistance data
-fema.assistance <- merge(fema.assistance,
-                         unique(fema.disasters[, c("disasterNumber", "incidentType", "incidentBeginDate", "incidentEndDate")]),
-                         by = "disasterNumber", all.x = TRUE, all.y = FALSE)
+fema.comb <- merge(fema.assistance,
+                   unique(fema.disasters[, c("disasterNumber", "incidentType", "incidentBeginDate", "incidentEndDate")]),
+                   by = "disasterNumber", all.x = TRUE, all.y = FALSE)
+
 
 
 
