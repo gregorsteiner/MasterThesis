@@ -1,9 +1,16 @@
 # Natural Disasters and Education
 
-The Stanford Education Data Archive (Reardon et al. 2021) provides
-summary statistics for standardized test scores by county, year, grade
-and subject. Data on natural disasters is available at the FEMA database
-and the **rfema** package (Turner 2022) provides easy access.
+In my thesis I explore the link between natural disasters and education
+outcomes. The Stanford Education Data Archive (Reardon et al. 2021)
+provides summary statistics for standardized test scores by county,
+year, grade and subject. Data on natural disasters is available at the
+FEMA database and the **rfema** package (Turner 2022) provides easy
+access.
+
+Below you can see the number of cumulative disasters from 2009 to 2018
+by county.
+
+![](README_files/figure-markdown_github/unnamed-chunk-2-1.png)
 
 ## References
 

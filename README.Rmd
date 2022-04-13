@@ -23,6 +23,8 @@ knitr::opts_chunk$set(echo = FALSE,
 ```{r}
 # preliminaries
 library(data.table)
+library(usmap)
+library(ggplot2)
 
 dat <- readRDS("Code & Data/Data.RDS")
 
