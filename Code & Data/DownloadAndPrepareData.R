@@ -20,6 +20,8 @@ seda.cov <- fread("C:/Users/gregs/OneDrive/Uni/Economics Master/Literatur Master
 seda.comb <- merge(seda.gcs, seda.cov)
 
 
+
+
 ######## FEMA disaster data ########
 
 
@@ -42,10 +44,35 @@ fema.cum <- fema.disasters[fipsCountyCode != "000",
                            by = .(fips = paste0(fipsStateCode, fipsCountyCode))]
 
 
+# aggregate fema disasters by year and county
+fema.dis.agg <- fema.disasters[fipsCountyCode != "000",
+                               .(Disasters = length(unique(disasterNumber))),
+                               by = .(fips = as.character(as.numeric(paste0(fipsStateCode, fipsCountyCode))),
+                                      year = as.numeric(fyDeclared))]
 
 
 
 
 
+######## Merge FEMA and SEDA data ########
+
+# merge seda and fema no. of disasters
+dat <- merge(seda.comb, fema.dis.agg,
+             by = c("fips", "year"),
+             all.x = TRUE, all.y = FALSE)
+
+
+
+# fill NA disaster values with 0
+dat[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
+
+
+# compute cumulative disasters by county
+dat[, CumuDisasters := cumsum(Disasters), by = .(fips, grade, subject)]
+
+
+
+# export as RDS
+saveRDS(dat, "Data.RDS")
 
 
