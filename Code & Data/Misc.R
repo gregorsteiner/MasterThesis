@@ -1,7 +1,9 @@
 
+
 ######## Preliminaries ########
 
-source("00_AuxFunctions.R")
+
+source("AuxFunctions.R")
 library(data.table)
 
 
@@ -32,13 +34,13 @@ data <- do.call(rbind, Map(function(file.name, counter){
     LONGITUDE <- as.numeric(stations[stations[, 1] == ID, 3])
     StateCounty <- latlong2county(data.frame(x = LONGITUDE, y = LATITUDE))
   })
-
+  
   # print progress
   print(counter)
   
   # return
   return(dat)
-
+  
 }, list.files("StationsData/ghcnd_hcn/"), 1:length(list.files("StationsData/ghcnd_hcn/"))))
 
 
@@ -94,7 +96,7 @@ fars.list <- lapply(years, function(year){
   
   # return
   return(dat)
-
+  
 })
 
 
@@ -133,7 +135,7 @@ fars.dat.agg <- within(fars.dat.agg, {
 
 # add county names
 fars.dat.agg <- merge(fars.dat.agg, maps::county.fips,
-                       by.x = "CountyFIPS", by.y = "fips")
+                      by.x = "CountyFIPS", by.y = "fips")
 
 # and reformat
 fars.dat.agg <- within(fars.dat.agg, {
@@ -221,6 +223,99 @@ dat.conf.agg <- aggregate(list("Deaths" = dat.conf$best_est),
 
 dat.acled <- read.csv("2019-04-02-2022-04-06-Central_America-El_Salvador-Guatemala-Honduras.csv")
 
+
+
+# read data
+data <- readRDS("DataCombined.RDS")
+
+# set parameters for saving plots
+wid <- 800
+hei <- 400
+
+
+######## Table of summary statistics ########
+
+stargazer::stargazer(data[, .(FatalAccidents, MaximumTemperature = TMAX,
+                              MinimumTemperature = TMIN, 
+                              Precipitation = PRCP)],
+                     type = "latex", summary.stat = c("n", "mean", "sd", "min", "median", "max"))
+
+
+
+######## Fatal Accidents by Year ########
+
+
+# plot number of fatal car accidents
+
+setDT(data)
+FatAccs <- data[, .(FatAccs = sum(FatalAccidents)), by = .(YEAR = format(DATE, "%Y"))]
+FatAccs <- FatAccs[!is.na(YEAR)]
+
+png("FatalAccidentsYearly.png", width = wid, height = hei)
+
+par(mar = c(2.5, 4, 1, 1))
+invisible(within(FatAccs, {
+  plot(YEAR, FatAccs, type = "n",
+       xlab = "", ylab = "Fatal car accidents")
+  grid()
+  lines(YEAR, FatAccs, col = 4, lwd = 2)
+}))
+
+dev.off()
+
+
+######## Map of Weather data ########
+
+library(ggplot2)
+
+# choose one point in time
+data.map <- data[DATE == "2015-07-01"]
+
+# the usmap package needs the column name to be fips
+data.map$fips <- data.map$CountyFIPS
+
+plot_usmap(data = data.map, values = "TMAX") +
+  scale_fill_viridis_c(name = "Max. Temperature")
+
+
+plot_usmap(data = data.map, values = "FatalAccidents") +
+  scale_fill_viridis_c(name = "Max. Temperature")
+
+
+
+
+######## Poisson ########
+
+lambda <- mean(data$FatalAccidents)
+
+# create empirical probability mass
+empi <- rep(0, length(0:max(data$FatalAccidents)))
+names(empi) <- 0:max(data$FatalAccidents)
+tab <- table(data$FatalAccidents) / nrow(data)
+empi[names(tab)] <- tab
+
+# and theoretical from poisson distribution
+theo <- dpois(0:max(data$FatalAccidents), lambda = lambda)
+
+png("Poisson.png", width = wid, height = hei)
+
+par(mar = c(4, 4, 1, 1))
+plot(names(empi), empi, type = "h", lwd = 5, col = 4,
+     xlab = "Number of fatal car accidents", ylab = "Probability mass")
+lines(as.numeric(names(empi)) + 0.2, theo, type = "h", lwd = 5, col = 3)
+legend("topright", legend = c("Empirical", "Theoretical Poisson"),
+       lty = c(1, 1), lwd = c(3, 3), col = c(4, 3), cex = 1.2)
+
+
+dev.off()
+
+
+
+
+
+
+
+
 dat.acled.agg <- aggregate(list("Deaths" = dat.acled$fatalities),
                            list("Country" = dat.acled$country,
                                 "Department" = dat.acled$admin1), sum)
@@ -229,36 +324,52 @@ dat.acled.agg <- aggregate(list("Deaths" = dat.acled$fatalities),
 
 
 
-######## SEDA Testing data ########
 
-# test scores data
-dat.seda.gcs <- read.csv("C:/Users/gregs/OneDrive/Uni/Economics Master/Literatur Masterarbeit/seda_county_long_gcs_4.1.csv")
-#dat.seda <- read.csv("https://stacks.stanford.edu/file/druid:db586ns4974/seda_county_long_gcs_4.1.csv")
+######## Merge together ########
 
-# covariates data
-dat.seda.cov <- read.csv("C:/Users/gregs/OneDrive/Uni/Economics Master/Literatur Masterarbeit/seda_cov_county_long_4.1.csv")
+# read weather data
+dat.weather <- readRDS("WeatherDataCounty.RDS")
+
+# merge with fips data to have county codes
+fips <- maps::county.fips
+fips$StateCounty <- sapply(strsplit(fips$polyname, ","), function(x) paste0(toupper(x[2]), " COUNTY", ", ", toupper(x[1])))
+
+dat.weather <- merge(dat.weather, fips,
+                     by = c("StateCounty"))
+
+# change columns
+dat.weather <- dat.weather[, .(StateCounty, CountyFIPS = fips, DATE, PRCP, TMAX, TMIN)]
+
+
+# read accident data
+dat.fars <- readRDS("AccidentDataAggregated.RDS")
 
 # merge
-dat.seda <- merge(dat.seda.gcs, dat.seda.cov)
-
-
-######## FEMA disaster data ########
-
-
-# load data from FEMA 
-fema.disasters <- rfema::open_fema("DisasterDeclarationsSummaries",
-                                   ask_before_call = FALSE)
-
-fema.assistance <- rfema::open_fema("PublicAssistanceApplicantsProgramDeliveries",
-                                    ask_before_call = FALSE)
-
-
-# add disaster type to assistance data
-fema.comb <- merge(fema.assistance,
-                   unique(fema.disasters[, c("disasterNumber", "incidentType", "incidentBeginDate", "incidentEndDate")]),
-                   by = "disasterNumber", all.x = TRUE, all.y = FALSE)
+dat.comb <- merge(dat.weather, dat.fars,
+                  by = c("CountyFIPS", "StateCounty", "DATE"), all = TRUE)
 
 
 
+# get latest data for which I have crash data
+dat.comb$DATE <- as.Date(dat.comb$DATE)
+crash.data.end <- dat.comb[!is.na(FatalAccidents), max(DATE, na.rm = TRUE)]
 
+
+# add 0s where fatal accidents are NA
+bool <- is.na(dat.comb$FatalAccidents) & dat.comb$DATE <= crash.data.end
+dat.comb[bool, "FatalAccidents"] <- 0
+
+# delete observations where Fatal car accidents is NA
+dat.comb <- dat.comb[!is.na(FatalAccidents)]
+
+# delete implausible temperature values
+dat.comb <- dat.comb[is.na(TMAX) | TMAX < 100]
+
+# add heatwave indicator
+setDT(dat.comb)
+dat.comb[, ":="(EHE.MAX = EHE(TMAX, DATE), EHE.MIN = EHE(TMIN, DATE)), by = .(StateCounty)]
+
+
+# save as RDS
+saveRDS(dat.comb, "DataCombined.RDS")
 
