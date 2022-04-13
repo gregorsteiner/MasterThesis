@@ -1,24 +1,18 @@
-## Extreme Heat Events and Fatal Car Accidents
+# Natural Disasters and Education
 
-In my master thesis I want to explore the causal effect of extreme heat
-events on fatal car accidents.
+The Stanford Education Data Archive (Sean Reardon 2021) provides summary
+statistics for standardized test scores by county, year, grade and
+subject.
 
-<!-- ### Weather Data -->
-<!-- Using data provided by the Daily Global Historical Climatology Network [@Menne_2012], I identify extreme heat events in the historical temperature time series. Historical weather data is available for about 1200 measurement stations in the US. Based on the latitude and longitude coordinates I assign each station to the county it belongs to. In case there is more than one station per county, I take the mean among those. -->
-<!-- Following the National Climate Data Center (NCDC), I define an extreme heat event as days in which the maximum or minimum temperature exceed the 85th percentile of July and August maximum or minimum temperatures [@Habeeb_2015]. Below you can see the average (across all counties) number of heat days based on minimum and maximum temperatures for each year. -->
+## References
 
-### Car Crash Data
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-Data on fatal car accidents is available from the [Fatality Analysis
-Reporting System
-(FARS)](https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars).
-Below you can see the number of fatal car accidents for each year (on a
-national level).
+<div id="ref-SEDA" class="csl-entry">
 
-![](README_files/figure-markdown_github/unnamed-chunk-4-1.png)
+Sean Reardon, Andrew Ho, Demetra Kalogrides. 2021. “Stanford Education
+Data Archive (Version 4.1).” <http://purl.stanford.edu/db586ns4974>.
 
-The number of fatal car accidents by day and county seems to closely
-follow a poisson distribution (see below). Thus a poisson model seems to
-be an attractive option.
+</div>
 
-![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
+</div>

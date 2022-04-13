@@ -26,119 +26,19 @@ library(data.table)
 
 ```
 
-## Extreme Heat Events and Fatal Car Accidents
 
-In my master thesis I want to explore the causal effect of extreme heat events on fatal car accidents.
+# Natural Disasters and Education
 
-<!-- ### Weather Data -->
-
-<!-- Using data provided by the Daily Global Historical Climatology Network [@Menne_2012], I identify extreme heat events in the historical temperature time series. Historical weather data is available for about 1200 measurement stations in the US. Based on the latitude and longitude coordinates I assign each station to the county it belongs to. In case there is more than one station per county, I take the mean among those. -->
-
-<!-- Following the National Climate Data Center (NCDC), I define an extreme heat event as days in which the maximum or minimum temperature exceed the 85th percentile of July and August maximum or minimum temperatures [@Habeeb_2015]. Below you can see the average (across all counties) number of heat days based on minimum and maximum temperatures for each year. -->
+The Stanford Education Data Archive [@SEDA] provides summary statistics for standardized test scores by county, year, grade and subject.
 
 
-```{r}
-# read data
-data <- readRDS("Code & Data/DataCombined.RDS")
 
 
-# # Define counties of interest
-# counties <- c("JACKSON COUNTY, OREGON", "ONTARIO COUNTY, NEW YORK",
-#              "ORANGE COUNTY, CALIFORNIA", "YORK COUNTY, SOUTH CAROLINA",
-#              "PIMA COUNTY, ARIZONA", "CHAMPAIGN COUNTY, ILLINOIS")
-# 
-# 
-# # Make plots
-# par(mfrow = c(round(length(counties) / 2), 2),
-#     mar = c(2, 4, 2, 1))
-# invisible(lapply(counties, function(x){
-#   # Select County
-#   dat <- data[data$StateCounty == x, ]
-#   
-#   # Get dates with extreme heat
-#   heatdates <- unlist(dat[dat$EHE.MAX == 1, "DATE"])
-#   
-#   # make graph
-#   plot(dat$DATE, dat$TMAX, type = "n",
-#        ylab = "Temperature in °C", xlab = "", main = x)
-#   
-#   abline(v = heatdates, col = rgb(1, 0, 0, 0.3), lwd = 1)
-#   lines(dat$DATE, dat$TMAX, lwd = 1)
-#   
-# }))
-
-```
 
 
-```{r fig.height=3}
-# # number of extreme heat events by year
-# setDT(data)
-# 
-# # display average number of ehe days in a year, based on both minimum and maximum temperature
-# EHEs.yearly <- data[
-#   , .(SUM.EHE.MAX = sum(EHE.MAX), SUM.EHE.MIN = sum(EHE.MIN)), by = .(YEAR = format(DATE, "%Y"), StateCounty)
-#   ][
-#     , .(AVG.EHE.MAX = mean(SUM.EHE.MAX), AVG.EHE.MIN = mean(SUM.EHE.MIN)), by = .(YEAR)
-#     ]
-# 
-# # plot results
-# par(mar = c(2.5, 4, 1, 1))
-# invisible(within(EHEs.yearly[YEAR >= 1990], {
-#   plot(YEAR, AVG.EHE.MAX, type = "n",
-#        xlab = "", ylab = "Number of extreme heat days")
-#   grid()
-#   lines(YEAR, AVG.EHE.MAX, col = 2, lwd = 2)
-#   lines(YEAR, AVG.EHE.MIN, col = 4, lwd = 2)
-#   legend("topleft", fill = c(2, 4), legend = c("Maximum", "Minimum"))
-# }))
-
-```
 
 
-### Car Crash Data
 
-Data on fatal car accidents is available from the [Fatality Analysis Reporting System (FARS)](https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars). Below you can see the number of fatal car accidents for each year (on a national level).
-
-```{r fig.height=3}
-# plot number of fatal car accidents
-FatAccs <- data[, .(FatAccs = sum(FatalAccidents)), by = .(YEAR = format(DATE, "%Y"))]
-FatAccs <- FatAccs[!is.na(YEAR)]
-
-par(mar = c(2.5, 4, 1, 1))
-invisible(within(FatAccs, {
-  plot(YEAR, FatAccs, type = "n",
-       xlab = "", ylab = "Fatal car accidents")
-  grid()
-  lines(YEAR, FatAccs, col = 4, lwd = 2)
-}))
-
-```
-
-
-The number of fatal car accidents by day and county seems to closely follow a poisson distribution (see below). Thus a poisson model seems to be an attractive option.
-
-```{r}
-# estimate parameter
-lambda <- mean(data$FatalAccidents)
-
-# create empirical probability mass
-empi <- rep(0, length(0:max(data$FatalAccidents)))
-names(empi) <- 0:max(data$FatalAccidents)
-tab <- table(data$FatalAccidents) / nrow(data)
-empi[names(tab)] <- tab
-
-# and theoretical from poisson distribution
-theo <- dpois(0:max(data$FatalAccidents), lambda = lambda)
-
-par(mar = c(4, 4, 1, 1))
-plot(names(empi), empi, type = "h", lwd = 5, col = 4,
-     xlab = "Number of fatal car accidents", ylab = "Probability mass")
-lines(as.numeric(names(empi)) + 0.2, theo, type = "h", lwd = 5, col = 3)
-legend("topright", legend = c("Empirical", "Theoretical Poisson"),
-       lty = c(1, 1), lwd = c(3, 3), col = c(4, 3), cex = 1.2)
-
-
-```
-
+## References
 
 
