@@ -26,12 +26,9 @@ plot_usmap(data = seda.comb[year == 2016 & grade == 3 & subject == "mth",
 
   
 
-
-
 # plot cumulative disasters
 plot_usmap(data = fema.cum, values = "Disasters") +
   scale_fill_viridis_c(name = "Disasters")
-
 
 
 
