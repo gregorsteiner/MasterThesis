@@ -21,7 +21,6 @@ seda.comb <- merge(seda.gcs, seda.cov)
 
 
 
-
 ######## FEMA disaster data ########
 
 
@@ -39,9 +38,29 @@ fema.comb <- merge(fema.assistance,
                    by = "disasterNumber", all.x = TRUE, all.y = FALSE)
 
 # compute cumulative disasters by county (and remove observations with 000 county)
-fema.cum <- fema.disasters[fipsCountyCode != "000",
-                           .(Disasters = length(unique(disasterNumber))),
+fema.cum <- fema.disasters[, .(Disasters = length(unique(disasterNumber))),
                            by = .(fips = paste0(fipsStateCode, fipsCountyCode))]
+
+# and add statewide cases to all counties within the state
+ind.statewide <- substring(fema.cum$fips, 3, 5) == "000"
+
+# isolate the statewide data
+statewide <- fema.cum[ind.statewide]
+fema.cum <- fema.cum[!ind.statewide]
+
+# by state add statewide cases to all counties
+fema.cum <- rbindlist(apply(statewide[order(as.numeric(statewide$fips)), ], 1, function(x){
+  # check for all counties in that state
+  bool <- substring(fema.cum$fips, 1, 2) == substring(x[1], 1, 2)
+  
+  # and add the number of disasters for those
+  res <- fema.cum[bool]
+  res[, "Disasters"] <- res[, "Disasters"] + as.numeric(x[2])
+  
+  # sort and return
+  return(res[order(res$fips), ])
+}))
+
 
 
 # aggregate fema disasters by year and county
