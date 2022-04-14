@@ -10,7 +10,7 @@ library(data.table)
 ######## SEDA Testing data ########
 
 # test scores data
-seda.gcs <- fread("C:/Users/gregs/OneDrive/Uni/Economics Master/Literatur Masterarbeit/seda_county_long_gcs_4.1.csv")
+seda.gcs <- fread("C:/Users/gregs/OneDrive/Uni/Economics Master/Literatur Masterarbeit/seda_county_long_cs_4.1.csv")
 #dat.seda <- read.csv("https://stacks.stanford.edu/file/druid:db586ns4974/seda_county_long_gcs_4.1.csv")
 
 # covariates data
@@ -47,7 +47,7 @@ fema.cum <- fema.disasters[fipsCountyCode != "000",
 # aggregate fema disasters by year and county
 fema.dis.agg <- fema.disasters[fipsCountyCode != "000",
                                .(Disasters = length(unique(disasterNumber))),
-                               by = .(fips = as.character(as.numeric(paste0(fipsStateCode, fipsCountyCode))),
+                               by = .(fips = as.numeric(paste0(fipsStateCode, fipsCountyCode)),
                                       year = as.numeric(fyDeclared))]
 
 
