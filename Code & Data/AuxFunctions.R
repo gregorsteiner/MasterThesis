@@ -40,28 +40,20 @@ latlong2county <- function(pointsDF) {
 
 
 
-
-
-
-### Heatwave Indicator function
-EHE <- function(x, date, quantile = 0.85){
+### names to fips function based on the usmaps package
+names_to_fips <- function(stateName, countyName){
+  # if its is statewide use "000" as county
+  if(countyName %in% c("Statewide", "Multiple Counties")) {
+    res <- paste0(usmap::fips(stateName), "000")
+    return(res)
+  }
   
-  # x as numeric and date as date
-  x <- as.numeric(x)
-  date <- as.Date(date)
+  # a few counties cause problems
+  if(countyName == "LaSalle Parish") countyName <- "La Salle Parish"
+  if(countyName == "Hoonah?Angoon Census Area") countyName <- "Hoonah-Angoon Census Area"
   
-  # compute threshold (85th percentile of july and august temperatures)
-  bool.jul.aug <- format(date, "%m") %in% c("07", "08") 
-  threshhold <- quantile(x[bool.jul.aug], quantile, na.rm = TRUE)
-  
-  # Mark as heatwave all consecutive days that exceed the threshhold
-  bool <- x > threshhold
-  bool <- ifelse(is.na(bool), FALSE, bool)
-  
-  # define EHE
-  EHE <- as.numeric(bool)
-  return(EHE)
-  
+  # else just use the result
+  res <- try(usmap::fips(stateName, countyName))
+  return(res)
 }
-
 

@@ -32,12 +32,22 @@ fema.assistance <- setDT(rfema::open_fema("PublicAssistanceApplicantsProgramDeli
                                           ask_before_call = FALSE))
 
 
-# add disaster type to assistance data
-fema.comb <- merge(fema.assistance,
-                   unique(fema.disasters[, c("disasterNumber", "incidentType", "incidentBeginDate", "incidentEndDate")]),
-                   by = "disasterNumber", all.x = TRUE, all.y = FALSE)
+# remove COVID 19
+fema.assistance <- fema.assistance[declarationTitle != "COVID-19"]
 
-# compute cumulative disasters by county (and remove observations with 000 county)
+
+# add county fips to the assistance data
+fema.assistance[, fips := as.numeric(mapply(names_to_fips, stateName, countyApplicantJurisdiction))]
+
+# aggreagte assistance data by county and year
+fema.assist.agg <- fema.assistance[, .(totalDamage = sum(as.numeric(totalAppDamageCost)),
+                                       federalAssistance = sum(as.numeric(federalShareObligated))),
+                                   by = .(fips, year = as.numeric(format(declarationDate, "%Y")))]
+
+
+
+
+# compute cumulative disasters by county
 fema.cum <- fema.disasters[, .(Disasters = length(unique(disasterNumber))),
                            by = .(fips = paste0(fipsStateCode, fipsCountyCode))]
 
@@ -81,7 +91,6 @@ dat <- merge(seda.comb, fema.dis.agg,
              all.x = TRUE, all.y = FALSE)
 
 
-
 # fill NA disaster values with 0
 dat[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
 
@@ -89,6 +98,11 @@ dat[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
 # compute cumulative disasters by county
 dat[, CumuDisasters := cumsum(Disasters), by = .(fips, grade, subject)]
 
+
+
+# add assistance data
+dat <- merge(dat, fema.assist.agg,
+             all.x = TRUE, all.y = FALSE)
 
 
 # export as RDS
