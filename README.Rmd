@@ -35,14 +35,14 @@ dat <- readRDS("Code & Data/Data.RDS")
 
 In my thesis I explore the link between natural disasters and education outcomes. The Stanford Education Data Archive [@SEDA] provides summary statistics for standardized test scores by county, year, grade and subject. Data on natural disasters is available at the FEMA database and the **rfema** package [@rfema] provides easy access.
 
-Below you can see the number of cumulative disasters from 2009 to 2018 by county.
+Below you can see the number of cumulative disasters by county.
 
 ```{r}
 knitr::include_graphics("Code & Data/DisasterMap.png")
 
 ```
 
-To compare, here is the map of average test scores by county.
+To compare, here is the map of average test scores by county. Visually, there seems to be some correlation.
 
 ```{r}
 knitr::include_graphics("Code & Data/TestScoresMap.png")

@@ -7,12 +7,12 @@ year, grade and subject. Data on natural disasters is available at the
 FEMA database and the **rfema** package (Turner 2022) provides easy
 access.
 
-Below you can see the number of cumulative disasters from 2009 to 2018
-by county.
+Below you can see the number of cumulative disasters by county.
 
 <img src="Code & Data/DisasterMap.png" width="600" />
 
-To compare, here is the map of average test scores by county.
+To compare, here is the map of average test scores by county. Visually,
+there seems to be some correlation.
 
 <img src="Code & Data/TestScoresMap.png" width="600" />
 
