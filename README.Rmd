@@ -38,13 +38,15 @@ In my thesis I explore the link between natural disasters and education outcomes
 Below you can see the number of cumulative disasters from 2009 to 2018 by county.
 
 ```{r}
-plot_usmap(data = dat[year == max(year) & grade == 3 & subject == "mth"], values = "CumuDisasters") +
-  scale_fill_viridis_c(name = "Disasters")
-
+knitr::include_graphics("Code & Data/DisasterMap.png")
 
 ```
 
+To compare, here is the map of average test scores by county.
 
+```{r}
+knitr::include_graphics("Code & Data/TestScoresMap.png")
+```
 
 
 

@@ -10,7 +10,11 @@ access.
 Below you can see the number of cumulative disasters from 2009 to 2018
 by county.
 
-![](README_files/figure-markdown_github/unnamed-chunk-2-1.png)
+<img src="Code & Data/DisasterMap.png" width="600" />
+
+To compare, here is the map of average test scores by county.
+
+<img src="Code & Data/TestScoresMap.png" width="600" />
 
 ## References
 
