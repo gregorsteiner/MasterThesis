@@ -40,6 +40,11 @@ fema.assist.agg <- fema.assistance[, .(totalDamage = sum(as.numeric(totalAppDama
 
 
 
+
+
+
+
+
 # compute cumulative disasters by county
 fema.cum <- fema.disasters[, .(Disasters = length(unique(disasterNumber))),
                            by = .(fips = paste0(fipsStateCode, fipsCountyCode))]
