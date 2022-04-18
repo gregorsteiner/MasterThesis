@@ -8,17 +8,10 @@ library(data.table)
 
 
 ######## SEDA Testing data ########
+# (from "https://stacks.stanford.edu/file/druid:db586ns4974/seda_county_long_cs_4.1.csv")
 
-# test scores data
-seda.gcs <- fread("C:/Users/gregs/OneDrive/Uni/Economics Master/Literatur Masterarbeit/seda_county_long_cs_4.1.csv")
-#dat.seda <- read.csv("https://stacks.stanford.edu/file/druid:db586ns4974/seda_county_long_gcs_4.1.csv")
 
-# covariates data
-seda.cov <- fread("C:/Users/gregs/OneDrive/Uni/Economics Master/Literatur Masterarbeit/seda_cov_county_long_4.1.csv")
-
-# merge
-seda.comb <- merge(seda.gcs, seda.cov)
-
+seda.comb <- setDT(readRDS("SedaData.RDS"))
 
 
 ######## FEMA disaster data ########

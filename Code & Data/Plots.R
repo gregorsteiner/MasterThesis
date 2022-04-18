@@ -16,7 +16,7 @@ dat <- setDT(readRDS("Data.RDS"))
 
 
 # plot median income 
-plot_usmap(data = seda.cov[year == 2018 & grade == 3,
+plot_usmap(data = seda.comb[year == 2018 & grade == 3,
                            .(inc50all = exp(lninc50all), fips = sedacounty)],
            values = "inc50all") +
   scale_fill_viridis_c(name = "Median Income (2018)")
