@@ -14,6 +14,7 @@ library(data.table)
 seda.comb <- setDT(readRDS("SedaData.RDS"))
 
 
+
 ######## FEMA disaster data ########
 
 
@@ -71,12 +72,40 @@ fema.cum <- rbindlist(apply(statewide[order(as.numeric(statewide$fips)), ], 1, f
 
 
 
-# aggregate fema disasters by year and county
-fema.dis.agg <- fema.disasters[fipsCountyCode != "000",
-                               .(Disasters = length(unique(disasterNumber))),
+# create empty data expanded to the seda format
+empty <- data.table(expand.grid("fips" = maps::county.fips[, "fips"],
+                                "year" = min(seda.comb$year):max(seda.comb$year)))
+
+# aggregate fema disasters by year and county and add to the empty set
+fema.dis.agg <- fema.disasters[, .(Disasters = length(unique(disasterNumber))),
                                by = .(fips = as.numeric(paste0(fipsStateCode, fipsCountyCode)),
                                       year = as.numeric(fyDeclared))]
 
+# add statewide to each county in the state
+ind.statewide <- substring(fema.dis.agg$fips, 3, 5) == "000"
+
+# isolate the statewide data
+statewide <- fema.dis.agg[ind.statewide]
+fema.dis.agg <- fema.dis.agg[!ind.statewide]
+
+for (i in 1:nrow(statewide)) {
+  # check matching years and fips
+  bool <- fema.dis.agg[, fips] == statewide[i, fips] & fema.dis.agg[, year] == statewide[i, year]
+  
+  # for those add the number of disasters
+  if(!is.null(nrow(fema.dis.agg[bool, Disasters]))){
+    fema.dis.agg[bool, Disasters] <- fema.dis.agg[bool, Disasters] + statewide[i, Disasters]
+  }
+  
+}
+
+
+fema.dis.agg <- merge(empty, fema.dis.agg,
+                      all.x = TRUE, all.y = FALSE)
+
+
+# fill NA disaster values with 0
+fema.dis.agg[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
 
 
 
@@ -84,13 +113,12 @@ fema.dis.agg <- fema.disasters[fipsCountyCode != "000",
 ######## Merge FEMA and SEDA data ########
 
 # merge seda and fema no. of disasters
-dat <- merge(seda.comb, fema.dis.agg,
+dat <- merge(fema.dis.agg, seda.comb[, .(fips = sedacounty, year, grade, subject,
+                                         cs_mn_all)],
              by = c("fips", "year"),
-             all.x = TRUE, all.y = FALSE)
+             all.x = TRUE, all.y = TRUE)
 
 
-# fill NA disaster values with 0
-dat[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
 
 
 # compute cumulative disasters by county
