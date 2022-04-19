@@ -131,6 +131,9 @@ dat <- merge(dat, fema.assist.agg,
              all.x = TRUE, all.y = FALSE)
 
 
+# remove rows with missing disaster values (mainly Puerto Rico)
+dat <- dat[!is.na(Disasters)]
+
 # export as RDS
 saveRDS(dat, "Data.RDS")
 
