@@ -1,6 +1,3 @@
 Variation in number of disasters may be driven by governor's proactiveness in requesting a declaration
 => Maybe compare neighbouring counties in different states (likely similar disaster exposure)
 to analyze the effect of the declaration?
-
-
-Quantile regression to detect heterogenous effects?
