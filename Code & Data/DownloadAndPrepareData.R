@@ -72,6 +72,16 @@ fema.cum <- rbindlist(apply(statewide[order(as.numeric(statewide$fips)), ], 1, f
 
 
 
+
+# add school year variable based on declaration date (as explained in the main text)
+fema.disasters[, syDeclared := dplyr::case_when(
+  # if in september to december add 1 to the year (Schoolyear x/x+1 is x+1)
+  as.numeric(format(declarationDate, "%m")) %in% 9:12 ~ as.numeric(fyDeclared) + 1,
+  as.numeric(format(declarationDate, "%m")) %in% 1:3 ~ as.numeric(fyDeclared),
+  as.numeric(format(declarationDate, "%m")) %in% 4:8 ~ NA_real_
+  )]
+
+
 # create empty data expanded to the seda format
 empty <- data.table(expand.grid("fips" = maps::county.fips[, "fips"],
                                 "year" = min(seda.comb$year):max(seda.comb$year)))
@@ -79,7 +89,7 @@ empty <- data.table(expand.grid("fips" = maps::county.fips[, "fips"],
 # aggregate fema disasters by year and county and add to the empty set
 fema.dis.agg <- fema.disasters[, .(Disasters = length(unique(disasterNumber))),
                                by = .(fips = as.numeric(paste0(fipsStateCode, fipsCountyCode)),
-                                      year = as.numeric(fyDeclared))]
+                                      year = syDeclared)]
 
 # add statewide to each county in the state
 ind.statewide <- substring(fema.dis.agg$fips, 3, 5) == "000"
@@ -133,6 +143,9 @@ dat <- merge(dat, fema.assist.agg,
 
 # remove rows with missing disaster values (mainly Puerto Rico)
 dat <- dat[!is.na(Disasters)]
+
+# add Disaster Dummy (1 if disasters > 0, 0 else)
+dat[, DisasterDummy := as.numeric(Disasters > 0)]
 
 # export as RDS
 saveRDS(dat, "Data.RDS")
