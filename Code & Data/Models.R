@@ -23,7 +23,8 @@ etable(model, coefstat = "confint",
        file = "../TeX Files/MainResults.tex", replace = TRUE,
        label = "MainResults", title = "Results",
        dict=c(cs_mn_all = "Mean test score", cs_mn_wbg = "White-Black gap",
-              cs_mn_mfg = "Male-Female gap", cs_mn_neg = "Disadvantaged gap"))
+              cs_mn_mfg = "Male-Female gap", cs_mn_neg = "Disadvantaged gap",
+              DisasterDummy = "Disaster"))
 
 
 # check residuals
