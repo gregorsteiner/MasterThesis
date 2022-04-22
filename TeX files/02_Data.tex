@@ -3,11 +3,11 @@
 
 \subsection{Natural Disaster Data}
 
-The Federal Emergency Management Agency (FEMA) provides data on all federally declared natural disasters, beginning in 1953. The data is easily accessible via their API \citep{rfema}.
+Natural disasters are declared as such by the president, usually upon request by the affected state's governor. Once a disaster is federally declared, states or local governments can receive federal assistance. The Federal Emergency Management Agency (FEMA) provides data on all federally declared natural disasters, beginning in 1953. The data is easily accessible via their API \citep{rfema}.
 
-Disaster declarations are made by the president, usually upon request by the affected state's governor. Once a disaster is federally declared, states or local governments can receive federal assistance.
 
-Figure \ref{DisasterMap} shows the number of declared disasters across the US.
+
+Figure \ref{DisasterMap} shows the number of declared disasters since 1953 across the US.
 
 
 \begin{figure}[!h]
@@ -34,4 +34,12 @@ Figure \ref{TestScoresMap} shows the average test scores across the US.
 	\caption{Average test scores by county (cohort-standardized and averaged across grades, subjects and years)}
 	\label{TestScoresMap}
 \end{figure}
+
+Natural disasters should only have an effect on test scores if they occur before the test. Standardized tests are generally administered during spring. We will use March 1st as a cut-off point. Thus, any disaster happening within the same school year before the 1st of March will be considered. School years tend to start in late August or early September with some variation across states. We will use September 1st, meaning any disaster happening between September 1st and March 1st will be counted for a given school year.
+
+
+
+
+
+
 
