@@ -1,26 +1,16 @@
 
 \section{Empirical Strategy}
 
+School closures often occur in the wake of natural disasters. These can have a substantial negative impact on academic success. For example, \cite{Grewening_2020} find that school closures as a measure against Covid 19 reduced students' learning time by about half.
+
+
 \begin{figure}[h]
 	\centering
 	\begin{tikzpicture}
-		\node[state] (heat) at (0,0) {Heat};
-		\node[state] (accs) [right = of heat] {Accidents};
-		\node[state] (time) [above = of heat] {Time};
-		\node[state] (safe) [right = of time] {Safety};
-		\node[state] (rain) [below left = of accs] {Rain};
-		%\node[state] (dema) [below right = of heat] {Travel demand};
+		\node[state] (dis) at (0,0) {Natural Disaster};
+		\node[state] (acpe) [right = of dis] {Academic Performance};
 		
-		\path (heat) edge (accs);
-		\path (time) edge (heat);
-		\path (time) edge (safe);
-		\path (safe) edge (accs);
-		\path (rain) edge (heat);
-		\path (heat) edge (rain);
-		\path (rain) edge (accs);
-		%\path (rain) edge (dema);
-		%\path (heat) edge (dema);
-		%\path (dema) edge (accs);
+		\path (dis) edge (acpe);
 	\end{tikzpicture}
 	\caption{Directed acyclic graph of the effect}
 \end{figure}
