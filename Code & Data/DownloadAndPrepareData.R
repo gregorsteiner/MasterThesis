@@ -22,24 +22,24 @@ seda.comb <- setDT(readRDS("SedaData.RDS"))
 fema.disasters <- setDT(rfema::open_fema("DisasterDeclarationsSummaries",
                                          ask_before_call = FALSE))
 
-fema.assistance <- setDT(rfema::open_fema("PublicAssistanceApplicantsProgramDeliveries",
-                                          ask_before_call = FALSE))
 
 
-# remove COVID 19
-fema.assistance <- fema.assistance[declarationTitle != "COVID-19"]
-
-
-# add county fips to the assistance data
-fema.assistance[, fips := as.numeric(mapply(names_to_fips, stateName, countyApplicantJurisdiction))]
-
-# aggreagte assistance data by county and year
-fema.assist.agg <- fema.assistance[, .(totalDamage = sum(as.numeric(totalAppDamageCost)),
-                                       federalAssistance = sum(as.numeric(federalShareObligated))),
-                                   by = .(fips, year = as.numeric(format(declarationDate, "%Y")))]
-
-
-
+# # assistance data
+# fema.assistance <- setDT(rfema::open_fema("PublicAssistanceApplicantsProgramDeliveries",
+#                                           ask_before_call = FALSE))
+# 
+# 
+# # remove COVID 19
+# fema.assistance <- fema.assistance[declarationTitle != "COVID-19"]
+# 
+# 
+# # add county fips to the assistance data
+# fema.assistance[, fips := as.numeric(mapply(names_to_fips, stateName, countyApplicantJurisdiction))]
+# 
+# # aggreagte assistance data by county and year
+# fema.assist.agg <- fema.assistance[, .(totalDamage = sum(as.numeric(totalAppDamageCost)),
+#                                        federalAssistance = sum(as.numeric(federalShareObligated))),
+#                                    by = .(fips, year = as.numeric(format(declarationDate, "%Y")))]
 
 
 
@@ -124,7 +124,7 @@ fema.dis.agg[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
 
 # merge seda and fema no. of disasters
 dat <- merge(fema.dis.agg, seda.comb[, .(fips = sedacounty, year, grade, subject,
-                                         cs_mn_all)],
+                                         cs_mn_all, cs_mn_wbg, cs_mn_mfg, cs_mn_neg)],
              by = c("fips", "year"),
              all.x = TRUE, all.y = TRUE)
 
@@ -136,9 +136,9 @@ dat[, CumuDisasters := cumsum(Disasters), by = .(fips, grade, subject)]
 
 
 
-# add assistance data
-dat <- merge(dat, fema.assist.agg,
-             all.x = TRUE, all.y = FALSE)
+# # add assistance data
+# dat <- merge(dat, fema.assist.agg,
+#              all.x = TRUE, all.y = FALSE)
 
 
 # remove rows with missing disaster values (mainly Puerto Rico)

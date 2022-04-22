@@ -14,7 +14,8 @@ dat <- readRDS("Data.RDS")
 ######## Models ########
 
 # county fixed effects
-model <- feols(cs_mn_all ~ CumuDisasters | year + grade + subject,
+model <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_mfg, cs_mn_neg) ~ 
+                 DisasterDummy | year + grade + subject,
                data = dat, vcov = "iid")
 etable(model)
 
