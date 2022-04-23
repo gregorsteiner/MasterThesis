@@ -43,7 +43,7 @@ dev.off()
 # plot cumulative disasters
 png("AssistanceMap.png", width = wid, height = hei)
 
-plot_usmap(data = fema.assist.agg[, .("Assistance received" = federalAssistance),
+plot_usmap(data = fema.assist.agg[, .("Assistance received" = sum(federalAssistance)),
                                   by = .(fips)], values = "Assistance received") +
   scale_fill_viridis_c(name = "Assistance received", trans = "log",
                        breaks = c(20000, 400000, 9000000, 200000000)) +

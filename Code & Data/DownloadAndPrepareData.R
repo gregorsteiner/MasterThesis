@@ -42,6 +42,22 @@ fema.assist.agg <- fema.assistance[, .(totalDamage = sum(as.numeric(totalAppDama
                                    by = .(fips, year = as.numeric(format(declarationDate, "%Y")))]
 
 
+# merge with empty hull
+empty <- data.table(expand.grid("fips" = union(maps::county.fips[, "fips"], unique(fema.assist.agg$fips)),
+                                "year" = min(fema.assist.agg$year):max(fema.assist.agg$year)))
+
+fema.assist.agg <- merge(empty, fema.assist.agg,
+                         all.x = TRUE)
+
+# remove NA fips
+fema.assist.agg <- fema.assist.agg[!is.na(fips)]
+
+# fill NAs with zero
+fema.assist.agg[, totalDamage := ifelse(is.na(totalDamage), 0, totalDamage)]
+fema.assist.agg[, federalAssistance := ifelse(is.na(federalAssistance), 0, federalAssistance)]                  
+
+# control for statewide cases
+
 
 
 

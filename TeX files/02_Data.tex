@@ -7,7 +7,8 @@ Natural disasters are declared as such by the president, usually upon request by
 
 
 
-Figure \ref{DisasterMap} shows the number of declared disasters since 1953 across the US.
+Figure \ref{DisasterMap} shows the number of declared disasters since 1953 across the US. It seems that the variation in the number of declared disasters may be driven by the governor's proactiveness in requesting a declaration. Tus, it could be interesting to compare counties on different sides of state borders, whose actual disaster exposure is likely very similar in order to analyze the effect of a declaration.
+
 
 
 \begin{figure}[!h]
@@ -18,12 +19,13 @@ Figure \ref{DisasterMap} shows the number of declared disasters since 1953 acros
 \end{figure}
 
 
+FEMA also provides federal disaster assistance data. This includes the amount of damage caused and amount of federal disaster assistance granted. Unfortunately, this data is only available since October 2016. Figure \ref{AssistanceMap} shows the total federal assistance awarded to counties.
 
 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[scale=0.7]{"../Code & Data/AssistanceMap.png"}
-	\caption{Amount of federal assistance awarded to counties since October 2016}
+	\caption{Amount of federal disaster assistance (in USD) awarded to counties since October 2016}
 	\label{AssistanceMap}
 \end{figure}
 
@@ -35,16 +37,6 @@ Figure \ref{DisasterMap} shows the number of declared disasters since 1953 acros
 Data on academic achievement is available from the Stanford Education Data Archive \citep{SEDA}. They provide mean test results from standardized tests by county, year, grade and subject among all students and various subgroups (including race, gender, and economicall disadvantaged). The most recent version 4.1 covers grades 3 through 8 in mathematics and Reading Language Arts (RLA) over the 2008-09 through 2017-18 school years.
 
 Test scores are cohort-standardized, meaning they can be interpreted relatively to an average national reference cohort in the same grade. For instance, a county mean of 0.5 indicates that the average student in the county scored approximately one half of a standard deviation higher than the average national student in the same grade.
-
-Figure \ref{TestScoresMap} shows the average test scores across the US.
-
-
-\begin{figure}[!h]
-	\centering
-	\includegraphics[scale=0.7]{"../Code & Data/TestScoresMap.png"}
-	\caption{Average test scores by county (cohort-standardized and averaged across grades, subjects and years)}
-	\label{TestScoresMap}
-\end{figure}
 
 In addition to mean test scores, the data includes estimates of differences among various subgroups. These are only reported if the subgroups' sample sizes are large enough. Thus, the number of observations for some of the gap statistics is substantially smaller.
 
