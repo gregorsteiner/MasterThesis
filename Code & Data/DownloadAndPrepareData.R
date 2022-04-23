@@ -24,22 +24,23 @@ fema.disasters <- setDT(rfema::open_fema("DisasterDeclarationsSummaries",
 
 
 
-# # assistance data
-# fema.assistance <- setDT(rfema::open_fema("PublicAssistanceApplicantsProgramDeliveries",
-#                                           ask_before_call = FALSE))
-# 
-# 
-# # remove COVID 19
-# fema.assistance <- fema.assistance[declarationTitle != "COVID-19"]
-# 
-# 
-# # add county fips to the assistance data
-# fema.assistance[, fips := as.numeric(mapply(names_to_fips, stateName, countyApplicantJurisdiction))]
-# 
-# # aggreagte assistance data by county and year
-# fema.assist.agg <- fema.assistance[, .(totalDamage = sum(as.numeric(totalAppDamageCost)),
-#                                        federalAssistance = sum(as.numeric(federalShareObligated))),
-#                                    by = .(fips, year = as.numeric(format(declarationDate, "%Y")))]
+# assistance data
+fema.assistance <- setDT(rfema::open_fema("PublicAssistanceApplicantsProgramDeliveries",
+                                          ask_before_call = FALSE))
+
+
+# remove COVID 19
+fema.assistance <- fema.assistance[declarationTitle != "COVID-19"]
+
+
+# add county fips to the assistance data
+fema.assistance[, fips := as.numeric(mapply(names_to_fips, stateName, countyApplicantJurisdiction))]
+
+# aggreagte assistance data by county and year
+fema.assist.agg <- fema.assistance[, .(totalDamage = sum(as.numeric(totalAppDamageCost)),
+                                       federalAssistance = sum(as.numeric(federalShareObligated))),
+                                   by = .(fips, year = as.numeric(format(declarationDate, "%Y")))]
+
 
 
 
