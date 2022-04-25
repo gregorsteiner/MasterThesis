@@ -5,9 +5,7 @@
 
 Natural disasters are declared as such by the president, usually upon request by the affected state's governor. Once a disaster is federally declared, states or local governments can receive federal assistance. The Federal Emergency Management Agency (FEMA) provides data on all federally declared natural disasters, beginning in 1953. The data is easily accessible via their API \citep{rfema}.
 
-
-
-Figure \ref{DisasterMap} shows the number of declared disasters since 1953 across the US. It seems that the variation in the number of declared disasters may be driven by the governor's proactiveness in requesting a declaration. Tus, it could be interesting to compare counties on different sides of state borders, whose actual disaster exposure is likely very similar in order to analyze the effect of a declaration.
+Figure \ref{DisasterMap} shows the number of declared disasters since 1953 across the US. It seems that the variation in the number of declared disasters may be driven by the governor's proactiveness in requesting a declaration. Thus, it could be interesting to compare counties on different sides of state borders, whose actual disaster exposure is likely very similar in order to analyze the effect of a declaration.
 
 
 
@@ -34,13 +32,21 @@ FEMA also provides federal disaster assistance data. This includes the amount of
 
 \subsection{Standardized Testing Data}
 
-Data on academic achievement is available from the Stanford Education Data Archive \citep{SEDA}. They provide mean test results from standardized tests by county, year, grade and subject among all students and various subgroups (including race, gender, and economicall disadvantaged). The most recent version 4.1 covers grades 3 through 8 in mathematics and Reading Language Arts (RLA) over the 2008-09 through 2017-18 school years.
+Data on academic achievement is available from the Stanford Education Data Archive \citep{SEDA}. They provide mean test results from standardized tests by county, year, grade and subject among all students and various subgroups (including race, gender, and economically disadvantaged). The most recent version 4.1 covers grades 3 through 8 in mathematics and Reading Language Arts (RLA) over the 2008-09 through 2017-18 school years.
 
 Test scores are cohort-standardized, meaning they can be interpreted relatively to an average national reference cohort in the same grade. For instance, a county mean of 0.5 indicates that the average student in the county scored approximately one half of a standard deviation higher than the average national student in the same grade.
 
-In addition to mean test scores, the data includes estimates of differences among various subgroups. These are only reported if the subgroups' sample sizes are large enough. Thus, the number of observations for some of the gap statistics is substantially smaller.
+In addition to mean test scores, the data includes estimates of gap estimates for various subgroups, e.g. mean difference in test scores among white and black students. These are only reported if the subgroups' sample sizes are large enough. Thus, the number of observations for some of the gap statistics is substantially smaller.
+
+
+\subsection{Combining disaster and testing data}
 
 Natural disasters should only have an effect on test scores if they occur before the test. Standardized tests are generally administered during spring. We will use March 1st as a cut-off point. Thus, any disaster happening within the same school year before the 1st of March will be considered. School years tend to start in late August or early September with some variation across states. We will use September 1st, meaning any disaster happening between September 1st and March 1st will be counted for a given school year.
+
+Each disaster is assigned to a school year as described above. Then, disaster and test score data can be merged by school year and county. This yields a panel data set with six grades and two subjects for each county-year combination. Table \ref{SumStats} shows summary statistics for all relevant variables
+
+\input{SummaryStats.tex}
+
 
 
 
