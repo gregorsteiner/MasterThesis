@@ -34,8 +34,8 @@ etable(model, coefstat = "confint",
        label = "MainResults", title = "Results",
        dict=c(cs_mn_all = "Mean test score", cs_mn_wbg = "White-Black gap",
               cs_mn_mfg = "Male-Female gap", cs_mn_neg = "Disadvantaged gap",
-              DisasterDummy = "Disaster", lninc50all = "Log Income",
-              unempall = "Unemployment"))
+              DisasterDummy = "Disaster", year = "Year", grade = "Grade", subject = "Subject",
+              lninc50all = "Log Income", unempall = "Unemployment"))
 
 
 # check residuals
