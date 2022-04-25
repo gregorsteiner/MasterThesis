@@ -141,7 +141,8 @@ fema.dis.agg[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
 
 # merge seda and fema no. of disasters
 dat <- merge(fema.dis.agg, seda.comb[, .(fips = sedacounty, year, grade, subject,
-                                         cs_mn_all, cs_mn_wbg, cs_mn_mfg, cs_mn_neg)],
+                                         cs_mn_all, cs_mn_wbg, cs_mn_mfg, cs_mn_neg,
+                                         lninc50all, unempall)],
              by = c("fips", "year"),
              all.x = TRUE, all.y = TRUE)
 

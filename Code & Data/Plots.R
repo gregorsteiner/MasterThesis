@@ -20,7 +20,8 @@ dat.summary <- dat[, .(Disasters, "Disaster Dummy" = as.factor(DisasterDummy),
                        "Cumulative Disasters" = CumuDisasters, "Grade" = as.factor(grade),
                        "Subject" = factor(subject, labels = c("Mathematics", "RLA")),
                        "Mean test score" = cs_mn_all, "White-Black gap" = cs_mn_wbg,
-                       "Male-Female gap" = cs_mn_mfg, "Disadvantaged gap" = cs_mn_neg)]
+                       "Male-Female gap" = cs_mn_mfg, "Disadvantaged gap" = cs_mn_neg,
+                       "Log Income" = lninc50all, "Unemployment" = unempall)]
 
 vtable::sumtable(dat.summary,
                  out = "latex", file = "../TeX Files/SummaryStats.tex", anchor = "SumStats")
