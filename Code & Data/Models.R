@@ -13,6 +13,13 @@ dat <- readRDS("Data.RDS")
 
 ######## Models ########
 
+
+# check TWFE weigths
+TwoWayFEWeights::twowayfeweights(dat, Y = "cs_mn_all",
+                                 G = "fips", T = "year", D = "DisasterDummy",
+                                 cmd_type = "feTR")
+
+
 # county fixed effects
 model <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_mfg, cs_mn_neg) ~ 
                  DisasterDummy | year + grade + subject,

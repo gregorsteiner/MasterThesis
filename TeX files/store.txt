@@ -1,0 +1,14 @@
+
+School closures often occur in the wake of natural disasters. These can have a substantial negative impact on academic success. For example, \cite{Grewening_2020} find that school closures as a measure against Covid 19 reduced students' learning time by about half.
+
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}
+		\node[state] (dis) at (0,0) {Natural Disaster};
+		\node[state] (acpe) [right = of dis] {Academic Performance};
+		
+		\path (dis) edge (acpe);
+	\end{tikzpicture}
+	\caption{Directed acyclic graph of the effect}
+\end{figure}

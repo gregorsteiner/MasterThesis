@@ -1,17 +1,12 @@
 
 \section{Empirical Strategy}
 
-School closures often occur in the wake of natural disasters. These can have a substantial negative impact on academic success. For example, \cite{Grewening_2020} find that school closures as a measure against Covid 19 reduced students' learning time by about half.
 
 
-\begin{figure}[h]
-	\centering
-	\begin{tikzpicture}
-		\node[state] (dis) at (0,0) {Natural Disaster};
-		\node[state] (acpe) [right = of dis] {Academic Performance};
-		
-		\path (dis) edge (acpe);
-	\end{tikzpicture}
-	\caption{Directed acyclic graph of the effect}
-\end{figure}
+In order to identify a causal effect, unobservable determinants of a county's mean test score must be unrelated to natural disasters conditional on observable characteristics of that county. Potential confounders are likely to fall into one of the following categories: Effects varying by county but constant across time, time varying effects constant across counties, and characteristics of the county that vary across time and counties. Thus, a two way fixed-effects design with some sociodemographic control variables can credibly deliver causal estimates.
+
+However, it is implausible that the treatment effects are constant. The extent of disasters varies substantially, and also the level of preparation for such disasters likely displays high variance across counties. Such treatment effect heterogeneity can lead to problems in a two way fixed-effects design: Under the common trends assumption, the estimated coefficient is a weighted average of treatment effects in each group and period, with possibly negative weights. If treatment effects are heterogenous, this can lead to a situation where the treatment effect is positive in each group and period, but the weighted average is negative, or vice versa \citep{deChaisemartin_2020}.
+
+\cite{TwoWayFEWeights} provide an R implementation for the weights computation which makes it easy to check the signs. If all the sign are positive, a conventional estimator can be used. If they are not, \cite{deChaisemartin_2020} propose an alternative estimator.
+
 
