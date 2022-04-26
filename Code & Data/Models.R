@@ -25,7 +25,7 @@ lapply(c("cs_mn_all", "cs_mn_wbg", "cs_mn_mfg", "cs_mn_neg"), function(x){
 
 # county fixed effects
 model <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_mfg, cs_mn_neg) ~ 
-                 DisasterDummy + lninc50all + unempall| year + grade + subject,
+                 DisasterDummy + lninc50all| year + grade + subject,
                data = dat, vcov = "iid")
 
 # automatically export as tex file
