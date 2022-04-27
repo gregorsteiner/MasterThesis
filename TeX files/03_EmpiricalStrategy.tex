@@ -5,7 +5,19 @@
 
 In order to identify a causal effect, unobservable determinants of a county's mean test score must be unrelated to natural disasters conditional on observable characteristics of that county. Potential confounders are likely to fall into one of the following categories: Effects varying by county but constant across time, time varying effects constant across counties, and characteristics of the county that vary across time and counties. Thus, a two way fixed-effects design with some sociodemographic control variables can credibly deliver causal estimates.
 
-However, it is implausible that the treatment effects are constant. The extent of disasters varies substantially, and also the level of preparation for such disasters likely displays high variance across counties. Such treatment effect heterogeneity can lead to problems in a two way fixed-effects design: Under the common trends assumption, the estimated coefficient is a weighted average of treatment effects in each group and period, with possibly negative weights. If treatment effects are heterogenous, this can lead to a situation where the treatment effect is positive in each group and period, but the weighted average is negative, or vice versa \citep{deChaisemartin_2020}.
+Consequently, the baseline specification is
+\begin{align} \label{baseline}
+	y_{i, t, g, s} = \alpha_i + \lambda_t + \zeta_g + \xi_s + \beta D_{i, t} + \gamma X_{i, t} + \varepsilon_{i, t, g, s} \;,
+\end{align}
+where $y_{i, t, g, s}$ is the outcome of interest for county $i$, year $t$, grade $g$, and subject $s$. Note that $D$ and $X$ do not vary by grades and subject. That is, treatment and covariates are constant for all grades and subject within a given county-year combination.
+
+Let $\widehat{\beta}$ be the OLS estimator for $\beta$ in (\ref{baseline}). \cite{deChaisemartin_2020} show that under the common trends assumption,
+\begin{align*}
+	\E\left[ \widehat{\beta} \right] = \E\left[  \sum_{(i, t): D_{i, t} = 1} w_{i, t} \Delta_{i, t} \right],
+\end{align*}
+where $\Delta_{i, t}$ is the average treatment effect (ATE) in county $i$ and year $t$. That is, the estimated coefficient is a weighted combination of average treatment effects across all treated county-year combinations. Importantly, these weights can be negative. This does not lead to problems if the treatment effects are constant, but it may cause substantial bias if they are not.
+
+It is implausible that the treatment effects are constant in our setting. The extent of disasters varies substantially, and also the level of preparation for such disasters likely displays high variance across counties. If treatment effects are heterogenous, this can lead to a situation where the treatment effect is positive in each group and period, but the weighted average is negative, or vice versa \citep{deChaisemartin_2022}.
 
 \cite{TwoWayFEWeights} provide an R implementation for the weights computation which makes it easy to check the signs. If all the sign are positive, a conventional estimator can be used. If they are not, \cite{deChaisemartin_2020} propose an alternative estimator.
 
