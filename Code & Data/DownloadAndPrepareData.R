@@ -166,6 +166,12 @@ dat[, CumuDisasters := cumsum(Disasters), by = .(fips, grade, subject)]
 # add Disaster Dummy (1 if disasters > 0, 0 else)
 dat[, DisasterDummy := as.numeric(Disasters > 0)]
 
+# add absorbing treatment (as described in Sun & Abraham)
+dat[, DisasterTreat := as.numeric(cumsum(Disasters) > 0), by = fips]
+
+# add time to first treatment
+dat[, TreatStart := year - min(year[DisasterTreat == 1], na.rm = TRUE), by = fips]
+
 # export as RDS
 saveRDS(dat, "Data.RDS")
 

@@ -65,3 +65,21 @@ dev.off()
 
 
 
+
+
+# plot means by treatment timing
+means.treat <- dat[!is.na(TreatStart),
+                   .(MeanMath = mean(cs_mn_all[subject == "mth"], na.rm = TRUE),
+                     MeanRLA = mean(cs_mn_all[subject == "rla"], na.rm = TRUE)),
+                   by = .("YearstoTreatment" = TreatStart)][
+                     order(YearstoTreatment)
+                   ]
+
+plot(means.treat$YearstoTreatment, means.treat$MeanRLA,
+     type = "l", lwd = 2, col = 2,
+     xlab = "Years to Treatment", ylab = "Mean Test Score")
+lines(means.treat$YearstoTreatment, means.treat$MeanMath,
+      type = "l", lwd = 2, col = 4)
+
+
+

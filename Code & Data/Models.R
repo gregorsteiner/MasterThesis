@@ -10,13 +10,6 @@ library(fixest)
 # read data
 dat <- readRDS("Data.RDS")
 
-# add absorbing treatment (as described in Sun & Abraham)
-dat[, DisasterTreat := as.numeric(cumsum(Disasters) > 0), by = fips]
-
-# cohort treatment start
-cohort <- dat[DisasterTreat == 1, .(year = year[1]), by = fips]
-
-
 ######## Models ########
 
 
