@@ -24,9 +24,9 @@ lapply(c("cs_mn_all", "cs_mn_wbg", "cs_mn_mfg", "cs_mn_whg", "cs_mn_neg"), funct
 
 
 # county fixed effects
-model.math <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
+model <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
                  DisasterDummy + lninc50all| year + fips + grade + subject,
-               data = dat[subject == "Mathematics"], vcov = "iid")
+               data = dat, vcov = "iid")
 
 # automatically export as tex file
 etable(model, file = "../TeX Files/MainResults.tex", replace = TRUE,
