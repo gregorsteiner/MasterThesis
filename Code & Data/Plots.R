@@ -37,7 +37,8 @@ fema.cum <- aggregate(list("Disasters" = dat$CumuDisasters),
 png("DisasterMap.png", width = wid, height = hei)
 
 plot_usmap(data = fema.cum, values = "Disasters") +
-  scale_fill_viridis_c(name = "Disasters") +
+  scale_fill_viridis_c(name = "",
+                       breaks = c(0, 5, 10, max(fema.cum$Disasters, na.rm = TRUE))) +
   theme(legend.position = "right",
         legend.key.size = grid::unit(1, "cm"),
         legend.text = element_text(size = 12),
@@ -52,7 +53,7 @@ png("AssistanceMap.png", width = wid, height = hei)
 
 plot_usmap(data = fema.assist.agg[, .("Assistance received" = sum(federalAssistance)),
                                   by = .(fips)], values = "Assistance received") +
-  scale_fill_viridis_c(name = "Assistance received", trans = "log",
+  scale_fill_viridis_c(name = "", trans = "log",
                        breaks = c(20000, 400000, 9000000, 200000000)) +
   theme(legend.position = "right",
         legend.key.size = grid::unit(1, "cm"),
