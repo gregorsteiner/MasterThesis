@@ -51,6 +51,8 @@ names_to_fips <- function(stateName, countyName){
   # a few counties cause problems
   if(countyName == "LaSalle Parish") countyName <- "La Salle Parish"
   if(countyName == "Hoonah?Angoon Census Area") countyName <- "Hoonah-Angoon Census Area"
+  if(countyName == "Anchorage, Municipality of") countyName <- "Anchorage Municipality"
+  if(countyName == "Honolulu, City and County of") countyName <- "Honolulu County"
   
   # else just use the result
   res <- try(usmap::fips(stateName, countyName))

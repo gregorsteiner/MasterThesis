@@ -32,6 +32,8 @@ fema.assistance <- setDT(rfema::open_fema("PublicAssistanceApplicantsProgramDeli
 # remove COVID 19
 fema.assistance <- fema.assistance[declarationTitle != "COVID-19"]
 
+# drop Puerto Rico
+fema.assistance <- fema.assistance[stateName != "Puerto Rico"]
 
 # add county fips to the assistance data
 fema.assistance[, fips := as.numeric(mapply(names_to_fips, stateName, countyApplicantJurisdiction))]
@@ -99,9 +101,6 @@ fema.disasters[, syDeclared := dplyr::case_when(
   )]
 
 
-# create empty data expanded to the seda format
-empty <- data.table(expand.grid("fips" = maps::county.fips[, "fips"],
-                                "year" = min(seda.comb$year):max(seda.comb$year)))
 
 # aggregate fema disasters by year and county and add to the empty set
 fema.dis.agg <- fema.disasters[, .(Disasters = length(unique(disasterNumber))),
@@ -127,6 +126,10 @@ for (i in 1:nrow(statewide)) {
 }
 
 
+
+# create empty data expanded to the seda format
+empty <- data.table(expand.grid("fips" = as.numeric(usmap::countypop[, "fips", drop = TRUE]),
+                                "year" = min(seda.comb$year):max(seda.comb$year)))
 fema.dis.agg <- merge(empty, fema.dis.agg,
                       all.x = TRUE, all.y = FALSE)
 
@@ -141,7 +144,8 @@ fema.dis.agg[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
 
 # merge seda and fema no. of disasters
 dat <- merge(fema.dis.agg, seda.comb[, .(fips = sedacounty, year, grade, subject,
-                                         cs_mn_all, cs_mn_wbg, cs_mn_mfg, cs_mn_neg,
+                                         cs_mn_all, cs_mn_wbg, cs_mn_mfg,
+                                         cs_mn_whg, cs_mn_neg,
                                          lninc50all, unempall)],
              by = c("fips", "year"),
              all.x = TRUE, all.y = TRUE)
@@ -158,9 +162,6 @@ dat[, CumuDisasters := cumsum(Disasters), by = .(fips, grade, subject)]
 # dat <- merge(dat, fema.assist.agg,
 #              all.x = TRUE, all.y = FALSE)
 
-
-# remove rows with missing disaster values (mainly Puerto Rico)
-dat <- dat[!is.na(Disasters)]
 
 # add Disaster Dummy (1 if disasters > 0, 0 else)
 dat[, DisasterDummy := as.numeric(Disasters > 0)]

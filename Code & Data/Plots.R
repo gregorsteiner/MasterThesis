@@ -29,16 +29,11 @@ vtable::sumtable(dat.summary,
 ######## Maps ########
 
 
-# plot median income 
-plot_usmap(data = seda.comb[year == 2018 & grade == 3,
-                           .(inc50all = exp(lninc50all), fips = sedacounty)],
-           values = "inc50all") +
-  scale_fill_viridis_c(name = "Median Income (2018)")
-
-
-
-
 # plot cumulative disasters
+fema.cum <- aggregate(list("Disasters" = dat$CumuDisasters),
+                      list("fips" = dat$fips), function(x) x[length(x)])
+
+
 png("DisasterMap.png", width = wid, height = hei)
 
 plot_usmap(data = fema.cum, values = "Disasters") +
@@ -53,8 +48,6 @@ dev.off()
 
 
 # plot assistance received
-
-# plot cumulative disasters
 png("AssistanceMap.png", width = wid, height = hei)
 
 plot_usmap(data = fema.assist.agg[, .("Assistance received" = sum(federalAssistance)),

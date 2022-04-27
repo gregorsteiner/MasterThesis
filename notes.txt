@@ -1,3 +1,11 @@
-Variation in number of disasters may be driven by governor's proactiveness in requesting a declaration
-=> Maybe compare neighbouring counties in different states (likely similar disaster exposure)
-to analyze the effect of the declaration?
+Selection of disaster declarations (Who is applying?)
+
+Add hispanic-white gap
+
+Add mean of dependent variables in regression table
+
+Disaggregate by Math & RLA
+
+Different disaster data?
+
+Implement better way to get fips codes from county name
