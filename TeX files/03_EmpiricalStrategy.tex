@@ -7,7 +7,7 @@ In order to identify a causal effect, unobservable determinants of a county's me
 
 Consequently, the baseline specification is
 \begin{align} \label{baseline}
-	y_{i, t, g, s} = \alpha_i + \lambda_t + \zeta_g + \xi_s + \beta D_{i, t} + \gamma X_{i, t} + \varepsilon_{i, t, g, s} \;,
+	y_{i, t, g, s} = \alpha_i + \lambda_t + \zeta_g + \xi_s + \beta D_{i, t} + X_{i, t} \gamma + \varepsilon_{i, t, g, s} \;,
 \end{align}
 where $y_{i, t, g, s}$ is the outcome of interest for county $i$, year $t$, grade $g$, and subject $s$. Note that $D$ and $X$ do not vary by grades and subject. That is, treatment and covariates are constant for all grades and subject within a given county-year combination.
 
@@ -19,6 +19,6 @@ where $\Delta_{i, t}$ is the average treatment effect (ATE) in county $i$ and ye
 
 It is implausible that the treatment effects are constant in our setting. The extent of disasters varies substantially, and also the level of preparation for such disasters likely displays high variance across counties. If treatment effects are heterogenous, this can lead to a situation where the treatment effect is positive in each group and period, but the weighted average is negative, or vice versa \citep{deChaisemartin_2022}.
 
-\cite{TwoWayFEWeights} provide an R implementation for the weights computation which makes it easy to check the signs. If all the sign are positive, a conventional estimator can be used. If they are not, \cite{deChaisemartin_2020} propose an alternative estimator.
+\cite{TwoWayFEWeights} provide an R implementation for the weights computation which makes it easy to check the signs. If all the signs are positive, a conventional estimator can be used. If they are not, \cite{deChaisemartin_2020} propose an alternative estimator.
 
 

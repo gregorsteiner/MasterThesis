@@ -25,7 +25,7 @@ lapply(c("cs_mn_all", "cs_mn_wbg", "cs_mn_mfg", "cs_mn_neg"), function(x){
 
 # county fixed effects
 model <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_mfg, cs_mn_neg) ~ 
-                 DisasterDummy + lninc50all| year + grade + subject,
+                 DisasterDummy + lninc50all| year + fips + grade + subject,
                data = dat, vcov = "iid")
 
 # automatically export as tex file
@@ -34,7 +34,8 @@ etable(model, coefstat = "confint",
        label = "MainResults", title = "Results",
        dict=c(cs_mn_all = "Mean test score", cs_mn_wbg = "White-Black gap",
               cs_mn_mfg = "Male-Female gap", cs_mn_neg = "Disadvantaged gap",
-              DisasterDummy = "Disaster", year = "Year", grade = "Grade", subject = "Subject",
+              DisasterDummy = "Disaster", year = "Year", grade = "Grade",
+              subject = "Subject", fips = "County",
               lninc50all = "Log Income", unempall = "Unemployment"))
 
 
