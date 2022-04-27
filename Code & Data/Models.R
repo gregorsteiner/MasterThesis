@@ -10,22 +10,19 @@ library(fixest)
 # read data
 dat <- readRDS("Data.RDS")
 
+# add absorbing treatment (as described in Sun & Abraham)
+dat[, DisasterTreat := as.numeric(cumsum(Disasters) > 0), by = fips]
+
+# cohort treatment start
+cohort <- dat[DisasterTreat == 1, .(year = year[1]), by = fips]
+
 
 ######## Models ########
 
 
-# check TWFE weigths
-lapply(c("cs_mn_all", "cs_mn_wbg", "cs_mn_mfg", "cs_mn_whg", "cs_mn_neg"), function(x){
-  TwoWayFEWeights::twowayfeweights(dat, Y = x, G = "fips", T = "year",
-                                   D = "DisasterDummy", cmd_type = "feTR",
-                                   controls = c("lninc50all", "unempall"))
-})
-
-
-
 # county fixed effects
 model <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
-                 DisasterDummy + lninc50all| year + fips + grade + subject,
+                 sunab(cohort$year, year) + lninc50all| year + fips + grade + subject,
                data = dat, vcov = "iid")
 
 # automatically export as tex file
