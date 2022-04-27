@@ -1,9 +1,5 @@
 Selection of disaster declarations (Who is applying?)
 
-Add hispanic-white gap
-
-Add mean of dependent variables in regression table
-
 Disaggregate by Math & RLA
 
 Different disaster data?

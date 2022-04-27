@@ -15,7 +15,7 @@ dat <- readRDS("Data.RDS")
 
 
 # check TWFE weigths
-lapply(c("cs_mn_all", "cs_mn_wbg", "cs_mn_mfg", "cs_mn_neg"), function(x){
+lapply(c("cs_mn_all", "cs_mn_wbg", "cs_mn_mfg", "cs_mn_whg", "cs_mn_neg"), function(x){
   TwoWayFEWeights::twowayfeweights(dat, Y = x, G = "fips", T = "year",
                                    D = "DisasterDummy", cmd_type = "feTR",
                                    controls = c("lninc50all", "unempall"))
@@ -24,26 +24,18 @@ lapply(c("cs_mn_all", "cs_mn_wbg", "cs_mn_mfg", "cs_mn_neg"), function(x){
 
 
 # county fixed effects
-model <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_mfg, cs_mn_neg) ~ 
+model.math <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
                  DisasterDummy + lninc50all| year + fips + grade + subject,
-               data = dat, vcov = "iid")
+               data = dat[subject == "Mathematics"], vcov = "iid")
 
 # automatically export as tex file
-etable(model, coefstat = "confint",
-       file = "../TeX Files/MainResults.tex", replace = TRUE,
+etable(model, file = "../TeX Files/MainResults.tex", replace = TRUE,
        label = "MainResults", title = "Results",
-       dict=c(cs_mn_all = "Mean test score", cs_mn_wbg = "White-Black gap",
-              cs_mn_mfg = "Male-Female gap", cs_mn_neg = "Disadvantaged gap",
+       dict=c(cs_mn_all = "Mean test score", cs_mn_wbg = "White-Black",
+              cs_mn_mfg = "Male-Female", cs_mn_neg = "Adv.-Disadv.",
+              cs_mn_whg = "White-Hispanic",
               DisasterDummy = "Disaster", year = "Year", grade = "Grade",
               subject = "Subject", fips = "County",
               lninc50all = "Log Income", unempall = "Unemployment"))
 
-
-# check residuals
-resid <- residuals(model)
-
-plot(resid[, 1])
-
-qqnorm(resid)
-qqline(resid, lwd = 2, col = 2)
 

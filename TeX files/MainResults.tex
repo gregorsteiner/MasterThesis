@@ -2,26 +2,26 @@
 \begin{table}[htbp]
    \centering
    \caption{\label{MainResults} Results}
-   \begin{tabular}{lcccc}
+   \begin{tabular}{lccccc}
       \tabularnewline\midrule\midrule
-      Dependent Variables: & Mean test score       & White-Black gap   & Male-Female gap        & Disadvantaged gap\\
-      Model:               & (1)                   & (2)               & (3)                    & (4)\\
-      \midrule \emph{Variables} &   &   &   &  \\
-      Disaster             & -0.0002               & 0.0002            & -0.0033$^{***}$        & -0.0057$^{***}$\\
-                           & [-0.0019; 0.0015]     & [-0.0023; 0.0028] & [-0.0050; -0.0017]     & [-0.0075; -0.0040]\\
-      Log Income           & -0.0207$^{***}$       & 0.0807$^{***}$    & $-4.41\times 10^{-5}$ & 0.0196$^{**}$\\
-                           & [-0.0337; -0.0077]    & [0.0538; 0.1075]  & [-0.0134; 0.0134]      & [0.0044; 0.0347]\\
-      \midrule \emph{Fixed-effects} &   &   &   &  \\
-      Year                 & Yes                   & Yes               & Yes                    & Yes\\
-      County               & Yes                   & Yes               & Yes                    & Yes\\
-      Grade                & Yes                   & Yes               & Yes                    & Yes\\
-      Subject              & Yes                   & Yes               & Yes                    & Yes\\
-      \midrule \emph{Fit statistics} &   &   &   &  \\
-      Observations         & 323,218               & 129,071           & 302,398                & 279,288\\
-      R$^2$                & 0.69411               & 0.57790           & 0.41405                & 0.46097\\
-      Within R$^2$         & $3.03\times 10^{-5}$ & 0.00027           & $5.29\times 10^{-5}$  & 0.00018\\
-      \midrule\midrule\multicolumn{5}{l}{\emph{IID co-variance matrix, 95\% confidence intervals in brackets}}\\
-      \multicolumn{5}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+      Dependent Variables: & Mean test score       & White-Black    & White-Hispanic       & Male-Female           & Adv.-Disadv.\\
+      Model:               & (1)                   & (2)            & (3)                  & (4)                   & (5)\\
+      \midrule \emph{Variables} &   &   &   &   &  \\
+      Disaster             & -0.0004               & 0.0005         & 0.0030$^{**}$        & -0.0035$^{***}$       & -0.0053$^{***}$\\
+                           & (0.0009)              & (0.0013)       & (0.0013)             & (0.0008)              & (0.0009)\\
+      Log Income           & -0.0205$^{***}$       & 0.0724$^{***}$ & -0.0254$^{*}$        & -0.0009               & 0.0211$^{***}$\\
+                           & (0.0066)              & (0.0137)       & (0.0136)             & (0.0068)              & (0.0077)\\
+      \midrule \emph{Fixed-effects} &   &   &   &   &  \\
+      Year                 & Yes                   & Yes            & Yes                  & Yes                   & Yes\\
+      County               & Yes                   & Yes            & Yes                  & Yes                   & Yes\\
+      Grade                & Yes                   & Yes            & Yes                  & Yes                   & Yes\\
+      Subject              & Yes                   & Yes            & Yes                  & Yes                   & Yes\\
+      \midrule \emph{Fit statistics} &   &   &   &   &  \\
+      Observations         & 327,358               & 130,595        & 140,326              & 306,055               & 282,423\\
+      R$^2$                & 0.69770               & 0.57832        & 0.59356              & 0.41145               & 0.46287\\
+      Within R$^2$         & $3.02\times 10^{-5}$ & 0.00022        & $6.7\times 10^{-5}$ & $5.95\times 10^{-5}$ & 0.00016\\
+      \midrule\midrule\multicolumn{6}{l}{\emph{IID standard-errors in parentheses}}\\
+      \multicolumn{6}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
    \end{tabular}
 \end{table}
 
