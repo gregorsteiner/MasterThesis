@@ -15,7 +15,7 @@ dat <- readRDS("Data.RDS")
 
 # county fixed effects
 model <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
-                 sunab(cohort$year, year) + lninc50all| year + fips + grade + subject,
+                 sunab(DisasterTreat, TreatStart) + lninc50all| year + fips + grade + subject,
                data = dat, vcov = "iid")
 
 # automatically export as tex file
