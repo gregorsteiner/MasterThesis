@@ -45,7 +45,8 @@ fema.assist.agg <- fema.assistance[, .(totalDamage = sum(as.numeric(totalAppDama
 
 
 # merge with empty hull
-empty <- data.table(expand.grid("fips" = union(maps::county.fips[, "fips"], unique(fema.assist.agg$fips)),
+empty <- data.table(expand.grid("fips" = union(as.numeric(usmap::countypop[, "fips", drop = TRUE]),
+                                               unique(fema.assist.agg$fips)),
                                 "year" = min(fema.assist.agg$year):max(fema.assist.agg$year)))
 
 fema.assist.agg <- merge(empty, fema.assist.agg,
@@ -158,11 +159,6 @@ dat[, CumuDisasters := cumsum(Disasters), by = .(fips, grade, subject)]
 
 
 
-# # add assistance data
-# dat <- merge(dat, fema.assist.agg,
-#              all.x = TRUE, all.y = FALSE)
-
-
 # add Disaster Dummy (1 if disasters > 0, 0 else)
 dat[, DisasterDummy := as.numeric(Disasters > 0)]
 
@@ -177,6 +173,12 @@ dat[, TreatStart := ifelse(any(DisasterTreat == 1),
                            min(year[DisasterTreat == 1], na.rm = TRUE),
                            1000)
     , by = fips]
+
+
+# add assistance data
+dat <- merge(dat, fema.assist.agg,
+             all.x = TRUE, all.y = TRUE)
+
 
 # export as RDS
 saveRDS(dat, "Data.RDS")

@@ -20,8 +20,10 @@ dat.summary <- dat[, .(Disasters, "Disaster Dummy" = as.factor(DisasterDummy),
                        "Cumulative Disasters" = CumuDisasters, "Grade" = as.factor(grade),
                        "Subject" = factor(subject, labels = c("Mathematics", "RLA")),
                        "Mean test score" = cs_mn_all, "White-Black gap" = cs_mn_wbg,
-                       "Male-Female gap" = cs_mn_mfg, "Disadvantaged gap" = cs_mn_neg,
-                       "Log Income" = lninc50all, "Unemployment" = unempall)]
+                       "White-Hispanic gap" = cs_mn_whg, "Male-Female gap" = cs_mn_mfg,
+                       "Disadvantaged gap" = cs_mn_neg,
+                       "Total Damage" = totalDamage, "Federal Assistance" = federalAssistance,
+                       "Log Income" = lninc50all)]
 
 vtable::sumtable(dat.summary,
                  out = "latex", file = "../TeX Files/SummaryStats.tex", anchor = "SumStats")
@@ -31,7 +33,7 @@ vtable::sumtable(dat.summary,
 
 # plot cumulative disasters
 fema.cum <- aggregate(list("Disasters" = dat$CumuDisasters),
-                      list("fips" = dat$fips), function(x) x[length(x)])
+                      list("fips" = dat$fips), function(x) x[!is.na(x)][length(x[!is.na(x)])])
 
 
 png("DisasterMap.png", width = wid, height = hei)
@@ -47,39 +49,32 @@ plot_usmap(data = fema.cum, values = "Disasters") +
 
 dev.off()
 
+guides(fill = guide_legend(reverse = TRUE))
+
+
 
 # plot assistance received
-png("AssistanceMap.png", width = wid, height = hei)
 
-plot_usmap(data = fema.assist.agg[, .("Assistance received" = sum(federalAssistance)),
-                                  by = .(fips)], values = "Assistance received") +
+dat.plot <- melt(dat[, .("Damage" = sum(totalDamage, na.rm = TRUE) + 1,
+                         "Federal Assistance" = sum(federalAssistance, na.rm = TRUE) + 1),
+                     by = .(fips)],
+                 id.vars = c("fips"), measure.vars = c("Damage", "Assistance"))
+
+png("AssistanceMap.png", width = wid + 100, height = hei + 200)
+
+plot_usmap(data = dat.plot,
+           values = "value") +
   scale_fill_viridis_c(name = "", trans = "log",
-                       breaks = c(20000, 400000, 9000000, 200000000)) +
-  theme(legend.position = "right",
-        legend.key.size = grid::unit(1, "cm"),
+                       breaks = c(1e1, 1e3, 1e5, 1e7, 1e9)) +
+  facet_grid(cols = vars(variable)) + 
+  theme(legend.position = c(0.4, -0.3),
+        legend.key.size = grid::unit(0.6, "cm"),
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14),
-        plot.margin= grid::unit(c(0,0,0,0), "mm"))
-
+        legend.direction = "vertical",
+        plot.margin = grid::unit(c(0,0,-60,0), "mm"),
+        strip.text.x = element_text(size = 12))
 dev.off()
-
-
-
-
-
-# plot means by treatment timing
-means.treat <- dat[!is.na(TreatStart),
-                   .(MeanMath = mean(cs_mn_all[subject == "mth"], na.rm = TRUE),
-                     MeanRLA = mean(cs_mn_all[subject == "rla"], na.rm = TRUE)),
-                   by = .("YearstoTreatment" = TreatStart)][
-                     order(YearstoTreatment)
-                   ]
-
-plot(means.treat$YearstoTreatment, means.treat$MeanRLA,
-     type = "l", lwd = 2, col = 2,
-     xlab = "Years to Treatment", ylab = "Mean Test Score")
-lines(means.treat$YearstoTreatment, means.treat$MeanMath,
-      type = "l", lwd = 2, col = 4)
 
 
 
