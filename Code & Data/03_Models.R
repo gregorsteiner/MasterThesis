@@ -16,6 +16,14 @@ dat <- readRDS("Data.RDS")
 ######## Models ########
 
 
+# explain applications model
+model.apply <- feols(log(federalAssistance + 1) ~ lninc50all + ShareDem | year,
+                     data = dat)
+etable(model.apply)
+
+
+
+
 # main model
 model.math <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
                  sunab(TreatStart, year)| year + fips + grade,

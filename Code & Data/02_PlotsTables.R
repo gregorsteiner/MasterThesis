@@ -84,3 +84,16 @@ dev.off()
 
 
 
+# plot political outcomes
+plot_usmap(data = dat[, .("Share Democrats" = mean(ShareDem, na.rm = TRUE)),
+                      by = .(fips)], values = "Share Democrats") +
+  scale_fill_viridis_c(name = "") +
+  theme(legend.position = "right",
+        legend.key.size = grid::unit(1, "cm"),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14),
+        plot.margin= grid::unit(c(0,0,0,0), "mm"))
+
+
+
+
