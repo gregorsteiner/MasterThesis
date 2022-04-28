@@ -141,6 +141,27 @@ fema.dis.agg[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
 
 
 
+
+######## Election Data ########
+
+
+# read presidential election data (from https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ)
+elec <- fread("countypres_2000-2020.csv")
+
+# get vote shares by county in 2016
+elec2016 <- elec[year == 2016,
+                 .(ShareDem = candidatevotes[party == "DEMOCRAT"] / totalvotes[party == "DEMOCRAT"],
+                   ShareRep = candidatevotes[party == "REPUBLICAN"] / totalvotes[party == "REPUBLICAN"]),
+                 by = .(fips = county_fips)]
+
+
+# add to assistance data
+fema.assist.agg <- merge(fema.assist.agg, elec2016,
+                         by = "fips", all.x = TRUE, all.y = FALSE)
+
+
+
+
 ######## Merge FEMA and SEDA data ########
 
 # merge seda and fema no. of disasters
@@ -177,6 +198,7 @@ dat[, TreatStart := ifelse(any(DisasterTreat == 1),
 
 # add assistance data
 dat <- merge(dat, fema.assist.agg,
+             by = c("fips", "year"),
              all.x = TRUE, all.y = TRUE)
 
 

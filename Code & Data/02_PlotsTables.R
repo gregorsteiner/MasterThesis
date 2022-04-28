@@ -32,9 +32,15 @@ vtable::sumtable(dat.summary,
 
 
 # plot cumulative disasters
-fema.cum <- aggregate(list("Disasters" = dat$CumuDisasters),
-                      list("fips" = dat$fips), function(x) x[!is.na(x)][length(x[!is.na(x)])])
-
+fema.cum <- aggregate(list("Disasters" = as.numeric(dat$CumuDisasters)),
+                      list("fips" = dat$fips), function(x) {
+                        
+                        res <- x[!is.na(x)][length(x[!is.na(x)])]
+                        if(length(res) == 0) return(0)
+                        
+                        return(res)
+                        
+                        })
 
 png("DisasterMap.png", width = wid, height = hei)
 
@@ -49,7 +55,7 @@ plot_usmap(data = fema.cum, values = "Disasters") +
 
 dev.off()
 
-guides(fill = guide_legend(reverse = TRUE))
+
 
 
 
