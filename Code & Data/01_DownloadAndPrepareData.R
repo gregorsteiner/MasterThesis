@@ -170,7 +170,13 @@ dat[, DisasterDummy := as.numeric(Disasters > 0)]
 dat[, DisasterTreat := as.numeric(cumsum(Disasters) > 0), by = fips]
 
 # add time to first treatment
-dat[, TreatStart := year - min(year[DisasterTreat == 1], na.rm = TRUE), by = fips]
+dat[, TimeToTreat := year - min(year[DisasterTreat == 1], na.rm = TRUE), by = fips]
+
+# add year of first treatment
+dat[, TreatStart := ifelse(any(DisasterTreat == 1),
+                           min(year[DisasterTreat == 1], na.rm = TRUE),
+                           1000)
+    , by = fips]
 
 # export as RDS
 saveRDS(dat, "Data.RDS")

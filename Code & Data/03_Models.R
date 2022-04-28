@@ -13,19 +13,29 @@ dat <- readRDS("Data.RDS")
 ######## Models ########
 
 
-# county fixed effects
-model <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
-                 sunab(DisasterTreat, TreatStart) + lninc50all| year + fips + grade + subject,
-               data = dat, vcov = "iid")
+# main model
+model.math <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
+                 sunab(TreatStart, year)| year + fips + grade,
+               data = dat[subject == "mth"], vcov = "iid")
+
+model.rla <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
+                     sunab(TreatStart, year)| year + fips + grade,
+                   data = dat[subject == "rla"], vcov = "iid")
 
 # automatically export as tex file
-etable(model, file = "../TeX Files/MainResults.tex", replace = TRUE,
-       label = "MainResults", title = "Results",
-       dict=c(cs_mn_all = "Mean test score", cs_mn_wbg = "White-Black",
-              cs_mn_mfg = "Male-Female", cs_mn_neg = "Adv.-Disadv.",
-              cs_mn_whg = "White-Hispanic",
-              DisasterDummy = "Disaster", year = "Year", grade = "Grade",
-              subject = "Subject", fips = "County",
-              lninc50all = "Log Income", unempall = "Unemployment"))
+etable(model.math, file = "../TeX Files/MainResultsMath.tex", replace = TRUE,
+       label = "MainResultsMath", title = "Results (Mathematics)",
+       dict = c(cs_mn_all = "Mean test score", cs_mn_wbg = "White-Black",
+                cs_mn_mfg = "Male-Female", cs_mn_neg = "Adv.-Disadv.",
+                cs_mn_whg = "White-Hispanic",
+                year = "Year", grade = "Grade", fips = "County",
+                lninc50all = "Log Income"))
 
+etable(model.rla, file = "../TeX Files/MainResultsRLA.tex", replace = TRUE,
+       label = "MainResultsRLA", title = "Results (RLA)",
+       dict = c(cs_mn_all = "Mean test score", cs_mn_wbg = "White-Black",
+                cs_mn_mfg = "Male-Female", cs_mn_neg = "Adv.-Disadv.",
+                cs_mn_whg = "White-Hispanic",
+                year = "Year", grade = "Grade", fips = "County",
+                lninc50all = "Log Income"))
 
