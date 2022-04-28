@@ -1,7 +1,7 @@
 
 ######## Preliminaries ########
 
-source("AuxFunctions.R")
+source("00_AuxFunctions.R")
 library(data.table)
 library(usmap)
 library(ggplot2)
