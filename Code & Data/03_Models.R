@@ -39,3 +39,23 @@ etable(model.rla, file = "../TeX Files/MainResultsRLA.tex", replace = TRUE,
                 year = "Year", grade = "Grade", fips = "County",
                 lninc50all = "Log Income"))
 
+
+# plots
+dep.vars <- c("Mean test score", "White-Black", "White-Hispanic",
+              "Male-Female", "Adv.-Disadv.")
+pch <- 16:(15+length(dep.vars))
+
+
+par(mfrow = c(1, 2))
+invisible(Map(function(sub, model){
+  iplot(model, main = sub, xlab = "Year",
+        pt.col = 1:length(dep.vars), pt.pch = pch)
+  legend("topright", legend = dep.vars,
+         col = 1:length(dep.vars), pch = pch)
+  
+}, c("Mathematics", "Reading & Language Arts"), list(model.math, model.rla)))
+
+
+
+
+
