@@ -7,6 +7,9 @@ library(data.table)
 library(fixest)
 
 
+hei <- 600
+wid <- 600
+
 # read data
 dat <- readRDS("Data.RDS")
 
@@ -46,7 +49,10 @@ dep.vars <- c("Mean test score", "White-Black", "White-Hispanic",
 pch <- 16:(15+length(dep.vars))
 
 
-par(mfrow = c(1, 2))
+png("ResultsPlot.png", width = wid, height = hei)
+
+par(mfrow = c(2, 1),
+    mar = c(4, 4, 2, 1))
 invisible(Map(function(sub, model){
   iplot(model, main = sub, xlab = "Year",
         pt.col = 1:length(dep.vars), pt.pch = pch)
@@ -55,6 +61,7 @@ invisible(Map(function(sub, model){
   
 }, c("Mathematics", "Reading & Language Arts"), list(model.math, model.rla)))
 
+dev.off()
 
 
 
