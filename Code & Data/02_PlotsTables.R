@@ -32,21 +32,9 @@ vtable::sumtable(dat.summary,
 
 ######## Application characteristics ########
 
-# voter share by applicant status
-plot(density(assist.cov[AssistanceApplicant == 1 & !is.na(MedInc2016),
-                        MedInc2016]),
-     main = "", xlab = "Median Income (2016)", type = "n")
-grid()
+# voter share and median income by applicant status
 
-lines(density(assist.cov[AssistanceApplicant == 1 & !is.na(MedInc2016),
-                         MedInc2016]),
-      col = 3, lwd = 2)
-lines(density(assist.cov[AssistanceApplicant == 0 & !is.na(MedInc2016),
-                         MedInc2016]),
-      col = 4, lwd = 2)
-legend("topright", legend = c("Applied", "Did not apply"),
-       lwd = 2, col = c(3, 4))
-
+png("AssistanceCovDensity.png", width = wid + 100, height = hei)
 
 par(mfrow = c(1, 2), mar = c(4, 4, 1, 1))
 invis.Map(function(x, xlab){
@@ -67,6 +55,8 @@ invis.Map(function(x, xlab){
          lwd = 2, col = c(3, 4))
 }, assist.cov[, .(MedInc2016, ShareDem2016)],
 c("Median Income (2016)", "Democratic Voter Share (2016 Election)"))
+
+dev.off()
 
 
 
