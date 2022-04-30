@@ -2,6 +2,11 @@
 ######## Auxiliary functions ########
 
 
+### invisible lapply and Map for plotting
+invis.lapply <- function(...) invisible(lapply(...))
+invis.Map <- function(...) invisible(Map(...))
+
+
 ### Coordinates to County function
 
 # Thanks to https://stackoverflow.com/questions/13316185/r-convert-zipcode-or-lat-long-to-county

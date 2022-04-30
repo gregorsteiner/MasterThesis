@@ -8,7 +8,6 @@ Natural disasters are declared as such by the president, usually upon request by
 Figure \ref{DisasterMap} shows the number of declared disasters between 2008 and 2018 across the US. It seems that the variation in the number of declared disasters may be driven by the governor's proactiveness in requesting a declaration. Thus, it could be interesting to compare counties on different sides of state borders, whose actual disaster exposure is likely very similar in order to analyze the effect of a declaration.
 
 
-
 \begin{figure}[!h]
 	\centering
 	\includegraphics[scale=0.7]{"../Code & Data/DisasterMap.png"}
@@ -28,6 +27,14 @@ FEMA also provides a dataset on  their Public Assistance Applicants Program Deli
 \end{figure}
 
 
+Figure \ref{AssistCovDensity} provides kernel density estimates for median income and democratic voter shares by whether a county applied for federal assistance. It seems that the median income of counties that applied is slightly lower than of those that did not apply.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.7]{"../Code & Data/AssistanceCovDensity.png"}
+	\caption{Kernel density estimates for Median Income and Democratic voter share by application status of counties}
+	\label{AssistCovDensity}
+\end{figure}
 
 
 \subsection{Standardized Testing Data}

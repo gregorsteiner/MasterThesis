@@ -11,6 +11,7 @@ wid <- 600
 
 
 dat <- setDT(readRDS("Data.RDS"))
+assist.cov <- setDT(readRDS("AssistanceCovData.RDS"))
 
 
 
@@ -27,6 +28,47 @@ dat.summary <- dat[, .(Disasters, "Disaster Dummy" = as.factor(DisasterDummy),
 
 vtable::sumtable(dat.summary,
                  out = "latex", file = "../TeX Files/SummaryStats.tex", anchor = "SumStats")
+
+
+######## Application characteristics ########
+
+# voter share by applicant status
+plot(density(assist.cov[AssistanceApplicant == 1 & !is.na(MedInc2016),
+                        MedInc2016]),
+     main = "", xlab = "Median Income (2016)", type = "n")
+grid()
+
+lines(density(assist.cov[AssistanceApplicant == 1 & !is.na(MedInc2016),
+                         MedInc2016]),
+      col = 3, lwd = 2)
+lines(density(assist.cov[AssistanceApplicant == 0 & !is.na(MedInc2016),
+                         MedInc2016]),
+      col = 4, lwd = 2)
+legend("topright", legend = c("Applied", "Did not apply"),
+       lwd = 2, col = c(3, 4))
+
+
+par(mfrow = c(1, 2), mar = c(4, 4, 1, 1))
+invis.Map(function(x, xlab){
+  # filter by applicant status and remove nas
+  bool1 <- assist.cov$AssistanceApplicant == 1 & !is.na(x)
+  bool2 <- assist.cov$AssistanceApplicant == 0 & !is.na(x)
+  # plot
+  plot(density(x[bool2]),
+       main = "", xlab = xlab, type = "n")
+  grid()
+  
+  lines(density(x[bool1]),
+        col = 3, lwd = 2)
+  lines(density(x[bool2]),
+        col = 4, lwd = 2)
+  # add legend
+  legend("topright", legend = c("Applied", "Did not apply"),
+         lwd = 2, col = c(3, 4))
+}, assist.cov[, .(MedInc2016, ShareDem2016)],
+c("Median Income (2016)", "Democratic Voter Share (2016 Election)"))
+
+
 
 ######## Maps ########
 

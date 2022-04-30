@@ -148,17 +148,26 @@ fema.dis.agg[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
 # read presidential election data (from https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ)
 elec <- fread("countypres_2000-2020.csv")
 
-# get vote shares by county in 2016
-elec2016 <- elec[year == 2016,
-                 .(ShareDem = candidatevotes[party == "DEMOCRAT"] / totalvotes[party == "DEMOCRAT"],
-                   ShareRep = candidatevotes[party == "REPUBLICAN"] / totalvotes[party == "REPUBLICAN"]),
-                 by = .(fips = county_fips)]
+# create assistance covariate data
+assist.cov <- elec[year == 2016,
+                   .(ShareDem2016 = candidatevotes[party == "DEMOCRAT"] / totalvotes[party == "DEMOCRAT"],
+                     ShareRep2016 = candidatevotes[party == "REPUBLICAN"] / totalvotes[party == "REPUBLICAN"],
+                     AssistanceApplicant = as.numeric(fips %in% fema.assistance$fips)),
+                   by = .(fips = county_fips)]
+
+# add median income
+assist.cov <- merge(assist.cov, unique(seda.comb[year == 2016,
+                                                 .(MedInc2016 = exp(lninc50all),
+                                                   fips = sedacounty)]),
+                    by = "fips", all.x = TRUE, all.y = FALSE)
+
+# save as file
+saveRDS(assist.cov, "AssistanceCovData.RDS")
 
 
 # add to assistance data
-fema.assist.agg <- merge(fema.assist.agg, elec2016,
+fema.assist.agg <- merge(fema.assist.agg, assist.cov,
                          by = "fips", all.x = TRUE, all.y = FALSE)
-
 
 
 
