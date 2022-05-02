@@ -27,12 +27,23 @@ FEMA also provides a dataset on  their Public Assistance Applicants Program Deli
 \end{figure}
 
 
-Figure \ref{AssistCovDensity} provides kernel density estimates for median income and democratic voter shares by whether a county applied for federal assistance. It seems that the median income of counties that applied is slightly lower than of those that did not apply.
+Figure \ref{AssistCovBoxplot} and figure \ref{AssistCovDensity} show boxplots and kernel density estimates by county application status. Counties that did apply for federal disaster assistance tend to have lower median income, higher poverty rates, and higher shares of single motherhood. Thus, it seems that counties that had to apply for federal disaster assistance were more socially vulnerable in the first place. Visually, the distribution of democratic votes in the 2016 election does not seem to be different in the two groups.
+
+
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.7]{"../Code & Data/AssistanceCovBoxplot.png"}
+	\caption{Boxplots by application status}
+	\label{AssistCovBoxplot}
+\end{figure}
+
+
 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[scale=0.7]{"../Code & Data/AssistanceCovDensity.png"}
-	\caption{Kernel density estimates for Median Income and Democratic voter share by application status of counties}
+	\caption{Kernel density estimates by application status}
 	\label{AssistCovDensity}
 \end{figure}
 
@@ -45,7 +56,7 @@ Test scores are cohort-standardized, meaning they can be interpreted relatively 
 
 In addition to mean test scores, the data includes estimates of gap estimates for various subgroups, e.g. mean difference in test scores among white and black students. These are only reported if the subgroups' sample sizes are large enough. Thus, the number of observations for some of the gap statistics is substantially smaller.
 
-Furthermore, the Stanford Education Data Archive maintains a large set of covariates for each county and year. They include variables like the county's median income, unemployment and ethnic proportions.
+Furthermore, the Stanford Education Data Archive maintains a large set of covariates for each county and year. They include variables like the county's median income, unemployment and poverty rate.
 
 
 \subsection{Combining disaster and testing data}

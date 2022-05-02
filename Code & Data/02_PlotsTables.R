@@ -14,7 +14,6 @@ dat <- setDT(readRDS("Data.RDS"))
 assist.cov <- setDT(readRDS("AssistanceCovData.RDS"))
 
 
-
 ######## Summary Statistics ########
 
 dat.summary <- dat[, .(Disasters, "Disaster Dummy" = as.factor(DisasterDummy),
@@ -34,9 +33,12 @@ vtable::sumtable(dat.summary,
 
 # voter share and median income by applicant status
 
+
 png("AssistanceCovDensity.png", width = wid + 100, height = hei)
 
-par(mfrow = c(1, 2), mar = c(4, 4, 1, 1))
+col <- c("mediumblue", "mediumspringgreen")
+
+par(mfrow = c(2, 2), mar = c(4, 4, 1, 1))
 invis.Map(function(x, xlab){
   # filter by applicant status and remove nas
   bool1 <- assist.cov$AssistanceApplicant == 1 & !is.na(x)
@@ -47,14 +49,39 @@ invis.Map(function(x, xlab){
   grid()
   
   lines(density(x[bool1]),
-        col = 3, lwd = 2)
+        col = col[1], lwd = 2)
   lines(density(x[bool2]),
-        col = 4, lwd = 2)
+        col = col[2], lwd = 2)
   # add legend
   legend("topright", legend = c("Applied", "Did not apply"),
-         lwd = 2, col = c(3, 4))
-}, assist.cov[, .(MedInc2016, ShareDem2016)],
-c("Median Income (2016)", "Democratic Voter Share (2016 Election)"))
+         lwd = 2, col = col)
+}, assist.cov[, .(MedInc2016, ShareDem2016, PovertyRate, SingleMother)],
+c("Median Income (2016)", "Democratic Votes (2016 Election)",
+  "Poverty Rate (2016)", "Share of Single Mothers (2016)"))
+
+dev.off()
+
+
+
+# Boxplots
+
+# set applicant status as factor
+assist.cov[, AssistanceApplicant := factor(AssistanceApplicant,
+                                           labels = c("Did not apply", "Applied"))]
+
+
+png("AssistanceCovBoxplot.png", width = wid + 100, height = hei)
+
+par(mfrow = c(2, 2), mar = c(3, 4, 1, 1))
+invis.Map(function(x, ylab){
+  # create boxplot
+  boxplot(x ~ AssistanceApplicant,
+          data = assist.cov, col = col,
+          xlab = "", ylab = ylab)
+  
+}, assist.cov[, .(MedInc2016, ShareDem2016, PovertyRate, SingleMother)],
+c("Median Income (2016)", "Democratic Votes (2016 Election)",
+  "Poverty Rate (2016)", "Share of Single Mothers (2016)"))
 
 dev.off()
 

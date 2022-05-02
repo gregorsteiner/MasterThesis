@@ -157,7 +157,9 @@ assist.cov <- elec[year == 2016,
 
 # add median income
 assist.cov <- merge(assist.cov, unique(seda.comb[year == 2016,
-                                                 .(MedInc2016 = exp(lninc50all),
+                                                 .(MedInc2016 = exp(lninc50all), 
+                                                   PovertyRate = povertyall,
+                                                   SingleMother = single_momall,
                                                    fips = sedacounty)]),
                     by = "fips", all.x = TRUE, all.y = FALSE)
 
