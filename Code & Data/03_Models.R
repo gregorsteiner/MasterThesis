@@ -13,16 +13,27 @@ wid <- 600
 # read data
 dat <- readRDS("Data.RDS")
 
+
+
 ######## Models ########
+
+
+mod <- staggered::staggered_sa(dat[subject == "mth"],
+                               i = "fips", t = "year",
+                               g = "TreatStart", y = "cs_mn_all",
+                               estimand = "eventstudy",
+                               eventTime = c(0:7))
+summary(mod)
+
 
 
 # main model
 model.math <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
-                 sunab(TreatStart, year)| year + fips + grade,
+                 sunab(TreatStart, year) + lninc50all| year + fips + grade,
                data = dat[subject == "mth"], vcov = "iid")
 
 model.rla <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
-                     sunab(TreatStart, year)| year + fips + grade,
+                     sunab(TreatStart, year)+ lninc50all| year + fips + grade,
                    data = dat[subject == "rla"], vcov = "iid")
 
 # automatically export as tex file
@@ -47,17 +58,17 @@ etable(model.rla, file = "../TeX Files/MainResultsRLA.tex", replace = TRUE,
 dep.vars <- c("Mean test score", "White-Black", "White-Hispanic",
               "Male-Female", "Adv.-Disadv.")
 pch <- 16:(15+length(dep.vars))
+cols <- viridisLite::viridis(length(dep.vars))
 
-
-png("ResultsPlot.png", width = wid, height = hei)
+png("ResultsPlot.png", width = wid + 100, height = hei + 200)
 
 par(mfrow = c(2, 1),
     mar = c(4, 4, 2, 1))
 invisible(Map(function(sub, model){
   iplot(model, main = sub, xlab = "Year",
-        pt.col = 1:length(dep.vars), pt.pch = pch)
+        pt.col = cols, pt.pch = pch, ci.col = cols)
   legend("topright", legend = dep.vars,
-         col = 1:length(dep.vars), pch = pch)
+         col = cols, pch = pch)
   
 }, c("Mathematics", "Reading & Language Arts"), list(model.math, model.rla)))
 

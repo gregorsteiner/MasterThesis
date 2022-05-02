@@ -1,18 +1,27 @@
 
 \section{Empirical Strategy}
 
+We employ an event study design to measure the effect of natural disasters on standardized test outcomes. An event study design is a staggered adoption design where units are first-treated at different points in time, and there may or may not be never-treated units \citep{Sun_2021}.
 
-
-In order to identify a causal effect, unobservable determinants of a county's mean test score must be unrelated to natural disasters conditional on observable characteristics of that county. The occurrence of natural disasters is plausibly random conditional on location. Furthermore conditioning on the year should account for an increasing trend in natural disasters due to climate change. Thus, independence of mean test scores and natural disasters is plausible conditional on county and year fixed effects.
+In order to identify a causal effect, unobservable determinants of a county's test scores must be unrelated to natural disasters conditional on observable characteristics of that county. The occurrence of natural disasters is plausibly random conditional on location. Furthermore conditioning on the year should account for an increasing trend in natural disasters due to climate change. Thus, independence of mean test scores and natural disasters is plausible conditional on county and year fixed effects.
 
 Consequently, the baseline specification is
 \begin{align} \label{baseline}
 	y_{i, t, g} = \sum_{\tau = -9, \tau \neq -1}^{9} \beta_\tau D_{i, t-\tau} + \alpha_i + \lambda_t + \zeta_g + X_{i, t} \gamma + \varepsilon_{i, t, g} \;,
 \end{align}
-where $y_{i, t, g}$ is the outcome of interest for county $i$, year $t$, and grade $g$. County, year, and grade fixed-effects are given by $\alpha_i$, $\lambda_t$, and $\zeta_g$ respectively and $X_{i, t}$ is a row vector of additional control variables. $D_{i, t-\tau}$ is a treatment indicator for county $i$ in year $t-\tau$. That is, $D_{i, t-\tau} = 1$ if the county experienced a disaster $\tau$ years ago at time $t$.
+where $y_{i, t, g}$ is the outcome of interest for county $i$, year $t$, and grade $g$. County, year, and grade fixed-effects are given by $\alpha_i$, $\lambda_t$, and $\zeta_g$ respectively and $X_{i, t}$ is a row vector of additional control variables. $D_{i, t-\tau}$ is a treatment indicator for county $i$ in year $t-\tau$. That is, $D_{i, t-\tau} = 1$ if the county had already experienced a disaster $\tau$ years ago at time $t$. Since we consider the time period 2009-2018, $-9 \leq \tau \leq 9$.
 
-Note that treatment must be absorbing, meaning the sequence $(D_{i, t})_{t=1}^T$ must be a non-decreasing sequence of $0$s and $1$s. In other words, after being treated for the first time a county stays treated. In the present application this means treatment refers to having experienced a disaster rather than experiencing a disaster in that year. This is common practice and does not cause bias due to the conditionally random nature of natural disasters \citep[see][]{Deryugina_2017}. Thus, this captures the long term effects of having experienced a natural disaster.
+Note that treatment must be absorbing, meaning the sequence $(D_{i, t})_{t=1}^T$ must be a non-decreasing sequence of $0$s and $1$s. In other words, after being treated for the first time a county stays treated. In the present application this means treatment refers to having experienced a disaster rather than experiencing a disaster in that year. This is common practice and does not cause bias due to the conditionally random nature of natural disasters \citep{Deryugina_2017}. Thus, the emphasis lies on cumulative long-term effects rather than instantaneous short-term effects.
 
-It is implausible that the treatment effects are constant in our setting. The extent of disasters varies substantially, and also the level of preparation for such disasters likely displays high variance across counties. 
+It is implausible that the treatment effects are constant in our setting. The extent of disasters varies substantially, and also the level of preparation for such disasters likely displays high variance across counties. Thus, we utilize the interaction-weighted (IW) estimator proposed by \cite{Sun_2021} that is robust to treatment effects heterogeneity.
+
+The main interest lies on the cohort average treatment effect on the treated (CATT),
+\begin{align*}
+	CATT_{t, \tau} := \E \left[ Y_{i, t+\tau} - Y_{i, t+\tau}^{\infty} | E_i = t \right],
+\end{align*}
+where $Y_{i, t+\tau}^{\infty}$ is the counterfactual of being never treated and $E_i$ denotes the first treatment period. Thus, $CATT_{t, \tau}$ is the average treatment effect on the treated $\tau$ years after being treated for the first time for the cohort that was first treated in year $t$. Under parallel trends and no anticipation of intial treatment, the IW estimator by \cite{Sun_2021} consistently estimates the CATT.
+
+Under quasi-random treatment assignment, the parallel trends assumption is likely justified \citep{Roth_2022}. 
+
 
 

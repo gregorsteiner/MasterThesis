@@ -67,6 +67,7 @@ dev.off()
 
 # set applicant status as factor
 assist.cov[, AssistanceApplicant := factor(AssistanceApplicant,
+                                           levels = c(0, 1),
                                            labels = c("Did not apply", "Applied"))]
 
 
