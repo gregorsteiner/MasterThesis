@@ -33,12 +33,28 @@ The estimation procedure consists of three main steps:
 	\end{align}
 	where $C$ is the set of comparison cohorts. In our case $C$ is the never treated cohort, i.e. $C = {\infty}$. If there is a cohort that is always treated, i.e. that already receives treatment in the first period, then we need to exclude this cohort. The coeffiecient estimator $\widehat{\delta}_{e, \tau}$ that we obtain from (\ref{CATTDID}) estimates $CATT_{e, \tau}$.
 	
-	\item Weight the estimators by the share of the respective cohort in the sample in that period
+	\item Weight the estimators by the share of the respective cohort in the sample in that period. Let $\hat{W}^\tau$ be a weight matrix with element $(t, e)$
+	\begin{align*}
+		[\widehat{W}^\tau]_{t, e} := \frac{\mathds{1}\{t - e = \tau\} \sum_{i = 1}^{N} \mathds{1}\{E_i = e\}}{\sum_{e \in h^{\tau}} \sum_{i = 1}^{N} \mathds{1}\{E_i = e\}},
+	\end{align*}
+	where $h^{\tau} := \{e: 1 - \tau \leq e \leq \max(E_i) - 1 - \tau\}$ is the set of cohorts that experience at least $\tau$ periods of treatment.
 	
-	\item Take the average over all $CATT_{e, \tau}$ estimates weighted by the cohort share $W_e$.
+	\item Take the average over all $CATT_{e, \tau}$ estimates weighted by the cohort shares in the weight matrices. Let $vec(A)$ be the vectorize operator that vectorizes matrix $A$ by stacking its columns and let $\widehat{\delta}$ be the vector that collects $\widehat{\delta}_{e, \tau}$ for all $e$ and $\tau$. Then, the IW estimator $\widehat{v}_g$ for bin $g$ can be written as 
+	\begin{align}
+		\widehat{v}_g := \frac{1}{|g|} \sum_{\tau \in g} [vec(\widehat{W}^\tau)]^\intercal \widehat{\delta}.
+	\end{align}
+	For a singleton bin $g = \{\tau\}$, this simplifies to
+	\begin{align*}
+		\widehat{v}_{g} := [vec(\widehat{W}^\tau)]^\intercal \widehat{\delta}.
+	\end{align*}
+	
 \end{enumerate}
 
-
+Under some standard assumptions, $\widehat{v}_g$ is asymptotically normal \citep[for a proof and a detailed description of said assumptions see][Appendix C]{Sun_2021}. Under the additional assumptions of parallel trends and no anticipatory behavior, $\widehat{v}_g$ is consistent, that is it converges in probability to
+\begin{align*}
+	\widehat{v}_g \overset{p}{\to} [vec(W^{\tau})]^\intercal \delta = \sum_{e \in h^{\tau}} \Prob(E_i = e | E_i \in h^{\tau}) CATT_{e, \tau} \; ,
+\end{align*}
+where $W^{\tau}$ is the probability limit of the weight matrix $\widehat{W}^\tau$.
 
 
 Under quasi-random treatment assignment, the parallel trends assumption is likely justified \citep{Roth_2022}. 
