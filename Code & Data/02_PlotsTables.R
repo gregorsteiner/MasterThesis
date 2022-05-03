@@ -88,6 +88,32 @@ dev.off()
 
 
 
+# Treatment plot
+dat.treat <- dat[order(TimeToTreat),
+                 .(MeanScoreMath = mean(cs_mn_all[subject == "mth"], na.rm = TRUE),
+                   MeanScoreRLA = mean(cs_mn_all[subject == "rla"], na.rm = TRUE)),
+                 by = .("Years to Treatment" = TimeToTreat)]
+
+dat.treat[, ":="(TreatmentMath = MeanScoreMath[is.na(`Years to Treatment`)] - MeanScoreMath,
+                 TreatmentRLA = MeanScoreRLA[is.na(`Years to Treatment`)] - MeanScoreRLA)]
+
+plot(dat.treat$`Years to Treatment`, dat.treat$TreatmentMath, type = "n",
+     ylab = "Difference in mean test scores", xlab = "Years to Treatment",
+     ylim = range(dat.treat$TreatmentMath, dat.treat$TreatmentRLA) + c(-0.01, 0.01))
+grid()
+abline(v = 0, lwd = 2, col = 2)
+points(dat.treat$`Years to Treatment`, dat.treat$TreatmentMath,
+       pch = 18, col = 3)
+lines(dat.treat$`Years to Treatment`, dat.treat$TreatmentMath,
+      lwd = 2, col = 3)
+points(dat.treat$`Years to Treatment`, dat.treat$TreatmentRLA,
+       pch = 18, col = 4)
+lines(dat.treat$`Years to Treatment`, dat.treat$TreatmentRLA,
+      lwd = 2, col = 4)
+
+
+
+
 ######## Maps ########
 
 
@@ -153,6 +179,8 @@ plot_usmap(data = dat[, .("Share Democrats" = mean(ShareDem, na.rm = TRUE)),
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14),
         plot.margin= grid::unit(c(0,0,0,0), "mm"))
+
+
 
 
 
