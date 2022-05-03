@@ -1,6 +1,8 @@
 
 \section{Empirical Strategy}
 
+\subsection{Setting}
+
 We employ an event study design to measure the effect of natural disasters on standardized test outcomes. An event study design is a staggered adoption design where units are first-treated at different points in time, and there may or may not be never-treated units \citep{Sun_2021}.
 
 In order to identify a causal effect, unobservable determinants of a county's test scores must be unrelated to natural disasters conditional on observable characteristics of that county. The occurrence of natural disasters is plausibly random conditional on location. Furthermore conditioning on the year should account for an increasing trend in natural disasters due to climate change. Thus, independence of mean test scores and natural disasters is plausible conditional on county and year fixed effects.
@@ -13,13 +15,31 @@ where $y_{i, t, g}$ is the outcome of interest for county $i$, year $t$, and gra
 
 Note that treatment must be absorbing, meaning the sequence $(D_{i, t})_{t=1}^T$ must be a non-decreasing sequence of $0$s and $1$s. In other words, after being treated for the first time a county stays treated. In the present application this means treatment refers to having experienced a disaster rather than experiencing a disaster in that year. This is common practice and does not cause bias due to the conditionally random nature of natural disasters \citep{Deryugina_2017}. Thus, the emphasis lies on cumulative long-term effects rather than instantaneous short-term effects.
 
-It is implausible that the treatment effects are constant in our setting. The extent of disasters varies substantially, and also the level of preparation for such disasters likely displays high variance across counties. Thus, we utilize the interaction-weighted (IW) estimator proposed by \cite{Sun_2021} that is robust to treatment effects heterogeneity.
+It is implausible that the treatment effects are constant in our setting. The extent of disasters varies substantially, and also the level of preparation for such disasters likely displays high variance across counties. 
 
-The main interest lies on the cohort average treatment effect on the treated (CATT),
+\subsection{Interaction-weighted estimator}
+
+We utilize the interaction-weighted (IW) estimator proposed by \cite{Sun_2021} that is robust to treatment effects heterogeneity. The main interest lies on the cohort average treatment effect on the treated (CATT),
 \begin{align*}
-	CATT_{t, \tau} := \E \left[ Y_{i, t+\tau} - Y_{i, t+\tau}^{\infty} | E_i = t \right],
+	CATT_{e, \tau} := \E \left[ Y_{i, t+\tau} - Y_{i, t+\tau}^{\infty} | E_i = e \right],
 \end{align*}
-where $Y_{i, t+\tau}^{\infty}$ is the counterfactual of being never treated and $E_i$ denotes the first treatment period. Thus, $CATT_{t, \tau}$ is the average treatment effect on the treated $\tau$ years after being treated for the first time for the cohort that was first treated in year $t$. Under parallel trends and no anticipation of intial treatment, the IW estimator by \cite{Sun_2021} consistently estimates the CATT.
+where $Y_{i, t+\tau}^{\infty}$ is the counterfactual of being never treated and $E_i$ denotes the first treatment period. Thus, $CATT_{e, \tau}$ is the average treatment effect on the treated $\tau$ years after being treated for the first time for the cohort that was first treated in year $e$.
+
+The estimation procedure consists of three main steps:
+\begin{enumerate}
+	\item Estimate $CATT_{e, \tau}$ using a linear fixed effects specification with interactions between relative period indicators and cohort indicators:
+	\begin{align} \label{CATTDID}
+		y_{i, t, g} = \sum_{e \notin C}^{}\sum_{\tau \neq -1}^{} \delta_{e, \tau} (\mathds{1}\{E_i = e\} D_{i, t-\tau}) + \alpha_i + \lambda_t + \zeta_g + \varepsilon_{i, t, g} \;,
+	\end{align}
+	where $C$ is the set of comparison cohorts. In our case $C$ is the never treated cohort, i.e. $C = {\infty}$. If there is a cohort that is always treated, i.e. that already receives treatment in the first period, then we need to exclude this cohort. The coeffiecient estimator $\widehat{\delta}_{e, \tau}$ that we obtain from (\ref{CATTDID}) estimates $CATT_{e, \tau}$.
+	
+	\item Weight the estimators by the share of the respective cohort in the sample in that period
+	
+	\item Take the average over all $CATT_{e, \tau}$ estimates weighted by the cohort share $W_e$.
+\end{enumerate}
+
+
+
 
 Under quasi-random treatment assignment, the parallel trends assumption is likely justified \citep{Roth_2022}. 
 
