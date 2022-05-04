@@ -16,6 +16,7 @@ assist.cov <- setDT(readRDS("AssistanceCovData.RDS"))
 
 ######## Summary Statistics ########
 
+# dataset summary
 dat.summary <- dat[, .(Disasters, "Disaster Dummy" = as.factor(DisasterDummy),
                        "Cumulative Disasters" = CumuDisasters, "Grade" = as.factor(grade),
                        "Subject" = factor(subject, labels = c("Mathematics", "RLA")),
@@ -27,6 +28,16 @@ dat.summary <- dat[, .(Disasters, "Disaster Dummy" = as.factor(DisasterDummy),
 
 vtable::sumtable(dat.summary,
                  out = "latex", file = "../TeX Files/SummaryStats.tex", anchor = "SumStats")
+
+
+
+# dependent variables summary
+dat.summary <- dat[, .("Mean test score" = cs_mn_all, "White-Black gap" = cs_mn_wbg,
+                       "White-Hispanic gap" = cs_mn_whg, "Male-Female gap" = cs_mn_mfg,
+                       "Disadvantaged gap" = cs_mn_neg)]
+
+vtable::sumtable(dat.summary,
+                 out = "latex", file = "../TeX Files/SummaryStatsDep.tex", anchor = "SumStatsDep")
 
 
 ######## Application characteristics ########

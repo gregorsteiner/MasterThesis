@@ -27,7 +27,9 @@ FEMA also provides a dataset on  their Public Assistance Applicants Program Deli
 \end{figure}
 
 
-Figure \ref{AssistCovBoxplot} and figure \ref{AssistCovDensity} show boxplots and kernel density estimates by county application status. Counties that did apply for federal disaster assistance tend to have lower median income, higher poverty rates, and higher shares of single motherhood. Thus, it seems that counties that had to apply for federal disaster assistance were more socially vulnerable in the first place. Visually, the distribution of democratic votes in the 2016 election does not seem to be different in the two groups.
+Figure \ref{AssistCovBoxplot} and figure \ref{AssistCovDensity} show boxplots and kernel density estimates by county application status. Counties that did apply for federal disaster assistance tend to have lower median income, higher poverty rates, and higher shares of single motherhood. Thus, it seems that counties that had to apply for federal disaster assistance were more socially vulnerable in the first place. However, the direction of causality is not clear. Possibly these counties are more vulnerable to natural disasters and are also poorer or more socially vulnerable because of it. Alternatively, counties that are poorer could be more likely to apply for public disaster aid as they have fewer private resources.
+
+It is also interesting whether variation in the federal assistance procedure may be driven by political factors. Visually, the distribution of democratic votes in the 2016 election (almost coincides with the start of the Public Assistance Applicants Program Deliveries dataset) does not seem to be different in the two groups.
 
 
 
@@ -63,9 +65,11 @@ Furthermore, the Stanford Education Data Archive maintains a large set of covari
 
 Natural disasters should only have an effect on test scores if they occur before the test. Standardized tests are generally administered during spring. We will use March 1st as a cut-off point. Thus, any disaster happening within the same school year before the 1st of March will be considered. School years tend to start in late August or early September with some variation across states. We will use September 1st, meaning any disaster happening between September 1st and March 1st will be counted for a given school year.
 
-Each disaster is assigned to a school year as described above. Then, disaster and test score data can be merged by school year and county. This yields a panel data set with six grades and two subjects for each county-year combination. Table \ref{SumStats} shows summary statistics for all relevant variables
+Each disaster is assigned to a school year as described above. Then, disaster and test score data can be merged by school year and county. This yields a panel data set with six grades and two subjects for each county-year combination.
 
-\input{SummaryStats.tex}
+The outcomes of interest are mean test scores by county, and achievement gaps between white and black, white and hispanic, male and female, and economically advantaged and disadvantaged students. Table \ref{SumStatsDep} shows summary statistics for all five outcomes of interest. 
+
+\input{SummaryStatsDep.tex}
 
 
 
