@@ -6,6 +6,7 @@ output:
   md_document:
     variant: markdown_github
 bibliography: "TeX files/references.bib" 
+always_allow_html: true
 ---
 
 ```{r setup, include=FALSE}
@@ -33,20 +34,33 @@ dat <- readRDS("Code & Data/Data.RDS")
 
 # Natural Disasters and Education
 
-In my thesis I explore the link between natural disasters and education outcomes. The Stanford Education Data Archive [@SEDA] provides summary statistics for standardized test scores by county, year, grade and subject. Data on natural disasters is available at the FEMA database and the **rfema** package [@rfema] provides easy access.
+In my thesis I explore the link between natural disasters and education outcomes. The Stanford Education Data Archive [@SEDA] provides standardized test scores by county, year, grade and subject. Data on natural disasters is available at the FEMA database and the **rfema** package [@rfema] provides easy access.
 
-Below you can see the number of cumulative disasters by county.
+Below you can see the number of cumulative disasters by county from 2008/2009 to 2017/2018.
 
 ```{r}
 knitr::include_graphics("Code & Data/DisasterMap.png")
 
 ```
 
-To compare, here is the map of average test scores by county. Visually, there seems to be some correlation.
+The outcomes of interest are Mean test scores by county, and achievement gaps between white and black, white and hispanic, male and female, and economically advantaged and disadvantaged students. 
 
 ```{r}
-knitr::include_graphics("Code & Data/TestScoresMap.png")
+dat.summary <- dat[, .("Mean test score" = cs_mn_all, "White-Black gap" = cs_mn_wbg,
+                       "White-Hispanic gap" = cs_mn_whg, "Male-Female gap" = cs_mn_mfg,
+                       "Disadvantaged gap" = cs_mn_neg)]
+
+vtable::sumtable(dat.summary)
 ```
+
+
+
+To identify a causal effect, I use an event study design. Due to likely very heterogenous treatment effects, I employ the estimator by @Sun_2021. Below you can see a plot of the treatment effects by treatment timing.
+
+```{r}
+knitr::include_graphics("Code & Data/ResultsPlot.png")
+```
+
 
 
 
