@@ -18,16 +18,13 @@ dat <- readRDS("Data.RDS")
 ######## Models ########
 
 
-# remove always treated units
-
-
 # main model
 model.math <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
-                 sunab(TreatStart, year, ref.p = c(-9, -1)) + lninc50all| year + fips + grade,
+                 sunab(TreatStart, year, bin.rel = c(-5:-9, 5:7)) + lninc50all| year + fips + grade,
                data = dat[subject == "mth"], vcov = "iid")
 
 model.rla <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
-                     sunab(TreatStart, year, ref.p = c(-9, -1))+ lninc50all| year + fips + grade,
+                     sunab(TreatStart, year, bin.rel = c(-5:-9, 5:7)) + lninc50all| year + fips + grade,
                    data = dat[subject == "rla"], vcov = "iid")
 
 # automatically export as tex file
