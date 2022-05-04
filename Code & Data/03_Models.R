@@ -20,11 +20,11 @@ dat <- readRDS("Data.RDS")
 
 # main model
 model.math <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
-                 sunab(TreatStart, year, bin.rel = c(-5:-9, 5:7)) + lninc50all| year + fips + grade,
+                 sunab(TreatStart, year, bin.rel = c(-5:-9)) + lninc50all| year + fips + grade,
                data = dat[subject == "mth"], vcov = "iid")
 
 model.rla <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
-                     sunab(TreatStart, year, bin.rel = c(-5:-9, 5:7)) + lninc50all| year + fips + grade,
+                     sunab(TreatStart, year, bin.rel = c(-5:-9)) + lninc50all| year + fips + grade,
                    data = dat[subject == "rla"], vcov = "iid")
 
 # automatically export as tex file
@@ -58,13 +58,25 @@ par(mfrow = c(2, 1),
 invisible(Map(function(sub, model){
   iplot(model, main = sub, xlab = "Year",
         pt.col = cols, pt.pch = pch, ci.col = cols)
-  legend("topright", legend = dep.vars,
+  legend("bottomleft", legend = dep.vars,
          col = cols, pch = pch)
   
 }, c("Mathematics", "Reading & Language Arts"), list(model.math, model.rla)))
 
 dev.off()
 
+
+
+# residuals
+res <- residuals(model.math)
+
+par(mfrow = c(2, 3))
+invisible(apply(res, 2, function(x){
+  y <- x[!is.na(x)]
+  
+  qqnorm(y)
+  qqline(y)
+}))
 
 
 
