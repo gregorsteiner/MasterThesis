@@ -18,22 +18,16 @@ dat <- readRDS("Data.RDS")
 ######## Models ########
 
 
-mod <- staggered::staggered_sa(dat[subject == "mth"],
-                               i = "fips", t = "year",
-                               g = "TreatStart", y = "cs_mn_all",
-                               estimand = "eventstudy",
-                               eventTime = c(0:7))
-summary(mod)
-
+# remove always treated units
 
 
 # main model
 model.math <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
-                 sunab(TreatStart, year) + lninc50all| year + fips + grade,
+                 sunab(TreatStart, year, ref.p = c(-9, -1)) + lninc50all| year + fips + grade,
                data = dat[subject == "mth"], vcov = "iid")
 
 model.rla <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
-                     sunab(TreatStart, year)+ lninc50all| year + fips + grade,
+                     sunab(TreatStart, year, ref.p = c(-9, -1))+ lninc50all| year + fips + grade,
                    data = dat[subject == "rla"], vcov = "iid")
 
 # automatically export as tex file
