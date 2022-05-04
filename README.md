@@ -11,7 +11,7 @@ Below you can see the number of cumulative disasters by county from
 
 <img src="Code & Data/DisasterMap.png" width="600" />
 
-The outcomes of interest are Mean test scores by county, and achievement
+The outcomes of interest are mean test scores by county, and achievement
 gaps between white and black, white and hispanic, male and female, and
 economically advantaged and disadvantaged students.
 
