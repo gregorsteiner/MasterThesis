@@ -19,35 +19,38 @@ dat <- readRDS("Data.RDS")
 
 
 # main model
-model.math <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
-                 sunab(TreatStart, year, bin.rel = c(-5:-9)) + lninc50all| year + fips + grade,
+model.math <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+                 sunab(TreatStart, year, bin.rel = c(-5:-9)) + lninc50all | year + fips + grade,
                data = dat[subject == "mth"], vcov = "iid")
 
-model.rla <- feols(c(cs_mn_all, cs_mn_wbg, cs_mn_whg, cs_mn_mfg, cs_mn_neg) ~ 
-                     sunab(TreatStart, year, bin.rel = c(-5:-9)) + lninc50all| year + fips + grade,
+model.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+                     sunab(TreatStart, year, bin.rel = c(-5:-9)) | year + fips + grade,
                    data = dat[subject == "rla"], vcov = "iid")
 
 # automatically export as tex file
 etable(model.math, file = "../TeX Files/MainResultsMath.tex", replace = TRUE,
        label = "MainResultsMath", title = "Results (Mathematics)",
-       dict = c(cs_mn_all = "Mean test score", cs_mn_wbg = "White-Black",
-                cs_mn_mfg = "Male-Female", cs_mn_neg = "Adv.-Disadv.",
-                cs_mn_whg = "White-Hispanic",
+       dict = c("Overall" = cs_mn_all,
+                "Black" = cs_mn_blk,
+                "Hispanic" = cs_mn_hsp,
+                "Female" = cs_mn_fem,
+                "Econ. Disadv." = cs_mn_ecd),
                 year = "Year", grade = "Grade", fips = "County",
                 lninc50all = "Log Income"))
 
 etable(model.rla, file = "../TeX Files/MainResultsRLA.tex", replace = TRUE,
        label = "MainResultsRLA", title = "Results (RLA)",
-       dict = c(cs_mn_all = "Mean test score", cs_mn_wbg = "White-Black",
-                cs_mn_mfg = "Male-Female", cs_mn_neg = "Adv.-Disadv.",
-                cs_mn_whg = "White-Hispanic",
+       dict = c("Overall" = cs_mn_all,
+                "Black" = cs_mn_blk,
+                "Hispanic" = cs_mn_hsp,
+                "Female" = cs_mn_fem,
+                "Econ. Disadv." = cs_mn_ecd),
                 year = "Year", grade = "Grade", fips = "County",
                 lninc50all = "Log Income"))
 
 
 # plots
-dep.vars <- c("Mean test score", "White-Black", "White-Hispanic",
-              "Male-Female", "Adv.-Disadv.")
+dep.vars <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")
 pch <- 16:(15+length(dep.vars))
 cols <- viridisLite::viridis(length(dep.vars))
 

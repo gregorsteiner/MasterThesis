@@ -11,33 +11,37 @@ wid <- 600
 
 
 dat <- setDT(readRDS("Data.RDS"))
+assist <- setDT(readRDS("AssistanceData.RDS"))
 assist.cov <- setDT(readRDS("AssistanceCovData.RDS"))
 
 
 ######## Summary Statistics ########
 
 # dataset summary
-dat.summary <- dat[, .(Disasters, "Disaster Dummy" = as.factor(DisasterDummy),
-                       "Cumulative Disasters" = CumuDisasters, "Grade" = as.factor(grade),
+dat.summary <- dat[, .(Disasters, Treatment = factor(DisasterTreat),
                        "Subject" = factor(subject, labels = c("Mathematics", "RLA")),
-                       "Mean test score" = cs_mn_all, "White-Black gap" = cs_mn_wbg,
-                       "White-Hispanic gap" = cs_mn_whg, "Male-Female gap" = cs_mn_mfg,
-                       "Disadvantaged gap" = cs_mn_neg,
-                       "Total Damage" = totalDamage, "Federal Assistance" = federalAssistance,
-                       "Log Income" = lninc50all)]
+                       "Mean test score" = cs_mn_all,
+                       "Mean test score (black students)" = cs_mn_blk,
+                       "Mean test score (hispanic students)" = cs_mn_hsp,
+                       "Mean test score (female students)" = cs_mn_fem,
+                       "Mean test score (economically disadvantaged students)" = cs_mn_ecd)]
 
 vtable::sumtable(dat.summary,
                  out = "latex", file = "../TeX Files/SummaryStats.tex", anchor = "SumStats")
 
 
+# boxplots for dependent variables
+png("DepVarsBoxplot.png", width = wid + 100, height = hei)
 
-# dependent variables summary
-dat.summary <- dat[, .("Mean test score" = cs_mn_all, "White-Black gap" = cs_mn_wbg,
-                       "White-Hispanic gap" = cs_mn_whg, "Male-Female gap" = cs_mn_mfg,
-                       "Disadvantaged gap" = cs_mn_neg)]
+par(mar = c(3, 4, 1, 1))
+boxplot(dat[, .("Overall" = cs_mn_all,
+                "Black" = cs_mn_blk,
+                "Hispanic" = cs_mn_hsp,
+                "Female" = cs_mn_fem,
+                "Economically disadvantaged" = cs_mn_ecd)],
+        col = viridisLite::viridis(5))
 
-vtable::sumtable(dat.summary,
-                 out = "latex", file = "../TeX Files/SummaryStatsDep.tex", anchor = "SumStatsDep")
+dev.off()
 
 
 ######## Application characteristics ########
@@ -47,7 +51,7 @@ vtable::sumtable(dat.summary,
 
 png("AssistanceCovDensity.png", width = wid + 100, height = hei)
 
-col <- c("mediumblue", "mediumspringgreen")
+col <- c(3, 4)
 
 par(mfrow = c(2, 2), mar = c(4, 4, 1, 1))
 invis.Map(function(x, xlab){
@@ -99,28 +103,28 @@ dev.off()
 
 
 
-# Treatment plot
-dat.treat <- dat[order(TimeToTreat),
-                 .(MeanScoreMath = mean(cs_mn_all[subject == "mth"], na.rm = TRUE),
-                   MeanScoreRLA = mean(cs_mn_all[subject == "rla"], na.rm = TRUE)),
-                 by = .("Years to Treatment" = TimeToTreat)]
-
-dat.treat[, ":="(TreatmentMath = MeanScoreMath[is.na(`Years to Treatment`)] - MeanScoreMath,
-                 TreatmentRLA = MeanScoreRLA[is.na(`Years to Treatment`)] - MeanScoreRLA)]
-
-plot(dat.treat$`Years to Treatment`, dat.treat$TreatmentMath, type = "n",
-     ylab = "Difference in mean test scores", xlab = "Years to Treatment",
-     ylim = range(dat.treat$TreatmentMath, dat.treat$TreatmentRLA) + c(-0.01, 0.01))
-grid()
-abline(v = 0, lwd = 2, col = 2)
-points(dat.treat$`Years to Treatment`, dat.treat$TreatmentMath,
-       pch = 18, col = 3)
-lines(dat.treat$`Years to Treatment`, dat.treat$TreatmentMath,
-      lwd = 2, col = 3)
-points(dat.treat$`Years to Treatment`, dat.treat$TreatmentRLA,
-       pch = 18, col = 4)
-lines(dat.treat$`Years to Treatment`, dat.treat$TreatmentRLA,
-      lwd = 2, col = 4)
+# # Treatment plot
+# dat.treat <- dat[order(TimeToTreat),
+#                  .(MeanScoreMath = mean(cs_mn_all[subject == "mth"], na.rm = TRUE),
+#                    MeanScoreRLA = mean(cs_mn_all[subject == "rla"], na.rm = TRUE)),
+#                  by = .("Years to Treatment" = TimeToTreat)]
+# 
+# dat.treat[, ":="(TreatmentMath = MeanScoreMath[is.na(`Years to Treatment`)] - MeanScoreMath,
+#                  TreatmentRLA = MeanScoreRLA[is.na(`Years to Treatment`)] - MeanScoreRLA)]
+# 
+# plot(dat.treat$`Years to Treatment`, dat.treat$TreatmentMath, type = "n",
+#      ylab = "Difference in mean test scores", xlab = "Years to Treatment",
+#      ylim = range(dat.treat$TreatmentMath, dat.treat$TreatmentRLA) + c(-0.01, 0.01))
+# grid()
+# abline(v = 0, lwd = 2, col = 2)
+# points(dat.treat$`Years to Treatment`, dat.treat$TreatmentMath,
+#        pch = 18, col = 3)
+# lines(dat.treat$`Years to Treatment`, dat.treat$TreatmentMath,
+#       lwd = 2, col = 3)
+# points(dat.treat$`Years to Treatment`, dat.treat$TreatmentRLA,
+#        pch = 18, col = 4)
+# lines(dat.treat$`Years to Treatment`, dat.treat$TreatmentRLA,
+#       lwd = 2, col = 4)
 
 
 
@@ -129,6 +133,7 @@ lines(dat.treat$`Years to Treatment`, dat.treat$TreatmentRLA,
 
 
 # plot cumulative disasters
+dat[, CumuDisasters := cumsum(Disasters), by = .(fips, grade, subject)]
 fema.cum <- aggregate(list("Disasters" = as.numeric(dat$CumuDisasters)),
                       list("fips" = dat$fips), function(x) {
                         
@@ -158,9 +163,9 @@ dev.off()
 
 # plot assistance received
 
-dat.plot <- melt(dat[, .("Damage" = sum(totalDamage, na.rm = TRUE) + 1,
-                         "Federal Assistance" = sum(federalAssistance, na.rm = TRUE) + 1),
-                     by = .(fips)],
+dat.plot <- melt(assist[, .("Damage" = sum(totalDamage, na.rm = TRUE) + 1,
+                            "Assistance" = sum(federalAssistance, na.rm = TRUE) + 1),
+                        by = .(fips)],
                  id.vars = c("fips"), measure.vars = c("Damage", "Assistance"))
 
 png("AssistanceMap.png", width = wid + 100, height = hei + 200)
@@ -178,20 +183,6 @@ plot_usmap(data = dat.plot,
         plot.margin = grid::unit(c(0,0,-60,0), "mm"),
         strip.text.x = element_text(size = 12))
 dev.off()
-
-
-
-# plot political outcomes
-plot_usmap(data = dat[, .("Share Democrats" = mean(ShareDem, na.rm = TRUE)),
-                      by = .(fips)], values = "Share Democrats") +
-  scale_fill_viridis_c(name = "") +
-  theme(legend.position = "right",
-        legend.key.size = grid::unit(1, "cm"),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14),
-        plot.margin= grid::unit(c(0,0,0,0), "mm"))
-
-
 
 
 

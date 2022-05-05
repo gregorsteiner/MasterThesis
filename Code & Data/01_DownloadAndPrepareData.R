@@ -171,34 +171,28 @@ saveRDS(assist.cov, "AssistanceCovData.RDS")
 fema.assist.agg <- merge(fema.assist.agg, assist.cov,
                          by = "fips", all.x = TRUE, all.y = FALSE)
 
+# save as RDS
+saveRDS(fema.assist.agg, "AssistanceData.RDS")
 
 
 ######## Merge FEMA and SEDA data ########
 
 # merge seda and fema no. of disasters
 dat <- merge(fema.dis.agg, seda.comb[, .(fips = sedacounty, year, grade, subject,
-                                         cs_mn_all, cs_mn_wbg, cs_mn_mfg,
-                                         cs_mn_whg, cs_mn_neg,
-                                         lninc50all, unempall)],
+                                         cs_mn_all, cs_mn_blk, cs_mn_hsp,
+                                         cs_mn_fem, cs_mn_ecd,
+                                         lninc50all)],
              by = c("fips", "year"),
              all.x = TRUE, all.y = TRUE)
 
 
 
 
-# compute cumulative disasters by county
-dat[, CumuDisasters := cumsum(Disasters), by = .(fips, grade, subject)]
-
-
-
-# add Disaster Dummy (1 if disasters > 0, 0 else)
-dat[, DisasterDummy := as.numeric(Disasters > 0)]
-
 # add absorbing treatment (as described in Sun & Abraham)
 dat[, DisasterTreat := as.numeric(cumsum(Disasters) > 0), by = fips]
 
-# add time to first treatment
-dat[, TimeToTreat := year - min(year[DisasterTreat == 1], na.rm = TRUE), by = fips]
+# # add time to first treatment
+# dat[, TimeToTreat := year - min(year[DisasterTreat == 1], na.rm = TRUE), by = fips]
 
 # add year of first treatment
 dat[, TreatStart := ifelse(any(DisasterTreat == 1),
@@ -206,11 +200,6 @@ dat[, TreatStart := ifelse(any(DisasterTreat == 1),
                            1000)
     , by = fips]
 
-
-# add assistance data
-dat <- merge(dat, fema.assist.agg,
-             by = c("fips", "year"),
-             all.x = TRUE, all.y = TRUE)
 
 
 # export as RDS

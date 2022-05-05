@@ -56,7 +56,7 @@ Data on academic achievement is available from the Stanford Education Data Archi
 
 Test scores are cohort-standardized, meaning they can be interpreted relatively to an average national reference cohort in the same grade. For instance, a county mean of 0.5 indicates that the average student in the county scored approximately one half of a standard deviation higher than the average national student in the same grade.
 
-In addition to mean test scores, the data includes estimates of gap estimates for various subgroups, e.g. mean difference in test scores among white and black students. These are only reported if the subgroups' sample sizes are large enough. Thus, the number of observations for some of the gap statistics is substantially smaller.
+In addition to overall mean test scores, the data includes mean test scores for various subgroups, e.g. by ethnicity. In particular, we consider mean test scores for black, hispanic, female, and economically disadvantaged students. These are only reported if the subgroups' sample sizes are large enough. Thus, the number of observations for some of them is substantially smaller.
 
 Furthermore, the Stanford Education Data Archive maintains a large set of covariates for each county and year. They include variables like the county's median income, unemployment and poverty rate.
 
@@ -67,9 +67,17 @@ Natural disasters should only have an effect on test scores if they occur before
 
 Each disaster is assigned to a school year as described above. Then, disaster and test score data can be merged by school year and county. This yields a panel data set with six grades and two subjects for each county-year combination.
 
-The outcomes of interest are mean test scores by county, and achievement gaps between white and black, white and hispanic, male and female, and economically advantaged and disadvantaged students. Table \ref{SumStatsDep} shows summary statistics for all five outcomes of interest. 
+The outcomes of interest are overall mean test scores by county, and mean test scores for black, hispanic, female, and economically disadvantaged students. Table \ref{SumStats} shows summary statistics and figure \ref{DepVarsBoxplot} shows boxplots for the five outcomes of interest. All five mean test scores are measured on the cohort standardized scale, that is a given observation measures the distance in standard deviations from the national reference cohort.
 
-\input{SummaryStatsDep.tex}
+\input{SummaryStats.tex}
+
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.7]{"../Code & Data/DepVarsBoxplot.png"}
+	\caption{Boxplots of the outcomes of interest}
+	\label{DepVarsBoxplot}
+\end{figure}
 
 
 
