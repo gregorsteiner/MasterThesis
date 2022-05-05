@@ -62,7 +62,11 @@ Under some standard assumptions, $\widehat{v}_g$ is asymptotically normal \citep
 \end{align*}
 where $W^{l}$ is the probability limit of the weight matrix $\widehat{W}^l$.
 
-We use the existing implementation in the \textbf{fixest} package \citep{Berge_2018}.
+
+\textbf{Parallel Trends:} Parallel trends in the sense of \cite{Sun_2021} refers to the following: $\E[Y_{i, t}^{\infty} - Y_{i, s}^{\infty} | E_i = e]$ does not depend on $e$ for any $s \neq t$. That is, the expected temporal difference, i.e. the trend, in the potential outcomes of being never-treated is the same for all treatment timings. 
+
+
+We use the existing implementation in the \textbf{fixest} R package \citep{Berge_2018}.
 
 
 Under quasi-random treatment assignment, the parallel trends assumption is likely justified \citep{Roth_2022}. 

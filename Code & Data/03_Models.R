@@ -20,7 +20,7 @@ dat <- readRDS("Data.RDS")
 
 # main model
 model.math <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
-                 sunab(TreatStart, year, bin.rel = c(-5:-9)) + lninc50all | year + fips + grade,
+                 sunab(TreatStart, year, bin.rel = c(-5:-9)) | year + fips + grade,
                data = dat[subject == "mth"], vcov = "iid")
 
 model.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
@@ -34,7 +34,7 @@ etable(model.math, file = "../TeX Files/MainResultsMath.tex", replace = TRUE,
                 "Black" = cs_mn_blk,
                 "Hispanic" = cs_mn_hsp,
                 "Female" = cs_mn_fem,
-                "Econ. Disadv." = cs_mn_ecd),
+                "Econ. Disadv." = cs_mn_ecd,
                 year = "Year", grade = "Grade", fips = "County",
                 lninc50all = "Log Income"))
 
@@ -44,7 +44,7 @@ etable(model.rla, file = "../TeX Files/MainResultsRLA.tex", replace = TRUE,
                 "Black" = cs_mn_blk,
                 "Hispanic" = cs_mn_hsp,
                 "Female" = cs_mn_fem,
-                "Econ. Disadv." = cs_mn_ecd),
+                "Econ. Disadv." = cs_mn_ecd,
                 year = "Year", grade = "Grade", fips = "County",
                 lninc50all = "Log Income"))
 
@@ -61,7 +61,7 @@ par(mfrow = c(2, 1),
 invisible(Map(function(sub, model){
   iplot(model, main = sub, xlab = "Year",
         pt.col = cols, pt.pch = pch, ci.col = cols)
-  legend("bottomleft", legend = dep.vars,
+  legend("topleft", legend = dep.vars,
          col = cols, pch = pch)
   
 }, c("Mathematics", "Reading & Language Arts"), list(model.math, model.rla)))
