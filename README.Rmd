@@ -46,9 +46,11 @@ knitr::include_graphics("Code & Data/DisasterMap.png")
 The outcomes of interest are mean test scores by county, and achievement gaps between white and black, white and hispanic, male and female, and economically advantaged and disadvantaged students. 
 
 ```{r}
-dat.summary <- dat[, .("Mean test score" = cs_mn_all, "White-Black gap" = cs_mn_wbg,
-                       "White-Hispanic gap" = cs_mn_whg, "Male-Female gap" = cs_mn_mfg,
-                       "Disadvantaged gap" = cs_mn_neg)]
+dat.summary <- dat[, .("Mean test score" = cs_mn_all,
+                       "Mean test score (black students)" = cs_mn_blk,
+                       "Mean test score (hispanic students)" = cs_mn_hsp,
+                       "Mean test score (female students)" = cs_mn_fem,
+                       "Mean test score (economically disadvantaged students)" = cs_mn_ecd)]
 
 vtable::sumtable(dat.summary)
 ```

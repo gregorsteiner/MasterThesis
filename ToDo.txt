@@ -1,7 +1,5 @@
 Selection of disaster declarations (Who is applying?)
 
-Disaggregate by Math & RLA
-
 Different disaster data?
 
 Implement better way to get fips codes from county name

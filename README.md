@@ -76,106 +76,106 @@ Mean test score
 </tr>
 <tr>
 <td style="text-align:left;">
-White-Black gap
+Mean test score (black students)
 </td>
 <td style="text-align:left;">
-130595
+136886
 </td>
 <td style="text-align:left;">
-0.618
+-0.483
 </td>
 <td style="text-align:left;">
-0.257
+0.273
 </td>
 <td style="text-align:left;">
--0.754
+-2.745
 </td>
 <td style="text-align:left;">
-0.454
+-0.662
 </td>
 <td style="text-align:left;">
-0.771
+-0.304
 </td>
 <td style="text-align:left;">
-2.358
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-White-Hispanic gap
-</td>
-<td style="text-align:left;">
-140326
-</td>
-<td style="text-align:left;">
-0.451
-</td>
-<td style="text-align:left;">
-0.258
-</td>
-<td style="text-align:left;">
--1.713
-</td>
-<td style="text-align:left;">
-0.282
-</td>
-<td style="text-align:left;">
-0.611
-</td>
-<td style="text-align:left;">
-2.213
+1.394
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Male-Female gap
+Mean test score (hispanic students)
 </td>
 <td style="text-align:left;">
-306055
+144303
 </td>
 <td style="text-align:left;">
--0.131
+-0.281
 </td>
 <td style="text-align:left;">
-0.199
+0.266
 </td>
 <td style="text-align:left;">
--1.612
+-1.699
 </td>
 <td style="text-align:left;">
--0.258
+-0.46
 </td>
 <td style="text-align:left;">
-0.001
+-0.108
 </td>
 <td style="text-align:left;">
-1.248
+1.374
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Disadvantaged gap
+Mean test score (female students)
 </td>
 <td style="text-align:left;">
-282423
+310350
 </td>
 <td style="text-align:left;">
-0.543
+0.025
 </td>
 <td style="text-align:left;">
-0.211
+0.295
 </td>
 <td style="text-align:left;">
--0.995
+-2.862
 </td>
 <td style="text-align:left;">
-0.413
+-0.153
 </td>
 <td style="text-align:left;">
-0.669
+0.222
 </td>
 <td style="text-align:left;">
-2.052
+1.496
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mean test score (economically disadvantaged students)
+</td>
+<td style="text-align:left;">
+305395
+</td>
+<td style="text-align:left;">
+-0.284
+</td>
+<td style="text-align:left;">
+0.256
+</td>
+<td style="text-align:left;">
+-3.007
+</td>
+<td style="text-align:left;">
+-0.441
+</td>
+<td style="text-align:left;">
+-0.118
+</td>
+<td style="text-align:left;">
+1.312
 </td>
 </tr>
 </tbody>
