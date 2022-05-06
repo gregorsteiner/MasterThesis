@@ -18,7 +18,7 @@ dat <- readRDS("Data.RDS")
 ######## Models ########
 
 
-# main model
+# Sun & Abraham
 model.math <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                  sunab(TreatStart, year, bin.rel = c(-5:-9)) | year + fips + grade,
                data = dat[subject == "mth"], vcov = "iid")

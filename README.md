@@ -1,3 +1,14 @@
+---
+always_allow_html: true
+author: Gregor Steiner
+bibliography: TeX files/references.bib
+date: 05/06/2022
+output:
+  md_document:
+    variant: gfm
+title: Natural Disasters and Education
+---
+
 # Natural Disasters and Education
 
 In my thesis I explore the link between natural disasters and education
