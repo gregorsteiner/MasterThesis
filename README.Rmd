@@ -4,7 +4,7 @@ author: "Gregor Steiner"
 date: "`r format(Sys.Date(), format = '%m/%d/%Y')`"
 output:
   md_document:
-    variant: gfm
+    variant: markdown_github
 bibliography: "TeX files/references.bib" 
 always_allow_html: true
 ---
