@@ -6,9 +6,9 @@ library(data.table)
 library(usmap)
 library(ggplot2)
 
-hei <- 400
-wid <- 600
-
+hei <- 10
+wid <- 16
+unit <- "cm"
 
 dat <- setDT(readRDS("Data.RDS"))
 assist <- setDT(readRDS("AssistanceData.RDS"))
@@ -31,14 +31,15 @@ vtable::sumtable(dat.summary,
 
 
 # boxplots for dependent variables
-png("DepVarsBoxplot.png", width = wid + 100, height = hei)
+png("DepVarsBoxplot.png",
+    width = wid, height = hei, units = unit, res = 1200)
 
-par(mar = c(3, 4, 1, 1))
+par(mar = c(3, 3, 1, 1))
 boxplot(dat[, .("Overall" = cs_mn_all,
                 "Black" = cs_mn_blk,
                 "Hispanic" = cs_mn_hsp,
                 "Female" = cs_mn_fem,
-                "Economically disadvantaged" = cs_mn_ecd)],
+                "Econ. disadv." = cs_mn_ecd)],
         col = viridisLite::viridis(5))
 
 dev.off()
@@ -49,32 +50,33 @@ dev.off()
 # voter share and median income by applicant status
 
 
-png("AssistanceCovDensity.png", width = wid + 100, height = hei)
-
-col <- c(3, 4)
-
-par(mfrow = c(2, 2), mar = c(4, 4, 1, 1))
-invis.Map(function(x, xlab){
-  # filter by applicant status and remove nas
-  bool1 <- assist.cov$AssistanceApplicant == 1 & !is.na(x)
-  bool2 <- assist.cov$AssistanceApplicant == 0 & !is.na(x)
-  # plot
-  plot(density(x[bool2]),
-       main = "", xlab = xlab, type = "n")
-  grid()
-  
-  lines(density(x[bool1]),
-        col = col[1], lwd = 2)
-  lines(density(x[bool2]),
-        col = col[2], lwd = 2)
-  # add legend
-  legend("topright", legend = c("Applied", "Did not apply"),
-         lwd = 2, col = col)
-}, assist.cov[, .(MedInc2016, ShareDem2016, PovertyRate, SingleMother)],
-c("Median Income (2016)", "Democratic Votes (2016 Election)",
-  "Poverty Rate (2016)", "Share of Single Mothers (2016)"))
-
-dev.off()
+# png("AssistanceCovDensity.png",
+#     width = wid, height = 16, units = "cm", res = 1200)
+# 
+# col <- c(3, 4)
+# 
+# par(mfrow = c(2, 2), mar = c(4, 4, 1, 1))
+# invis.Map(function(x, xlab){
+#   # filter by applicant status and remove nas
+#   bool1 <- assist.cov$AssistanceApplicant == 1 & !is.na(x)
+#   bool2 <- assist.cov$AssistanceApplicant == 0 & !is.na(x)
+#   # plot
+#   plot(density(x[bool2]),
+#        main = "", xlab = xlab, type = "n", cex = 0.8)
+#   grid()
+#   
+#   lines(density(x[bool1]),
+#         col = col[1], lwd = 2)
+#   lines(density(x[bool2]),
+#         col = col[2], lwd = 2)
+#   # add legend
+#   legend("topright", legend = c("Applied", "Did not apply"),
+#          lwd = 2, col = col)
+# }, assist.cov[, .(MedInc2016, ShareDem2016, PovertyRate, SingleMother)],
+# c("Median Income (2016)", "Democratic Votes (2016 Election)",
+#   "Poverty Rate (2016)", "Share of Single Mothers (2016)"))
+# 
+# dev.off()
 
 
 
@@ -86,7 +88,8 @@ assist.cov[, AssistanceApplicant := factor(AssistanceApplicant,
                                            labels = c("Did not apply", "Applied"))]
 
 
-png("AssistanceCovBoxplot.png", width = wid + 100, height = hei)
+png("AssistanceCovBoxplot.png",
+    width = wid, height = wid, units = unit, res = 400)
 
 par(mfrow = c(2, 2), mar = c(3, 4, 1, 1))
 invis.Map(function(x, ylab){
@@ -144,7 +147,8 @@ fema.cum <- aggregate(list("Disasters" = as.numeric(dat$CumuDisasters)),
                         
                         })
 
-png("DisasterMap.png", width = wid, height = hei)
+png("DisasterMap.png",
+    width = wid, height = hei, units = unit, res = 1200)
 
 plot_usmap(data = fema.cum, values = "Disasters") +
   scale_fill_viridis_c(name = "",
@@ -168,7 +172,8 @@ dat.plot <- melt(assist[, .("Damage" = sum(totalDamage, na.rm = TRUE) + 1,
                         by = .(fips)],
                  id.vars = c("fips"), measure.vars = c("Damage", "Assistance"))
 
-png("AssistanceMap.png", width = wid + 100, height = hei + 200)
+png("AssistanceMap.png",
+    width = wid, height = hei, units = unit, res = 1200)
 
 plot_usmap(data = dat.plot,
            values = "value") +
@@ -180,7 +185,7 @@ plot_usmap(data = dat.plot,
         legend.text = element_text(size = 12),
         legend.title = element_text(size = 14),
         legend.direction = "vertical",
-        plot.margin = grid::unit(c(0,0,-60,0), "mm"),
+        plot.margin = grid::unit(c(0,0,0,0), "mm"),
         strip.text.x = element_text(size = 12))
 dev.off()
 

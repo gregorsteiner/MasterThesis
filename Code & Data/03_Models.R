@@ -7,7 +7,7 @@ library(data.table)
 library(fixest)
 
 
-hei <- 600
+hei <- 400
 wid <- 600
 
 # read data
@@ -49,37 +49,47 @@ etable(model.rla, file = "../TeX Files/MainResultsRLA.tex", replace = TRUE,
                 lninc50all = "Log Income"))
 
 
-# plots
+# # plots
+# dep.vars <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")
+# pch <- 16:(15+length(dep.vars))
+# cols <- viridisLite::viridis(length(dep.vars))
+# 
+# png("ResultsPlot.png", width = wid + 100, height = hei + 200)
+# 
+# par(mfrow = c(2, 1),
+#     mar = c(4, 4, 2, 1))
+# invisible(Map(function(sub, model){
+#   iplot(model, main = sub, xlab = "Year",
+#         pt.col = cols, pt.pch = pch, ci.col = cols)
+#   legend("topleft", legend = dep.vars,
+#          col = cols, pch = pch)
+#   
+# }, c("Mathematics", "Reading & Language Arts"), list(model.math, model.rla)))
+# 
+# dev.off()
+
+
+# plot results
 dep.vars <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")
-pch <- 16:(15+length(dep.vars))
-cols <- viridisLite::viridis(length(dep.vars))
+cols <- c(3, 4)
 
-png("ResultsPlot.png", width = wid + 100, height = hei + 200)
 
-par(mfrow = c(2, 1),
-    mar = c(4, 4, 2, 1))
-invisible(Map(function(sub, model){
-  iplot(model, main = sub, xlab = "Year",
-        pt.col = cols, pt.pch = pch, ci.col = cols)
-  legend("topleft", legend = dep.vars,
-         col = cols, pch = pch)
+png("ResultsPlot.png", width = 15, height = 20, units = "cm", res = 1200)
+
+par(mfrow = c(3, 2), mar = c(4, 4, 2, 1))
+invis.Map(function(math, rla, name){
   
-}, c("Mathematics", "Reading & Language Arts"), list(model.math, model.rla)))
+  iplot(list(math, rla), main = name, xlab = "Years to treatment",
+        col = cols, ci.col = cols, pt.pch = 19)
+  legend("topleft", legend = c("Math", "RLA"),
+         col = cols, pch = 19)
+  
+}, model.math, model.rla, dep.vars)
 
 dev.off()
 
 
 
-# residuals
-res <- residuals(model.math)
-
-par(mfrow = c(2, 3))
-invisible(apply(res, 2, function(x){
-  y <- x[!is.na(x)]
-  
-  qqnorm(y)
-  qqline(y)
-}))
 
 
 

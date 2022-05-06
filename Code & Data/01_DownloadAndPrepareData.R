@@ -197,7 +197,7 @@ dat[, DisasterTreat := as.numeric(cumsum(Disasters) > 0), by = fips]
 # add year of first treatment
 dat[, TreatStart := ifelse(any(DisasterTreat == 1),
                            min(year[DisasterTreat == 1], na.rm = TRUE),
-                           1000)
+                           0)
     , by = fips]
 
 
