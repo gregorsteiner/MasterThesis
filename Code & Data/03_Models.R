@@ -90,6 +90,39 @@ dev.off()
 
 
 
+# CS using the did package
+att <- did::att_gt(yname = "cs_mn_all", tname = "year", idname = "fips", gname = "TreatStart",
+                   data = dat[grade == 3 & subject == "mth"])
+att_agg <- did::aggte(att, type = "dynamic")
+did::ggdid(att_agg) +
+  theme_light()
+
+
+# Compare SA & CS using the staggered package
+cs <- staggered::staggered_cs(dat[grade == 3 & subject == "mth"],
+                              i = "fips", t = "year", g = "TreatStart",
+                              y = "cs_mn_all",
+                              estimand = "eventstudy", eventTime = -8:7)
+
+sa <- staggered::staggered_sa(dat[grade == 3 & subject == "mth"],
+                              i = "fips", t = "year", g = "TreatStart",
+                              y = "cs_mn_all",
+                              estimand = "eventstudy", eventTime = -8:7)
+
+
+
+plot(sa$eventTime, sa$estimate, type = "n",
+     xlim = range(sa$eventTime),
+     ylim = range(c(sa$estimate - 2 * sa$se, cs$estimate + 2*cs$se)),
+     ylab = "Estimate & Conf. Interval",
+     xlab = "Years to treatment")
+grid()
+abline(h = 0, col = 2, lty = "dashed")
+plotCI(sa, add = TRUE, col = 3)
+plotCI(cs, add = TRUE, shift = TRUE, col = 4)
+legend("bottomleft", legend = c("SA", "CS"),
+       col = c(3, 4), pch = 19)
+
 
 
 

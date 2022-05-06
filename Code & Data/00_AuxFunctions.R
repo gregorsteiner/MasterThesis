@@ -7,6 +7,27 @@ invis.lapply <- function(...) invisible(lapply(...))
 invis.Map <- function(...) invisible(Map(...))
 
 
+### plot confidence intervals based on the staggered output
+plotCI <- function(data, add = FALSE, shift = FALSE, col){
+  # create confidence bounds
+  data <- within(data, {
+    Lower = estimate - qnorm(alpha/2) * se
+    Upper = estimate + qnorm(alpha/2) * se
+    if(shift == TRUE) eventTime <- eventTime + 0.1
+  })
+  # plot
+  plotrix::plotCI(data$eventTime, data$estimate, 
+                  ui = data$Lower, li = data$Upper,
+                  add = add, col = col, pch = 19)
+  
+}
+
+
+
+
+
+
+
 ### Coordinates to County function
 
 # Thanks to https://stackoverflow.com/questions/13316185/r-convert-zipcode-or-lat-long-to-county
