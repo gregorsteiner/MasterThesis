@@ -5,6 +5,8 @@
 
 We employ an event study design to measure the effect of natural disasters on standardized test outcomes. An event study design is a staggered adoption design where units are first-treated at different points in time, and there may or may not be never-treated units \citep{Sun_2021}.
 
+Note that treatment must be absorbing, meaning the sequence $(D_{i, t})_{t=1}^T$ must be a non-decreasing sequence of $0$s and $1$s. In other words, after being treated for the first time a county stays treated. In the present application this means treatment refers to having experienced a disaster rather than experiencing a disaster in that year. This is common practice and does not cause bias due to the conditionally random nature of natural disasters \citep{Deryugina_2017}. Thus, the emphasis lies on cumulative long-term effects rather than instantaneous short-term effects.
+
 In order to identify a causal effect, unobservable determinants of a county's test scores must be unrelated to natural disasters conditional on observable characteristics of that county. The occurrence of natural disasters is plausibly random conditional on location. Furthermore conditioning on the year should account for an increasing trend in natural disasters due to climate change. Thus, independence of mean test scores and natural disasters is plausible conditional on county and year fixed effects.
 
 Consequently, the baseline specification is
@@ -13,13 +15,13 @@ Consequently, the baseline specification is
 \end{align}
 where $y_{i, t, g}$ is the outcome of interest for county $i$, year $t$, and grade $g$. County, year, and grade fixed-effects are given by $\alpha_i$, $\lambda_t$, and $\zeta_g$ respectively and $X_{i, t}$ is a row vector of additional control variables. $D_{i, t-l}$ is a treatment indicator for county $i$ in year $t-l$. That is, $D_{i, t-l} = 1$ if the county had already experienced a disaster $l$ years ago at time $t$.
 
-Since we consider the time period 2009-2018, $-9 \leq l \leq 9$, but note that $l = 9$ would correspond to a unit that experienced a disaster in the first period and is therefore always treated. As recommended by \cite{Sun_2021}, these units are dropped from estimation, since no treatment effects can be identified for that group\footnote{At least not under standard assumptions. If one is willing to make assumptions about the trends of both potential outcomes, then it may make sense to keep always treated units \citep[see][]{Marcus_2021}, but this is not the case here.}.
+Since we consider the time period 2009-2018, $-9 \leq l \leq 9$, but note that $l = 9$ would correspond to a unit that experienced a disaster in the first period and is therefore always treated. As recommended by \cite{Sun_2021} and \cite{Callaway_2021}, these units are dropped from estimation. Neither can treatment effects be identified for that group nor are they useful as a comparison group under standard parallel trends assumptions.
 
 Also, we need to drop at least two leads or lags to avoid a multicollinearity problem. A complete set of treatment leads and lags is perfectly collinear with unit and time fixed-effects \citep[for an extensive discussion of this issue see][section 3.2]{Borusyak_2021}. It is common to drop the first relative indicator prior to treatment (i.e. $\beta_{-1} = 0$). This acts as a normalization of treatment relative to the period before treatment. Furthermore, we bin the distant leads, that is we combine the treatment indicators for $l \leq -5$. Thus, equation (\ref{baseline}) turns into
 \begin{align} \label{baselineBinned}
-	y_{i, t, g} = \beta_{-5} \sum_{l \leq -5} D_{i, t-l} + \sum_{l = -4, l \neq -1}^{8} \beta_l D_{i, t-l} + \alpha_i + \lambda_t + \zeta_g + X_{i, t} \gamma + \varepsilon_{i, t, g} \;.
+	y_{i, t, g} = \beta_{-5}  D_{i, t-5} + \sum_{l = -4, l \neq -1}^{8} \beta_l D_{i, t-l} + \alpha_i + \lambda_t + \zeta_g + X_{i, t} \gamma + \varepsilon_{i, t, g} \;,
 \end{align}
-Note that treatment must be absorbing, meaning the sequence $(D_{i, t})_{t=1}^T$ must be a non-decreasing sequence of $0$s and $1$s. In other words, after being treated for the first time a county stays treated. In the present application this means treatment refers to having experienced a disaster rather than experiencing a disaster in that year. This is common practice and does not cause bias due to the conditionally random nature of natural disasters \citep{Deryugina_2017}. Thus, the emphasis lies on cumulative long-term effects rather than instantaneous short-term effects.
+where $D_{i, t-5}$ indicates treatment for any $l \leq 5$.
 
 It is implausible that the treatment effects are constant in our setting. The extent of disasters varies substantially, and also the level of preparation for such disasters likely displays high variance across counties. 
 
