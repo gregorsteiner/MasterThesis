@@ -40,7 +40,7 @@ boxplot(dat[, .("Overall" = cs_mn_all,
                 "Hispanic" = cs_mn_hsp,
                 "Female" = cs_mn_fem,
                 "Econ. disadv." = cs_mn_ecd)],
-        col = viridisLite::viridis(5))
+        col = 4)
 
 dev.off()
 
@@ -88,6 +88,7 @@ assist.cov[, AssistanceApplicant := factor(AssistanceApplicant,
                                            labels = c("Did not apply", "Applied"))]
 
 
+col <- c(3, 4)
 png("AssistanceCovBoxplot.png",
     width = wid, height = wid, units = unit, res = 400)
 
@@ -151,7 +152,7 @@ png("DisasterMap.png",
     width = wid, height = hei, units = unit, res = 1200)
 
 plot_usmap(data = fema.cum, values = "Disasters") +
-  scale_fill_viridis_c(name = "",
+  scale_fill_viridis_c(name = "", option = "H",
                        breaks = c(0, 5, 10, max(fema.cum$Disasters, na.rm = TRUE))) +
   theme(legend.position = "right",
         legend.key.size = grid::unit(1, "cm"),
@@ -177,12 +178,12 @@ png("AssistanceMap.png",
 
 plot_usmap(data = dat.plot,
            values = "value") +
-  scale_fill_viridis_c(name = "", trans = "log",
+  scale_fill_viridis_c(name = "", trans = "log", option = "H",
                        breaks = c(1e1, 1e3, 1e5, 1e7, 1e9)) +
   facet_grid(cols = vars(variable)) + 
-  theme(legend.position = c(0.4, -0.3),
-        legend.key.size = grid::unit(0.6, "cm"),
-        legend.text = element_text(size = 12),
+  theme(legend.position = c(0.4, -0.35),
+        legend.key.size = grid::unit(0.4, "cm"),
+        legend.text = element_text(size = 10),
         legend.title = element_text(size = 14),
         legend.direction = "vertical",
         plot.margin = grid::unit(c(0,0,0,0), "mm"),
