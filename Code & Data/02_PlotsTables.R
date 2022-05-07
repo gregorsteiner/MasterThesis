@@ -24,7 +24,7 @@ dat.summary <- dat[, .(Disasters, Treatment = factor(DisasterTreat),
                        "Mean test score (black students)" = cs_mn_blk,
                        "Mean test score (hispanic students)" = cs_mn_hsp,
                        "Mean test score (female students)" = cs_mn_fem,
-                       "Mean test score (economically disadvantaged students)" = cs_mn_ecd)]
+                       "Mean test score (econ. disadv. students)" = cs_mn_ecd)]
 
 vtable::sumtable(dat.summary,
                  out = "latex", file = "../TeX Files/SummaryStats.tex", anchor = "SumStats")

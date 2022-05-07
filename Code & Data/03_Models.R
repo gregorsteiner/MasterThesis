@@ -12,7 +12,8 @@ wid <- 600
 
 # read data
 dat <- readRDS("Data.RDS")
-
+#assist <- readRDS("AssistanceData.RDS")
+assist.cov <- readRDS("AssistanceCovData.RDS")
 
 
 ######## Models ########
@@ -126,3 +127,28 @@ legend("bottomleft", legend = c("SA", "CS"),
 
 
 
+
+
+
+
+
+
+
+# logistic regression for assistance covariates
+assist.cov$MedInclog <- log(assist.cov$MedInc2016)
+model.logit <- feglm(AssistanceApplicant ~ ShareDem2016 + MedInclog
+                     + PovertyRate + SingleMother, data = assist.cov,
+                     family = binomial("logit"))
+etable(model.logit, file = "../TeX Files/ResultsLogit.tex", replace = TRUE,
+       label = "ResultsLogit", title = "Determinants of Assistance Application",
+       dict = c(AssistanceApplicant = "Applicant",
+                ShareDem2016 = "Share of democratic voters",
+                MedInclog = "Median Income (logs)",
+                PovertyRate = "Poverty Rate", 
+                SingleMother = "Share of single mothers"))
+
+
+
+  
+  
+  
