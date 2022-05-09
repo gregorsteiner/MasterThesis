@@ -50,25 +50,6 @@ etable(model.rla, file = "../TeX Files/MainResultsRLA.tex", replace = TRUE,
                 lninc50all = "Log Income"))
 
 
-# # plots
-# dep.vars <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")
-# pch <- 16:(15+length(dep.vars))
-# cols <- viridisLite::viridis(length(dep.vars))
-# 
-# png("ResultsPlot.png", width = wid + 100, height = hei + 200)
-# 
-# par(mfrow = c(2, 1),
-#     mar = c(4, 4, 2, 1))
-# invisible(Map(function(sub, model){
-#   iplot(model, main = sub, xlab = "Year",
-#         pt.col = cols, pt.pch = pch, ci.col = cols)
-#   legend("topleft", legend = dep.vars,
-#          col = cols, pch = pch)
-#   
-# }, c("Mathematics", "Reading & Language Arts"), list(model.math, model.rla)))
-# 
-# dev.off()
-
 
 # plot results
 dep.vars <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")

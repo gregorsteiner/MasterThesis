@@ -164,6 +164,29 @@ dev.off()
 
 
 
+# plot cumulative Storms
+dat[, CumuStorms := cumsum(Storms), by = .(fips, grade, subject)]
+storms.cum <- aggregate(list("Storms" = as.numeric(dat$CumuStorms)),
+                        list("fips" = dat$fips), function(x) {
+                          res <- x[!is.na(x)][length(x[!is.na(x)])]
+                          if(length(res) == 0) return(0)
+                          
+                          return(res)
+                        })
+
+png("StormMap.png",
+    width = wid, height = hei, units = unit, res = 1200)
+
+plot_usmap(data = storms.cum, values = "Storms") +
+  scale_fill_viridis_c(name = "", option = "H",
+                       breaks = c(0, 5, 10, 15, max(storms.cum$Storms))) +
+  theme(legend.position = "right",
+        legend.key.size = grid::unit(1, "cm"),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14),
+        plot.margin= grid::unit(c(0,0,0,0), "mm"))
+
+dev.off()
 
 
 # plot assistance received
