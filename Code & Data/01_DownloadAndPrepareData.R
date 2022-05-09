@@ -146,7 +146,7 @@ fema.dis.agg[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
 
 
 # read presidential election data (from https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ)
-elec <- fread("countypres_2000-2020.csv")
+elec <- fread("Raw Data/countypres_2000-2020.csv")
 
 # create assistance covariate data
 assist.cov <- elec[year == 2016,
@@ -175,7 +175,42 @@ fema.assist.agg <- merge(fema.assist.agg, assist.cov,
 saveRDS(fema.assist.agg, "AssistanceData.RDS")
 
 
-######## Merge FEMA and SEDA data ########
+
+######## Alternative Disaster Data ########
+
+# read hurricanes 
+dat.hur <- fread("Raw Data/storm_data_search_results.csv")
+
+# create year and fips columns
+dat.hur$BEGIN_DATE <- as.Date(dat.hur$BEGIN_DATE, format = "%m/%d/%Y")
+dat.hur[, `:=`(fips = as.numeric(ifelse(nchar(CZ_FIPS) == 3,
+                                        paste0(usmap::fips(STATE_ABBR), CZ_FIPS),
+                                        paste0(usmap::fips(STATE_ABBR), 0, CZ_FIPS))),
+               year = dplyr::case_when(
+                 # if in september to december add 1 to the year (Schoolyear x/x+1 is x+1)
+                 as.numeric(format(BEGIN_DATE, "%m")) %in% 9:12 ~ as.numeric(format(BEGIN_DATE, "%Y")) + 1,
+                 as.numeric(format(BEGIN_DATE, "%m")) %in% 1:3 ~ as.numeric(format(BEGIN_DATE, "%Y")),
+                 as.numeric(format(BEGIN_DATE, "%m")) %in% 4:8 ~ NA_real_
+               ))]
+
+# aggregate by fips and year
+dat.hur <- dat.hur[, .(Hurricanes = length(EVENT_ID)),
+                   by = .(fips, year)]
+
+
+
+
+# read tornado data
+dat.tor <- fread("Raw Data/1950-2020_all_tornadoes.csv")
+
+
+
+
+
+
+
+
+######## Merge ########
 
 # merge seda and fema no. of disasters
 dat <- merge(fema.dis.agg, seda.comb[, .(fips = sedacounty, year, grade, subject,
