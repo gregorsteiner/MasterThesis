@@ -183,9 +183,9 @@ dat.hur <- fread("Raw Data/storm_data_search_results.csv")
 
 # create year and fips columns
 dat.hur$BEGIN_DATE <- as.Date(dat.hur$BEGIN_DATE, format = "%m/%d/%Y")
-dat.hur[, `:=`(fips = as.numeric(ifelse(nchar(CZ_FIPS) == 3,
-                                        paste0(usmap::fips(STATE_ABBR), CZ_FIPS),
-                                        paste0(usmap::fips(STATE_ABBR), 0, CZ_FIPS))),
+dat.hur[, `:=`(fips = as.numeric(dplyr::case_when(nchar(CZ_FIPS) == 3 ~ paste0(usmap::fips(STATE_ABBR), CZ_FIPS),
+                                                  nchar(CZ_FIPS) == 2 ~ paste0(usmap::fips(STATE_ABBR), 0, CZ_FIPS),
+                                                  nchar(CZ_FIPS) == 1 ~ paste0(usmap::fips(STATE_ABBR), "00", CZ_FIPS))),
                year = dplyr::case_when(
                  # if in september to december add 1 to the year (Schoolyear x/x+1 is x+1)
                  as.numeric(format(BEGIN_DATE, "%m")) %in% 9:12 ~ as.numeric(format(BEGIN_DATE, "%Y")) + 1,
@@ -203,10 +203,34 @@ dat.hur <- dat.hur[, .(Hurricanes = length(EVENT_ID)),
 # read tornado data
 dat.tor <- fread("Raw Data/1950-2020_all_tornadoes.csv")
 
+# pivot county codes from wide to long
+dat.tor <- melt(dat.tor, id.vars = c("om", "date", "stf"),
+                measure.vars = c("f1", "f2", "f3", "f4"))
+
+# aggregate by year and county
+dat.tor <- dat.tor[value != 0, .(Tornadoes = length(om)),
+                   by = .(fips = as.numeric(dplyr::case_when(
+                     nchar(value) == 3 ~ paste0(stf, value),
+                     nchar(value) == 2 ~ paste0(stf, 0, value),
+                     nchar(value) == 1 ~ paste0(stf, "00", value)
+                   )),
+                          year = dplyr::case_when(
+                            # if in september to december add 1 to the year (Schoolyear x/x+1 is x+1)
+                            as.numeric(format(date, "%m")) %in% 9:12 ~ as.numeric(format(date, "%Y")) + 1,
+                            as.numeric(format(date, "%m")) %in% 1:3 ~ as.numeric(format(date, "%Y")),
+                            as.numeric(format(date, "%m")) %in% 4:8 ~ NA_real_
+                          ))]
 
 
+# only keep relevant years
+dat.tor <- dat.tor[year >= 2009 & year <= 2018]
 
+# merge hurricane and tornado data
+dat.storms <- merge(dat.tor, dat.hur,
+                    all.x = TRUE, all.y = TRUE)
 
+# add tornadoes and Hurricanes
+dat.storms[, Storms := rowSums(dat.storms[, .(Tornadoes, Hurricanes)], na.rm = TRUE)]
 
 
 
@@ -221,18 +245,30 @@ dat <- merge(fema.dis.agg, seda.comb[, .(fips = sedacounty, year, grade, subject
              all.x = TRUE, all.y = TRUE)
 
 
+# add storms data
+dat <- merge(dat, dat.storms[, .(fips, year, Storms)],
+             by = c("fips", "year"),
+             all.x = TRUE, all.y = TRUE)
 
+# drop NA years and fips
+dat <- dat[!is.na(fips) & !is.na(year)]
+
+# set NA storms to 0
+dat[, Storms := ifelse(is.na(Storms), 0, Storms)]
 
 # add absorbing treatment (as described in Sun & Abraham)
-dat[, DisasterTreat := as.numeric(cumsum(Disasters) > 0), by = fips]
+dat[, `:=`(DisasterTreat = as.numeric(cumsum(Disasters) > 0),
+           StormTreat = as.numeric(cumsum(Storms) > 0)),
+    by = fips]
 
-# # add time to first treatment
-# dat[, TimeToTreat := year - min(year[DisasterTreat == 1], na.rm = TRUE), by = fips]
 
 # add year of first treatment
-dat[, TreatStart := ifelse(any(DisasterTreat == 1),
-                           min(year[DisasterTreat == 1], na.rm = TRUE),
-                           0)
+dat[, `:=`(TreatStart = ifelse(any(DisasterTreat == 1),
+                               min(year[DisasterTreat == 1], na.rm = TRUE),
+                               0),
+           TreatStartStorm = ifelse(any(StormTreat == 1),
+                                    min(year[StormTreat == 1], na.rm = TRUE),
+                                    0))
     , by = fips]
 
 
