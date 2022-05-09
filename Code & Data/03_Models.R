@@ -110,6 +110,28 @@ legend("bottomleft", legend = c("SA", "CS"),
 
 
 
+# sun & abraham with storms data
+model.math.storm <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+                            sunab(TreatStartStorm, year, bin.rel = c(-5:-9)) | year + fips + grade,
+                          data = dat[subject == "mth"], vcov = "iid")
+
+model.rla.storm <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+                           sunab(TreatStartStorm, year, bin.rel = c(-5:-9)) | year + fips + grade,
+                         data = dat[subject == "rla"], vcov = "iid")
+
+# plot results
+dep.vars <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")
+cols <- c(3, 4)
+
+par(mfrow = c(3, 2), mar = c(4, 4, 2, 1))
+invis.Map(function(math, rla, name){
+  
+  iplot(list(math, rla), main = name, xlab = "Years to treatment",
+        col = cols, ci.col = cols, pt.pch = 19)
+  legend("topleft", legend = c("Math", "RLA"),
+         col = cols, pch = 19)
+  
+}, model.math.storm, model.rla.storm, dep.vars)
 
 
 
