@@ -71,9 +71,9 @@ We use the existing implementation in the \textbf{fixest} R package \citep{Berge
 
 Below we discuss the identifying assumptions.
 
-\textbf{Parallel Trends:} Parallel trends in the sense of \cite{Sun_2021} refers to the following: $\E[Y_{i, t}^{\infty} - Y_{i, s}^{\infty} | E_i = e]$ does not depend on $e$ for any $s \neq t$. That is, the expected temporal difference, i.e. the trend, in the potential outcomes of being never-treated is the same for all treatment timings. A conditional version of the assumption, as in \cite{Callaway_2021}, should definitely hold, as test scores and natural disasters are plausibly independent given location. However, we cannot be sure about the unconditional version.
+\textbf{Parallel Trends:} Parallel trends in the sense of \cite{Sun_2021} refers to the following: $\E[Y_{i, t}^{\infty} - Y_{i, s}^{\infty} | E_i = e]$ does not depend on $e$ for any $s \neq t$. That is, the expected temporal difference, i.e. the trend, in the potential outcomes of being never-treated is the same for all treatment timings. A conditional version of the assumption, as in \cite{Callaway_2021}, should definitely hold, as test scores and natural disasters are plausibly independent given location. However, we cannot be sure about the unconditional version required by \cite{Sun_2021}.
 
-Testing for parallel trends is problematic for two reasons: These tests tend to have very low power and they introduce selective inference type issues if inference is conditional on passing a parallel trends test \citep{Rambachan_2019}.
+Testing for parallel trends is problematic for two reasons: These tests tend to have very low power and they introduce selective inference type issues if inference is conditional on passing a parallel trends test \citep{Rambachan_2019}. A purely visual inspection of pre-treatment trends does not indicate a violation of the parallel trends assumption (see appendix \ref{PreTrends}). In fact, the trends look almost identical for treated and control (never-treated) units.
 
 \textbf{No Anticipatory Behavior:} There is no treatment effect prior to treatment, that is $\E[Y_{i, e+l} - Y_{i, e+l}^{\infty}] = 0$ for all $e$ and all $l < 0$. This assumption is plausible as the treatment path is not known. Natural disasters are quasi-random and cannot be reliably forecast more than a few days in advance.
 

@@ -135,34 +135,17 @@ dev.off()
 ######## Parallel Trends Plots ########
 
 
-
-# # compute time to treatment
-# dat[, TimeToTreat := ifelse(TreatStart != 0,
-#                             year - TreatStart,
-#                             NA),
-#     by = .(fips, grade, subject)]
-# 
-# 
-# 
-# # aggregate by time to treat
-# dat.plot <- dat[, lapply(.SD, mean, na.rm = TRUE),
-#                 by = .(TimeToTreat, TreatStart, subject),
-#                 .SDcols = c("cs_mn_all", "cs_mn_blk", "cs_mn_hsp",
-#                             "cs_mn_fem", "cs_mn_ecd")]
-# 
-# # only keep complete cases
-# dat.plot <- dat.plot[complete.cases(dat.plot)]
-
-# loop over variables
-
-# plot by cohort
+# loop over both subjects
 invis.Map(function(sub, name){
   
   file <- paste0("ParTrendsPlot", name, ".png")
   png(file, width = 15, height = 20, res = 1000, units = unit)
   
+  
   par(mfrow = c(5, 2),
       mar = c(2, 4, 1, 1))
+  
+  # loop over cohorts
   invis.Map(function(cohort){
     
     # filter by subject
