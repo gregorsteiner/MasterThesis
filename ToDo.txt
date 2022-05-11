@@ -1,5 +1,0 @@
-Selection of disaster declarations (Who is applying?)
-
-Different disaster data?
-
-Implement better way to get fips codes from county name
