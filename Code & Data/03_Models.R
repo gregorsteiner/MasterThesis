@@ -7,9 +7,6 @@ library(data.table)
 library(fixest)
 
 
-hei <- 400
-wid <- 600
-
 # read data
 dat <- readRDS("Data.RDS")
 #assist <- readRDS("AssistanceData.RDS")
@@ -21,12 +18,12 @@ assist.cov <- readRDS("AssistanceCovData.RDS")
 
 # Sun & Abraham
 model.math <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
-                 sunab(TreatStart, year, bin.rel = c(-5:-9)) | year + fips + grade,
-               data = dat[subject == "mth"], vcov = "iid")
+                 sunab(TreatStart, year, ref.p = c(-1, -3000), bin.rel = c(-5:-3000)) | year + fips + grade,
+               data = dat[subject == "mth"], cluster = "TreatStart")
 
 model.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
-                     sunab(TreatStart, year, bin.rel = c(-5:-9)) | year + fips + grade,
-                   data = dat[subject == "rla"], vcov = "iid")
+                     sunab(TreatStart, year, ref.p = c(-1, -3000), bin.rel = c(-5:-9)) | year + fips + grade,
+                   data = dat[subject == "rla"], cluster = "TreatStart")
 
 # automatically export as tex file
 etable(model.math, file = "../TeX Files/MainResultsMath.tex", replace = TRUE,
@@ -36,7 +33,8 @@ etable(model.math, file = "../TeX Files/MainResultsMath.tex", replace = TRUE,
                 cs_mn_hsp = "Hispanic",
                 cs_mn_fem = "Female",
                 cs_mn_ecd = "Econ. Disadv.",
-                year = "Year", grade = "Grade", fips = "County"))
+                year = "Year", grade = "Grade", fips = "County",
+                TreatStart = "Cohort"))
 
 etable(model.rla, file = "../TeX Files/MainResultsRLA.tex", replace = TRUE,
        label = "MainResultsRLA", title = "Results (RLA)",
@@ -45,7 +43,8 @@ etable(model.rla, file = "../TeX Files/MainResultsRLA.tex", replace = TRUE,
                 cs_mn_hsp = "Hispanic",
                 cs_mn_fem = "Female",
                 cs_mn_ecd = "Econ. Disadv.",
-                year = "Year", grade = "Grade", fips = "County"))
+                year = "Year", grade = "Grade", fips = "County",
+                TreatStart = "Cohort"))
 
 
 

@@ -23,7 +23,11 @@ Also, we need to drop at least two leads or lags to avoid a multicollinearity pr
 \end{align}
 where $D_{i, t-5}$ indicates treatment for any $l \leq 5$.
 
-It is implausible that the treatment effects are constant in our setting. The extent of disasters varies substantially, and also the level of preparation for such disasters likely displays high variance across counties. 
+It is implausible that the treatment effects are constant in our setting. The extent of disasters varies substantially, and also the level of preparation for such disasters likely displays high variance across counties. With heterogenous treatment effects, standard two-way fixed-effects estimators are inadequate \citep{deChaisemartin_2020, deChaisemartin_2022, Sun_2021}. Therefore, we use an alternative estimation procedure by \cite{Sun_2021}.
+
+Treatment adoption varies in time and is therefore assigned in clusters: Counties that are first treated in a given year form a cluster. Following the recommendation by \cite{Abadie_2017}, standard errors are clustered at the cohort level. 
+
+
 
 \subsection{Interaction-weighted estimator}
 
