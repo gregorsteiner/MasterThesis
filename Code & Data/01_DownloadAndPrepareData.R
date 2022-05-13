@@ -149,9 +149,11 @@ fema.dis.agg[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
 elec <- fread("Raw Data/countypres_2000-2020.csv")
 
 # create assistance covariate data
-assist.cov <- elec[year == 2016,
-                   .(ShareDem2016 = candidatevotes[party == "DEMOCRAT"] / totalvotes[party == "DEMOCRAT"],
-                     ShareRep2016 = candidatevotes[party == "REPUBLICAN"] / totalvotes[party == "REPUBLICAN"],
+assist.cov <- elec[,
+                   .(ShareDem2016 = candidatevotes[party == "DEMOCRAT" & year == 2016] / totalvotes[party == "DEMOCRAT" & year == 2016],
+                     ShareRep2016 = candidatevotes[party == "REPUBLICAN" & year == 2016] / totalvotes[party == "REPUBLICAN" & year == 2016],
+                     ShareDem2008 = candidatevotes[party == "DEMOCRAT" & year == 2008] / totalvotes[party == "DEMOCRAT" & year == 2008],
+                     ShareRep2008 = candidatevotes[party == "REPUBLICAN" & year == 2008] / totalvotes[party == "REPUBLICAN" & year == 2008],
                      AssistanceApplicant = as.numeric(fips %in% fema.assistance$fips)),
                    by = .(fips = county_fips)]
 
