@@ -15,6 +15,10 @@ Figure \ref{DisasterMap} shows the number of declared disasters between 2009 and
 	\label{DisasterMap}
 \end{figure}
 
+Table \ref{DisasterTypes} shows the types of disasters and their proportion in the FEMA data. Storms make up the largest share of disaster events. Fire and floods are also a substantial part.
+
+\input{DisasterTypes.tex}
+
 
 FEMA also provides a dataset on  their Public Assistance Applicants Program Deliveries. This contains information on applicants and their recovery priorities, including the amount of damage caused and amount of federal disaster assistance granted. Unfortunately, this data is only available since October 2016. Figure \ref{AssistanceMap} shows the total federal assistance awarded to counties.
 
@@ -22,7 +26,7 @@ FEMA also provides a dataset on  their Public Assistance Applicants Program Deli
 \begin{figure}[!h]
 	\centering
 	\includegraphics[scale=1]{"../Code & Data/AssistanceMap.png"}
-	\caption{Amount of disaster damage and federal disaster assistance (in USD) awarded to counties since October 2016}
+	\caption{Amount of disaster damage reported by and federal disaster assistance awarded to counties since October 2016 (both in USD)}
 	\label{AssistanceMap}
 \end{figure}
 
@@ -43,7 +47,7 @@ It is also interesting whether variation in the federal assistance procedure may
 
 Since FEMA declarations may be driven by politics, we repeat the analysis on a second disaster dataset from an alternative source.
 
-The National Weather Service (NWS) provides data on storm events. In particular, this covers hurricanes, mainly affecting southern coastal regions, and tornadoes, mainly affecting the midwest. Hurricanes and Tornadoes make up a very large part of all natural disasters experienced in the United States. Combined they account for more than 40\% of all federal disaster assistance in the FEMA Public Assistance Applicants Program Deliveries.
+The National Weather Service (NWS) provides data on storm events. In particular, this covers hurricanes, mainly affecting southern coastal regions, tornadoes, and other severe storms. These make up a very large part of all natural disasters experienced in the United States (see table \ref{DisasterTypes}). Combined they account for more than 80\% of all federal disaster damage in the FEMA Public Assistance Applicants Program Deliveries database.
 
 Storm exposure by county is shown in figure \ref{StormMap}.
 
@@ -68,14 +72,13 @@ Furthermore, the Stanford Education Data Archive maintains a large set of covari
 
 \subsection{Combining disaster and testing data}
 
-Natural disasters should only have an effect on test scores if they occur before the test. Standardized tests are generally administered during spring. We will use March 1st as a cut-off point. Thus, any disaster happening within the same school year before the 1st of March will be considered. School years tend to start in late August or early September with some variation across states. We will use September 1st, meaning any disaster happening between September 1st and March 1st will be counted for a given school year.
+Natural disasters should only have an effect on test scores if they occur before the test. Standardized tests are generally administered during spring. We will use March 1st as a cut-off point. Thus, any disaster happening within the same school year before the 1st of March will be considered. School years tend to start in late August or early September with some variation across states. We will use September 1st, meaning any disaster happening between September 1st and March 1st will be counted for a given school year. Disasters occuring in the summer or in the spring after the exams should have much less influence on performance. Thus, we do not consider disasters that occur between March 1st and September 1st.
 
 Each disaster is assigned to a school year as described above. Then, disaster and test score data can be merged by school year and county. This yields a panel data set with six grades and two subjects for each county-year combination.
 
-The outcomes of interest are overall mean test scores by county, and mean test scores for black, hispanic, female, and economically disadvantaged students. Table \ref{SumStats} shows summary statistics and figure \ref{DepVarsBoxplot} shows boxplots for the five outcomes of interest. All five mean test scores are measured on the cohort standardized scale, that is a given observation measures the distance in standard deviations from the national reference cohort.
+The outcomes of interest are overall mean test scores by county, and mean test scores for black, hispanic, female, and economically disadvantaged students. Figure \ref{DepVarsBoxplot} shows boxplots for the five outcomes of interest. All five mean test scores are measured on the cohort standardized scale, that is a given observation measures the distance in standard deviations from the national reference cohort. 
 
-\input{SummaryStats.tex}
-
+Due to the way the scale is constructed, overall test scores are distributed symmetrically around zero, except for a few outliers. The mean scores for black, hispanic, and economically disadvantaged students are shifted downwards by -0.48, -0.281, and -0.283 respectively. Female mean scores are slightly above overall mean scores, meaning that female students perform slightly better than male students on average.
 
 \begin{figure}[!h]
 	\centering

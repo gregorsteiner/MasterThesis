@@ -85,27 +85,6 @@ Testing for parallel trends is problematic for two reasons: These tests tend to 
 
 Thus, both identifying assumptions should be fulfilled and the IW-Estimator consistently estimates a weighted average of the cohort average treatment effects on the treated.
 
-\subsection{Control Variables}
-
-Here, we discuss additional control variables, that is the content of $X_{i,t}$ in equations (\ref{baseline}) and (\ref{baselineBinned}). 
-
-One may be tempted to include economic outcomes of a county, like income or unemployment, to control for different economic conditions. However, this is likely not a good idea. Let $Z$ be some measure of the economic conditions in a county, then $Z$ is likely influenced by both natural disasters and the average academic achievement in the county. Figure \ref{DAG} illustrates this relationship. $Z$ is referred to as a collider (or common effect), and conditioning on $Z$ induces a non-causal association between natural disasters and academic achievement \citep{Cinelli_2020}. In such cases, $Z$ is also called a bad control. Consequently, we do not include any economic control variables, that may be affected by both academic achievement and natural disasters.
-
-\begin{figure}[!h]
-	\centering
-	\begin{tikzpicture}
-		\node[state] (d) at (0,0) {$D$};
-		\node[state] (y) [right = of d] {$Y$};
-		\node[state] (z) [below right = of d] {$Z$};
-		
-		\path (d) edge (y);
-		\path (d) edge (z);
-		\path (y) edge (z);
-	\end{tikzpicture}
-	\caption{Causal diagram of the relationship}
-	\label{DAG}
-\end{figure}
-
 
 
 

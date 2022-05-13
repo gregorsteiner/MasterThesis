@@ -26,8 +26,8 @@ dat.summary <- dat[, .(Disasters, Treatment = factor(DisasterTreat),
                        "Mean test score (female students)" = cs_mn_fem,
                        "Mean test score (econ. disadv. students)" = cs_mn_ecd)]
 
-vtable::sumtable(dat.summary,
-                 out = "latex", file = "../TeX Files/SummaryStats.tex", anchor = "SumStats")
+# vtable::sumtable(dat.summary,
+#                  out = "latex", file = "../TeX Files/SummaryStats.tex", anchor = "SumStats")
 
 
 # boxplots for dependent variables
@@ -43,6 +43,17 @@ boxplot(dat[, .("Overall" = cs_mn_all,
         col = 4)
 
 dev.off()
+
+
+# types of natural disasters
+fema.disasters <- setDT(rfema::open_fema("DisasterDeclarationsSummaries",
+                                         ask_before_call = FALSE))
+fema.disasters <- fema.disasters[fyDeclared %in% 2009:2018]
+
+vtable::sumtable(fema.disasters[, .("Disaster Type" = factor(incidentType))],
+                 out = "latex", file = "../TeX Files/DisasterTypes.tex",
+                 anchor = "DisasterTypes", title = "Disasters from 2009 to 2018 by type",
+                 fit.page = NA)
 
 
 ######## Application characteristics ########
