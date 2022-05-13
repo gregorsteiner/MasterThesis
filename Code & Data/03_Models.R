@@ -77,6 +77,58 @@ invis.Map(function(math, rla, name){
 dev.off()
 
 
+
+
+# STorms
+
+model.math.storm <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+                            sunab(TreatStartStorm, year, ref.p = c(-1, -3000), bin.rel = c(-5:-3000)) | year + fips + grade,
+                          data = dat[subject == "mth"], cluster = "TreatStartStorm")
+
+model.rla.storm <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+                           sunab(TreatStartStorm, year, ref.p = c(-1, -3000), bin.rel = c(-5:-9)) | year + fips + grade,
+                         data = dat[subject == "rla"], cluster = "TreatStartStorm")
+
+
+png("ResultsPlotStorm.png", width = 15, height = 12, units = "cm", res = 1200)
+
+iplot(list(model.math.storm[[1]], model.rla.storm[[1]]), main = "", xlab = "Years to treatment",
+      col = cols, ci.col = cols, pt.pch = 19)
+legend("topleft", legend = c("Math", "RLA"),
+       col = cols, pch = 19)
+
+dev.off()
+
+png("ResultsPlotSubStorm.png", width = 15, height = 15, units = "cm", res = 1200)
+
+par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+invis.Map(function(math, rla, name){
+  
+  iplot(list(math, rla), main = name, xlab = "Years to treatment",
+        col = cols, ci.col = cols, pt.pch = 19)
+  legend("topleft", legend = c("Math", "RLA"),
+         col = cols, pch = 19)
+  
+}, model.math.storm[2:5], model.rla.storm[2:5], dep.vars[2:5])
+
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # CS using the did package
 att <- did::att_gt(yname = "cs_mn_all", tname = "year", idname = "fips", gname = "TreatStart",
                    data = dat[grade == 3 & subject == "mth"])
