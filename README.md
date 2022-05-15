@@ -188,6 +188,11 @@ treatment timing.
 
 <img src="Code & Data/ResultsPlot.png" width="7086" />
 
+The effect may be more severe for minorities or disadvantaged students.
+Below you can see the same plot for some subgroups.
+
+<img src="Code & Data/ResultsPlotSub.png" width="7086" />
+
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent">

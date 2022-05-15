@@ -63,7 +63,12 @@ To identify a causal effect, I use an event study design. Due to likely very het
 knitr::include_graphics("Code & Data/ResultsPlot.png")
 ```
 
+The effect may be more severe for minorities or disadvantaged students. Below you can see the same plot for some subgroups.
 
+
+```{r}
+knitr::include_graphics("Code & Data/ResultsPlotSub.png")
+```
 
 
 
