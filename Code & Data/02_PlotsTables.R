@@ -145,64 +145,71 @@ dev.off()
 
 ######## Parallel Trends Plots ########
 
+# loop over fema and storm data
+invis.lapply(c("FEMA", "Storm"), function(type){
+  
+  # loop over both subjects
+  invis.Map(function(sub, name){
+    
+    file <- paste0("ParTrendsPlot", name, type, ".png")
+    png(file, width = 15, height = 20, res = 1000, units = unit)
+    
+    
+    par(mfrow = c(5, 2),
+        mar = c(2, 4, 1, 1))
+    
+    # loop over cohorts
+    invis.Map(function(cohort){
+      
+      # filter by subject
+      dat.int <- dat[subject == sub]
+      
+      # split into treatment and control
+      if(type == "FEMA") dat.int[, Group := ifelse(TreatStart == cohort,
+                                                   "Treatment", ifelse(TreatStart == 3000,
+                                                                       "Control", NA))]
+      else dat.int[, Group := ifelse(TreatStartStorm == cohort,
+                                     "Treatment", ifelse(TreatStartStorm == 3000,
+                                                         "Control", NA))]
+      
+      
+      # add relative time
+      dat.int[, RelTime := year - cohort ]
+      
+      # aggregate by relative time and group
+      dat.int <- dat.int[, .(Mean = mean(cs_mn_all, na.rm = TRUE)),
+                         by = .(RelTime, Group)]
+      
+      # sort by relative time to make sure the plot looks fine
+      dat.int <- dat.int[order(dat.int$RelTime)]
+      
+      # plot
+      plot(dat.int[Group == "Treatment", RelTime],
+           dat.int[Group == "Treatment", Mean],
+           xlab = "Years to treatment", ylab = "Mean Score", 
+           main = paste0("First treated in ", cohort),
+           ylim = range(dat.int$Mean), type = "n")
+      
+      grid()
+      abline(v = 0, col = 2)
+      
+      lines(dat.int[Group == "Treatment", RelTime],
+            dat.int[Group == "Treatment", Mean],
+            col = 3, lwd = 2)
+      lines(dat.int[Group == "Control", RelTime],
+            dat.int[Group == "Control", Mean],
+            col = 4, lwd = 2)
+      
+      legend("bottomright", c("Treatment", "Control"),
+             col = c(3, 4), lwd = 2, cex = 0.75)
+    
+    }, 2009:2018)
+    
+    dev.off()
+    
+  }, c("mth", "rla"), c("Mathematics", "RLA"))
 
-# loop over both subjects
-invis.Map(function(sub, name){
-  
-  file <- paste0("ParTrendsPlot", name, ".png")
-  png(file, width = 15, height = 20, res = 1000, units = unit)
-  
-  
-  par(mfrow = c(5, 2),
-      mar = c(2, 4, 1, 1))
-  
-  # loop over cohorts
-  invis.Map(function(cohort){
-    
-    # filter by subject
-    dat.int <- dat[subject == sub]
-    # split into treatment and control
-    dat.int[, Group := ifelse(TreatStart == cohort,
-                              "Treatment", ifelse(TreatStart == 0,
-                                                  "Control", NA))]
-    
-    # add relative time
-    dat.int[, RelTime := year - cohort ]
-    
-    # aggregate by relative time and group
-    dat.int <- dat.int[, .(Mean = mean(cs_mn_all, na.rm = TRUE)),
-                       by = .(RelTime, Group)]
-    
-    # sort by relative time to make sure the plot looks fine
-    dat.int <- dat.int[order(dat.int$RelTime)]
-    
-    # plot
-    plot(dat.int[Group == "Treatment", RelTime],
-         dat.int[Group == "Treatment", Mean],
-         xlab = "Years to treatment", ylab = "Mean Score", 
-         main = paste0("First treated in ", cohort),
-         ylim = range(dat.int$Mean), type = "n")
-    
-    grid()
-    abline(v = 0, col = 2)
-    
-    lines(dat.int[Group == "Treatment", RelTime],
-          dat.int[Group == "Treatment", Mean],
-          col = 3, lwd = 2)
-    lines(dat.int[Group == "Control", RelTime],
-          dat.int[Group == "Control", Mean],
-          col = 4, lwd = 2)
-    
-    legend("bottomright", c("Treatment", "Control"),
-           col = c(3, 4), lwd = 2, cex = 0.75)
-  
-  }, 2009:2018)
-  
-  dev.off()
-  
-}, c("mth", "rla"), c("Mathematics", "RLA"))
-
-
+})
 
 
 ######## Maps ########
