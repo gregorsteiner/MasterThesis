@@ -115,14 +115,6 @@ dev.off()
 
 
 
-
-
-
-
-
-
-
-
 # logistic regression for assistance covariates
 assist.cov$MedInclog <- log(assist.cov$MedInc2016)
 model.logit.ass <- feglm(AssistanceApplicant ~ ShareDem2016 + MedInclog
