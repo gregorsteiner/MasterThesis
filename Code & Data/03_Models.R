@@ -56,7 +56,7 @@ cols <- c(3, 4)
 png("ResultsPlot.png", width = 15, height = 12, units = "cm", res = 1200)
 
 iplot(list(model.math[[1]], model.rla[[1]]), main = "", xlab = "Years to treatment",
-      col = cols, ci.col = cols, pt.pch = 19)
+      col = cols, ci.col = cols, ci.lwd = 2, ci.width = 0.2, pt.pch = 19)
 legend("topleft", legend = c("Math", "RLA"),
        col = cols, pch = 19)
 
@@ -68,7 +68,7 @@ par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 invis.Map(function(math, rla, name){
   
   iplot(list(math, rla), main = name, xlab = "Years to treatment",
-        col = cols, ci.col = cols, pt.pch = 19)
+        col = cols, ci.col = cols, pt.pch = 19, ci.lwd = 2, ci.width = 0.2)
   legend("topleft", legend = c("Math", "RLA"),
          col = cols, pch = 19)
   
@@ -93,7 +93,7 @@ model.rla.storm <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd
 png("ResultsPlotStorm.png", width = 15, height = 12, units = "cm", res = 1200)
 
 iplot(list(model.math.storm[[1]], model.rla.storm[[1]]), main = "", xlab = "Years to treatment",
-      col = cols, ci.col = cols, pt.pch = 19)
+      col = cols, ci.col = cols, ci.lwd = 2, ci.width = 0.2, pt.pch = 19)
 legend("topleft", legend = c("Math", "RLA"),
        col = cols, pch = 19)
 
@@ -105,7 +105,7 @@ par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 invis.Map(function(math, rla, name){
   
   iplot(list(math, rla), main = name, xlab = "Years to treatment",
-        col = cols, ci.col = cols, pt.pch = 19)
+        col = cols, ci.col = cols, ci.lwd = 2, ci.width = 0.2, pt.pch = 19)
   legend("topleft", legend = c("Math", "RLA"),
          col = cols, pch = 19)
   
