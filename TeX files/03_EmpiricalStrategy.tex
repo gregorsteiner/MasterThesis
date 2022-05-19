@@ -11,15 +11,15 @@ In order to identify a causal effect, unobservable determinants of a county's te
 
 Consequently, the baseline specification is
 \begin{align} \label{baseline}
-	y_{i, t, g} = \sum_{l = -9, l \neq -1}^{8} \beta_l D_{i, t-l} + \alpha_i + \lambda_t + \zeta_g + X_{i, t} \gamma + \varepsilon_{i, t, g} \;,
+	y_{i, t, g} = \sum_{l = -9, l \neq -1}^{8} \beta_l D_{i, t-l} + \alpha_i + \lambda_t + \zeta_g + \varepsilon_{i, t, g} \;,
 \end{align}
-where $y_{i, t, g}$ is the outcome of interest for county $i$, year $t$, and grade $g$. County, year, and grade fixed-effects are given by $\alpha_i$, $\lambda_t$, and $\zeta_g$ respectively and $X_{i, t}$ is a row vector of additional control variables. $D_{i, t-l}$ is a treatment indicator for county $i$ in year $t-l$. That is, $D_{i, t-l} = 1$ if the county had already experienced a disaster $l$ years ago at time $t$.
+where $y_{i, t, g}$ is the outcome of interest for county $i$, year $t$, and grade $g$. County, year, and grade fixed-effects are given by $\alpha_i$, $\lambda_t$, and $\zeta_g$ respectively. $D_{i, t-l}$ is a treatment indicator for county $i$ in year $t-l$. That is, $D_{i, t-l} = 1$ if the county had already experienced a disaster $l$ years ago at time $t$.
 
 Since we consider the time period 2009-2018, $-9 \leq l \leq 9$, but note that $l = 9$ would correspond to a unit that experienced a disaster in the first period and is therefore always treated. As recommended by \cite{Sun_2021} and \cite{Callaway_2021}, these units are dropped from estimation. Neither can treatment effects be identified for that group nor are they useful as a comparison group under standard parallel trends assumptions.
 
 Also, we need to drop at least two leads or lags to avoid a multicollinearity problem. A complete set of treatment leads and lags is perfectly collinear with unit and time fixed-effects \citep[for an extensive discussion of this issue see][section 3.2]{Borusyak_2021}. It is common to drop the first relative indicator prior to treatment (i.e. $\beta_{-1} = 0$). This acts as a normalization of treatment relative to the period before treatment. Furthermore, we bin the distant leads, that is we combine the treatment indicators for $l \leq -5$. Thus, equation (\ref{baseline}) turns into
 \begin{align} \label{baselineBinned}
-	y_{i, t, g} = \beta_{-5}  D_{i, t-5} + \sum_{l = -4, l \neq -1}^{8} \beta_l D_{i, t-l} + \alpha_i + \lambda_t + \zeta_g + X_{i, t} \gamma + \varepsilon_{i, t, g} \;,
+	y_{i, t, g} = \beta_{-5}  D_{i, t-5} + \sum_{l = -4, l \neq -1}^{8} \beta_l D_{i, t-l} + \alpha_i + \lambda_t + \zeta_g + \varepsilon_{i, t, g} \;,
 \end{align}
 where $D_{i, t-5}$ indicates treatment for any $l \leq 5$.
 
@@ -70,8 +70,7 @@ Under some standard assumptions, $\widehat{v}_g$ is asymptotically normal \citep
 \end{align*}
 where $W^{l}$ is the probability limit of the weight matrix $\widehat{W}^l$.
 
-
-We use the existing implementation in the \textbf{fixest} R package \citep{Berge_2018}.
+We use $\widehat{v}_g$ as an estimator for $\beta_{g}$ in equation (\ref{baselineBinned}) and we exploit the existing implementation in the \textbf{fixest} R package \citep{Berge_2018}.
 
 \subsection{Identifying assumptions}
 
