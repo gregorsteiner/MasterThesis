@@ -53,7 +53,7 @@ dep.vars <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")
 cols <- c(3, 4)
 
 
-png("ResultsPlot.png", width = 15, height = 12, units = "cm", res = 1200)
+pdf("ResultsPlot.pdf", width = 15 / 2.5, height = 12 / 2.5)
 
 iplot(list(model.math[[1]], model.rla[[1]]), main = "", xlab = "Years to treatment",
       col = cols, ci.col = cols, ci.lwd = 2, ci.width = 0.2, pt.pch = 19)
@@ -62,7 +62,7 @@ legend("topleft", legend = c("Math", "RLA"),
 
 dev.off()
 
-png("ResultsPlotSub.png", width = 15, height = 15, units = "cm", res = 1200)
+pdf("ResultsPlotSub.pdf", width = 15 / 2.5, height = 15 / 2.5)
 
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 invis.Map(function(math, rla, name){
@@ -90,7 +90,7 @@ model.rla.storm <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd
                          data = dat[subject == "rla"])
 
 
-png("ResultsPlotStorm.png", width = 15, height = 12, units = "cm", res = 1200)
+pdf("ResultsPlotStorm.pdf", width = 15 / 2.5, height = 12 / 2.5)
 
 iplot(list(model.math.storm[[1]], model.rla.storm[[1]]), main = "", xlab = "Years to treatment",
       col = cols, ci.col = cols, ci.lwd = 2, ci.width = 0.2, pt.pch = 19)
@@ -99,7 +99,7 @@ legend("topleft", legend = c("Math", "RLA"),
 
 dev.off()
 
-png("ResultsPlotSubStorm.png", width = 15, height = 15, units = "cm", res = 1200)
+pdf("ResultsPlotSubStorm.pdf", width = 15 / 2.5, height = 15 / 2.5)
 
 par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 invis.Map(function(math, rla, name){

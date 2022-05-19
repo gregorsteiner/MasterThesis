@@ -6,9 +6,8 @@ library(data.table)
 library(usmap)
 library(ggplot2)
 
-hei <- 10
-wid <- 16
-unit <- "cm"
+hei <- 10 / 2.5
+wid <- 16 / 2.5
 
 dat <- setDT(readRDS("Data.RDS"))
 assist <- setDT(readRDS("AssistanceData.RDS"))
@@ -31,8 +30,8 @@ dat.summary <- dat[, .(Disasters, Treatment = factor(DisasterTreat),
 
 
 # boxplots for dependent variables
-png("DepVarsBoxplot.png",
-    width = wid, height = hei, units = unit, res = 1200)
+pdf("DepVarsBoxplot.pdf",
+    width = wid, height = hei)
 
 par(mar = c(3, 3, 1, 1))
 boxplot(dat[, .("Overall" = cs_mn_all,
@@ -100,8 +99,8 @@ assist.cov[, AssistanceApplicant := factor(AssistanceApplicant,
 
 
 col <- c(3, 4)
-png("AssistanceCovBoxplot.png",
-    width = wid, height = wid, units = unit, res = 400)
+pdf("AssistanceCovBoxplot.pdf",
+    width = wid, height = wid)
 
 par(mfrow = c(2, 2), mar = c(3, 4, 1, 1))
 invis.Map(function(x, ylab){
@@ -151,8 +150,8 @@ invis.lapply(c("FEMA", "Storm"), function(type){
   # loop over both subjects
   invis.Map(function(sub, name){
     
-    file <- paste0("ParTrendsPlot", name, type, ".png")
-    png(file, width = 15, height = 20, res = 1000, units = unit)
+    file <- paste0("ParTrendsPlot", name, type, ".pdf")
+    pdf(file, width = 15 / 2.5, height = 20 / 2.5)
     
     
     par(mfrow = c(5, 2),
@@ -227,8 +226,8 @@ fema.cum <- aggregate(list("Disasters" = as.numeric(dat$CumuDisasters)),
                         
                         })
 
-png("DisasterMap.png",
-    width = wid, height = hei, units = unit, res = 1200)
+pdf("DisasterMap.pdf",
+    width = wid, height = hei)
 
 plot_usmap(data = fema.cum, values = "Disasters") +
   scale_fill_viridis_c(name = "", option = "H",
@@ -253,8 +252,8 @@ storms.cum <- aggregate(list("Storms" = as.numeric(dat$CumuStorms)),
                           return(res)
                         })
 
-png("StormMap.png",
-    width = wid, height = hei, units = unit, res = 1200)
+pdf("StormMap.pdf",
+    width = wid, height = hei)
 
 plot_usmap(data = storms.cum, values = "Storms") +
   scale_fill_viridis_c(name = "", option = "H",
@@ -275,8 +274,8 @@ dat.plot <- melt(assist[, .("Damage" = sum(totalDamage, na.rm = TRUE) + 1,
                         by = .(fips)],
                  id.vars = c("fips"), measure.vars = c("Damage", "Assistance"))
 
-png("AssistanceMap.png",
-    width = wid, height = hei, units = unit, res = 1200)
+pdf("AssistanceMap.pdf",
+    width = wid, height = hei)
 
 plot_usmap(data = dat.plot,
            values = "value") +
