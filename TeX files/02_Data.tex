@@ -51,6 +51,8 @@ Since FEMA declarations may be driven by politics, we repeat the analysis on a s
 	\label{StormMap}
 \end{figure}
 
+We only consider severe storms which are likely to cause substantial damage. Tornadoes are classified based on the Enhanced Fujita (EF) scale based on estimated peak wind speeds \citep[for more details see][]{EF_Scale}. Tornadoes with an EF scale of 0 or 1 (wind speeds of up to 110 mph) are characterized as weak. Therefore, we exclude those and only keep tornadoes with an EF scale of at least 2 (wind speeds of at least 111 mph). Unfortunately, the hurricane data does not include a similar measure, but it does include an estimated amount of property damage. We exclude all hurricanes with an estimated property damage of zero.
+
 
 \subsection{Standardized Testing Data}
 
@@ -71,7 +73,7 @@ Each disaster is assigned to a school year as described above. Then, disaster an
 
 The outcomes of interest are overall mean test scores by county, and mean test scores for black, hispanic, female, and economically disadvantaged students. Figure \ref{DepVarsBoxplot} shows boxplots for the five outcomes of interest. All five mean test scores are measured on the cohort standardized scale, that is a given observation measures the distance in standard deviations from the national reference cohort. 
 
-Due to the way the scale is constructed, overall test scores are distributed symmetrically around zero, except for a few outliers. The mean scores for black, hispanic, and economically disadvantaged students are shifted downwards by -0.48, -0.281, and -0.283 respectively. Female mean scores are slightly above overall mean scores, meaning that female students perform slightly better than male students on average.
+Due to the way the scale is constructed, overall test scores are distributed symmetrically around zero, except for a few outliers. The mean scores for black, hispanic, and economically disadvantaged students are shifted downwards by -0.48, -0.281, and -0.283 standard deviations respectively. Female mean scores are slightly above overall mean scores, meaning that female students perform slightly better than male students on average.
 
 \begin{figure}[!h]
 	\centering

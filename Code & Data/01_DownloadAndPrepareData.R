@@ -183,6 +183,9 @@ saveRDS(fema.assist.agg, "AssistanceData.RDS")
 # read hurricanes 
 dat.hur <- fread("Raw Data/storm_data_search_results.csv")
 
+# exclude hurricanes with 0 damage
+dat.hur <- dat.hur[DAMAGE_PROPERTY_NUM > 0]
+
 # create year and fips columns
 dat.hur$BEGIN_DATE <- as.Date(dat.hur$BEGIN_DATE, format = "%m/%d/%Y")
 dat.hur[, `:=`(fips = as.numeric(dplyr::case_when(nchar(CZ_FIPS) == 3 ~ paste0(usmap::fips(STATE_ABBR), CZ_FIPS),
@@ -204,6 +207,9 @@ dat.hur <- dat.hur[, .(Hurricanes = length(EVENT_ID)),
 
 # read tornado data
 dat.tor <- fread("Raw Data/1950-2020_all_tornadoes.csv")
+
+# exclude tornadoes with weak (0 or 1 on EF scale) or missing (-9) magnitude
+dat.tor <- dat.tor[mag %in% 2:5]
 
 # pivot county codes from wide to long
 dat.tor <- melt(dat.tor, id.vars = c("om", "date", "stf"),
