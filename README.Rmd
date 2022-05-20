@@ -36,12 +36,6 @@ dat <- readRDS("Code & Data/Data.RDS")
 
 In my thesis I explore the link between natural disasters and education outcomes. The Stanford Education Data Archive [@SEDA] provides standardized test scores by county, year, grade and subject. Data on natural disasters is available at the FEMA database and the **rfema** package [@rfema] provides easy access.
 
-Below you can see the number of cumulative disasters by county from 2008/2009 to 2017/2018.
-
-```{r}
-xfun::embed_file("Code & Data/DisasterMap.pdf")
-```
-
 The outcomes of interest are mean test scores by county, and mean test scores for black, hispanic, female, and economically disadvantaged students.
 
 ```{r}
@@ -54,14 +48,7 @@ dat.summary <- dat[, .("Mean test score" = cs_mn_all,
 vtable::sumtable(dat.summary)
 ```
 
-
-
-To identify a causal effect, I use an event study design. Due to likely very heterogenous treatment effects, I employ the estimator by @Sun_2021. Below you can see a plot of the treatment effects for all students and subgroups in relative time to treatment.
-
-```{r}
-xfun::embed_file("Code & Data/ResultsPlot.pdf")
-```
-
+To identify a causal effect, I use an event study design. Due to likely very heterogenous treatment effects, I employ the estimator by @Sun_2021.
 
 ## References
 
