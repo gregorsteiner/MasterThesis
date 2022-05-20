@@ -38,12 +38,12 @@ In my thesis I explore the link between natural disasters and education outcomes
 
 Below you can see the number of cumulative disasters by county from 2008/2009 to 2017/2018.
 
-```{r out.width="80%", include=TRUE, fig.align='center'}
+```{r out.width="80%", include=TRUE}
 knitr::include_graphics("Code & Data/DisasterMap.pdf")
 
 ```
 
-The outcomes of interest are mean test scores by county, and achievement gaps between white and black, white and hispanic, male and female, and economically advantaged and disadvantaged students. 
+The outcomes of interest are mean test scores by county, and mean test scores for black, hispanic, female, and economically disadvantaged students.
 
 ```{r}
 dat.summary <- dat[, .("Mean test score" = cs_mn_all,
@@ -59,7 +59,7 @@ vtable::sumtable(dat.summary)
 
 To identify a causal effect, I use an event study design. Due to likely very heterogenous treatment effects, I employ the estimator by @Sun_2021. Below you can see a plot of the treatment effects for all students and subgroups in relative time to treatment.
 
-```{r out.width="80%", include=TRUE, fig.align='center'}
+```{r out.width="80%", include=TRUE}
 knitr::include_graphics("Code & Data/ResultsPlot.pdf")
 ```
 
