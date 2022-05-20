@@ -50,6 +50,15 @@ vtable::sumtable(dat.summary)
 
 To identify a causal effect, I use an event study design. Due to likely very heterogenous treatment effects, I employ the estimator by @Sun_2021.
 
+```{r}
+res <- magick::image_read_pdf("Code & Data/ResultsPlot.pdf")
+
+print(res)
+
+
+```
+
+
 ## References
 
 
