@@ -9,7 +9,7 @@ Data on natural disasters is available at the FEMA database and the
 Below you can see the number of cumulative disasters by county from
 2008/2009 to 2017/2018.
 
-![](Code%20&%20Data/DisasterMap.pdf)
+<embed src="Code & Data/DisasterMap.pdf" width="80%" style="display: block; margin: auto;" type="application/pdf" />
 
 The outcomes of interest are mean test scores by county, and achievement
 gaps between white and black, white and hispanic, male and female, and
@@ -186,9 +186,7 @@ very heterogenous treatment effects, I employ the estimator by Sun and
 Abraham (2021). Below you can see a plot of the treatment effects for
 all students and subgroups in relative time to treatment.
 
-<embed src="Code & Data/ResultsPlot.pdf" width="0.75\linewidth" type="application/pdf" />
-
-![Results](%22Code%20&%20Data/ResultsPlot.pdf%22)
+<embed src="Code & Data/ResultsPlot.pdf" width="80%" style="display: block; margin: auto;" type="application/pdf" />
 
 ## References
 
