@@ -186,7 +186,9 @@ very heterogenous treatment effects, I employ the estimator by Sun and
 Abraham (2021). Below you can see a plot of the treatment effects for
 all students and subgroups in relative time to treatment.
 
-![](Code%20&%20Data/ResultsPlot.pdf)
+<embed src="Code & Data/ResultsPlot.pdf" width="0.75\linewidth" type="application/pdf" />
+
+![Results](%22Code%20&%20Data/ResultsPlot.pdf%22)
 
 ## References
 

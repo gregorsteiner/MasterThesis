@@ -59,9 +59,11 @@ vtable::sumtable(dat.summary)
 
 To identify a causal effect, I use an event study design. Due to likely very heterogenous treatment effects, I employ the estimator by @Sun_2021. Below you can see a plot of the treatment effects for all students and subgroups in relative time to treatment.
 
-```{r}
+```{r out.width='0.75\\linewidth'}
 knitr::include_graphics("Code & Data/ResultsPlot.pdf")
 ```
+
+![Results]("Code & Data/ResultsPlot.pdf")
 
 
 
