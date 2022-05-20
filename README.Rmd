@@ -63,10 +63,6 @@ To identify a causal effect, I use an event study design. Due to likely very het
 knitr::include_graphics("Code & Data/ResultsPlot.pdf")
 ```
 
-![Results]("Code & Data/ResultsPlot.pdf")
-
-
-
 
 ## References
 
