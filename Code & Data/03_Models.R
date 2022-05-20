@@ -12,6 +12,8 @@ dat <- readRDS("Data.RDS")
 #assist <- readRDS("AssistanceData.RDS")
 assist.cov <- readRDS("AssistanceCovData.RDS")
 
+# color scheme
+cols <- c("firebrick", "cornflowerblue")
 
 ######## Models ########
 
@@ -50,29 +52,32 @@ etable(model.rla, file = "../TeX Files/MainResultsRLA.tex", replace = TRUE,
 
 # plot results
 dep.vars <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")
-cols <- c(3, 4)
 
 
-pdf("ResultsPlot.pdf", width = 15 / 2.5, height = 12 / 2.5)
+# layout
 
-iplot(list(model.math[[1]], model.rla[[1]]), main = "", xlab = "Years to treatment",
-      col = cols, ci.col = cols, ci.lwd = 2, ci.width = 0.2, pt.pch = 19)
-legend("topleft", legend = c("Math", "RLA"),
-       col = cols, pch = 19)
+pdf("ResultsPlot.pdf", width = 15 / 2.5, height = 20 / 2.5)
 
-dev.off()
+layout(matrix(c(1, 1:6, 6), ncol = 2, byrow = TRUE), heights = c(4, 4, 4, 1))
 
-pdf("ResultsPlotSub.pdf", width = 15 / 2.5, height = 15 / 2.5)
+par(mar = c(2, 4, 2, 1))
+iplot(list(model.math[[1]], model.rla[[1]]), main = "Overall", xlab = "Years to treatment",
+      col = cols, ci.col = cols, ci.lwd = 1, ci.width = 0.2,
+      pt.pch = 19, ylim = c(-0.07, 0.07))
 
-par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 invis.Map(function(math, rla, name){
   
   iplot(list(math, rla), main = name, xlab = "Years to treatment",
-        col = cols, ci.col = cols, pt.pch = 19, ci.lwd = 2, ci.width = 0.2)
-  legend("topleft", legend = c("Math", "RLA"),
-         col = cols, pch = 19)
+        col = cols, ci.col = cols, pt.pch = 19,
+        ci.lwd = 1, ci.width = 0.2, ylim = c(-0.12, 0.12))
   
 }, model.math[2:5], model.rla[2:5], dep.vars[2:5])
+
+par(mai=c(0,0,0,0))
+plot.new()
+legend(x = "center", legend = c("Math", "RLA"),
+       col = cols, lwd = 2, cex = 1, inset = 0, horiz = TRUE)
+
 
 dev.off()
 
@@ -90,26 +95,29 @@ model.rla.storm <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd
                          data = dat[subject == "rla"])
 
 
-pdf("ResultsPlotStorm.pdf", width = 15 / 2.5, height = 12 / 2.5)
 
-iplot(list(model.math.storm[[1]], model.rla.storm[[1]]), main = "", xlab = "Years to treatment",
-      col = cols, ci.col = cols, ci.lwd = 2, ci.width = 0.2, pt.pch = 19)
-legend("topleft", legend = c("Math", "RLA"),
-       col = cols, pch = 19)
+pdf("ResultsPlotStorm.pdf", width = 15 / 2.5, height = 20 / 2.5)
 
-dev.off()
+layout(matrix(c(1, 1:6, 6), ncol = 2, byrow = TRUE), heights = c(4, 4, 4, 1))
 
-pdf("ResultsPlotSubStorm.pdf", width = 15 / 2.5, height = 15 / 2.5)
+par(mar = c(2, 4, 2, 1))
+iplot(list(model.math.storm[[1]], model.rla.storm[[1]]), main = "Overall", xlab = "Years to treatment",
+      col = cols, ci.col = cols, ci.lwd = 1, ci.width = 0.2,
+      pt.pch = 19, ylim = c(-0.07, 0.07))
 
-par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
 invis.Map(function(math, rla, name){
   
   iplot(list(math, rla), main = name, xlab = "Years to treatment",
-        col = cols, ci.col = cols, ci.lwd = 2, ci.width = 0.2, pt.pch = 19)
-  legend("topleft", legend = c("Math", "RLA"),
-         col = cols, pch = 19)
+        col = cols, ci.col = cols, pt.pch = 19,
+        ci.lwd = 1, ci.width = 0.2, ylim = c(-0.12, 0.12))
   
 }, model.math.storm[2:5], model.rla.storm[2:5], dep.vars[2:5])
+
+par(mai=c(0,0,0,0))
+plot.new()
+legend(x = "center", legend = c("Math", "RLA"),
+       col = cols, lwd = 2, cex = 1, inset = 0, horiz = TRUE)
+
 
 dev.off()
 

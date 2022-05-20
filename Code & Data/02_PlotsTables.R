@@ -13,6 +13,8 @@ dat <- setDT(readRDS("Data.RDS"))
 assist <- setDT(readRDS("AssistanceData.RDS"))
 assist.cov <- setDT(readRDS("AssistanceCovData.RDS"))
 
+# color scheme
+col <- c("firebrick", "cornflowerblue")
 
 ######## Summary Statistics ########
 
@@ -39,7 +41,7 @@ boxplot(dat[, .("Overall" = cs_mn_all,
                 "Hispanic" = cs_mn_hsp,
                 "Female" = cs_mn_fem,
                 "Econ. disadv." = cs_mn_ecd)],
-        col = 4)
+        col = col)
 
 dev.off()
 
@@ -98,7 +100,7 @@ assist.cov[, AssistanceApplicant := factor(AssistanceApplicant,
                                            labels = c("Did not apply", "Applied"))]
 
 
-col <- c(3, 4)
+
 pdf("AssistanceCovBoxplot.pdf",
     width = wid, height = wid)
 
@@ -116,32 +118,6 @@ c("Median Income (2016)", "Democratic Votes (2016 Election)",
 dev.off()
 
 
-
-# # Treatment plot
-# dat.treat <- dat[order(TimeToTreat),
-#                  .(MeanScoreMath = mean(cs_mn_all[subject == "mth"], na.rm = TRUE),
-#                    MeanScoreRLA = mean(cs_mn_all[subject == "rla"], na.rm = TRUE)),
-#                  by = .("Years to Treatment" = TimeToTreat)]
-# 
-# dat.treat[, ":="(TreatmentMath = MeanScoreMath[is.na(`Years to Treatment`)] - MeanScoreMath,
-#                  TreatmentRLA = MeanScoreRLA[is.na(`Years to Treatment`)] - MeanScoreRLA)]
-# 
-# plot(dat.treat$`Years to Treatment`, dat.treat$TreatmentMath, type = "n",
-#      ylab = "Difference in mean test scores", xlab = "Years to Treatment",
-#      ylim = range(dat.treat$TreatmentMath, dat.treat$TreatmentRLA) + c(-0.01, 0.01))
-# grid()
-# abline(v = 0, lwd = 2, col = 2)
-# points(dat.treat$`Years to Treatment`, dat.treat$TreatmentMath,
-#        pch = 18, col = 3)
-# lines(dat.treat$`Years to Treatment`, dat.treat$TreatmentMath,
-#       lwd = 2, col = 3)
-# points(dat.treat$`Years to Treatment`, dat.treat$TreatmentRLA,
-#        pch = 18, col = 4)
-# lines(dat.treat$`Years to Treatment`, dat.treat$TreatmentRLA,
-#       lwd = 2, col = 4)
-
-
-
 ######## Parallel Trends Plots ########
 
 # loop over fema and storm data
@@ -154,8 +130,8 @@ invis.lapply(c("FEMA", "Storm"), function(type){
     pdf(file, width = 15 / 2.5, height = 20 / 2.5)
     
     
-    par(mfrow = c(5, 2),
-        mar = c(2, 4, 1, 1))
+    par(mar = c(2, 4, 1, 1))
+    layout(matrix(c(1:11, 11), nrow = 6, ncol = 2, byrow = TRUE), heights = c(rep(4, 5), 1))
     
     # loop over cohorts
     invis.Map(function(cohort){
@@ -190,19 +166,23 @@ invis.lapply(c("FEMA", "Storm"), function(type){
            ylim = range(dat.int$Mean), type = "n")
       
       grid()
-      abline(v = 0, col = 2)
+      abline(v = 0, col = 1, lty = "dashed")
       
       lines(dat.int[Group == "Treatment", RelTime],
             dat.int[Group == "Treatment", Mean],
-            col = 3, lwd = 2)
+            col = col[1], lwd = 2)
       lines(dat.int[Group == "Control", RelTime],
             dat.int[Group == "Control", Mean],
-            col = 4, lwd = 2)
+            col = col[2], lwd = 2)
       
-      legend("bottomright", c("Treatment", "Control"),
-             col = c(3, 4), lwd = 2, cex = 0.75)
+      
     
     }, 2009:2018)
+    
+    par(mai=c(0,0,0,0))
+    plot.new()
+    legend(x = "center", legend = c("Treatment", "Control"),
+           col = col, lwd = 2, cex = 1, inset = 0, horiz = TRUE)
     
     dev.off()
     
