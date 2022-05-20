@@ -9,7 +9,7 @@ Data on natural disasters is available at the FEMA database and the
 Below you can see the number of cumulative disasters by county from
 2008/2009 to 2017/2018.
 
-<img src="Code & Data/DisasterMap.png" width="7559" />
+![](Code%20&%20Data/DisasterMap.pdf)
 
 The outcomes of interest are mean test scores by county, and achievement
 gaps between white and black, white and hispanic, male and female, and
@@ -183,15 +183,10 @@ Mean test score (economically disadvantaged students)
 
 To identify a causal effect, I use an event study design. Due to likely
 very heterogenous treatment effects, I employ the estimator by Sun and
-Abraham (2021). Below you can see a plot of the treatment effects by
-treatment timing.
+Abraham (2021). Below you can see a plot of the treatment effects for
+all students and subgroups in relative time to treatment.
 
-<img src="Code & Data/ResultsPlot.png" width="7086" />
-
-The effect may be more severe for minorities or disadvantaged students.
-Below you can see the same plot for some subgroups.
-
-<img src="Code & Data/ResultsPlotSub.png" width="7086" />
+![](Code%20&%20Data/ResultsPlot.pdf)
 
 ## References
 
