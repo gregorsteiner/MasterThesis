@@ -180,13 +180,6 @@ To identify a causal effect, I use an event study design. Due to likely
 very heterogenous treatment effects, I employ the estimator by Sun and
 Abraham (2021).
 
-    ## # A tibble: 1 x 7
-    ##   format width height colorspace matte filesize density
-    ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG     1800   2400 sRGB       TRUE         0 300x300
-
-<img src="README_files/figure-markdown_github/unnamed-chunk-3-1.png" width="1800" />
-
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
