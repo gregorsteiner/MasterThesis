@@ -38,7 +38,7 @@ In my thesis I explore the link between natural disasters and education outcomes
 
 Below you can see the number of cumulative disasters by county from 2008/2009 to 2017/2018.
 
-```{r out.width="80%", include=TRUE}
+```{r}
 knitr::include_graphics("Code & Data/DisasterMap.pdf")
 
 ```
@@ -59,7 +59,7 @@ vtable::sumtable(dat.summary)
 
 To identify a causal effect, I use an event study design. Due to likely very heterogenous treatment effects, I employ the estimator by @Sun_2021. Below you can see a plot of the treatment effects for all students and subgroups in relative time to treatment.
 
-```{r out.width="80%", include=TRUE}
+```{r}
 knitr::include_graphics("Code & Data/ResultsPlot.pdf")
 ```
 
