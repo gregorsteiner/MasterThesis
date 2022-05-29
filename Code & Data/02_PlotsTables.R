@@ -18,18 +18,6 @@ col <- c("firebrick", "cornflowerblue")
 
 ######## Summary Statistics ########
 
-# dataset summary
-dat.summary <- dat[, .(Disasters, Treatment = factor(DisasterTreat),
-                       "Subject" = factor(subject, labels = c("Mathematics", "RLA")),
-                       "Mean test score" = cs_mn_all,
-                       "Mean test score (black students)" = cs_mn_blk,
-                       "Mean test score (hispanic students)" = cs_mn_hsp,
-                       "Mean test score (female students)" = cs_mn_fem,
-                       "Mean test score (econ. disadv. students)" = cs_mn_ecd)]
-
-# vtable::sumtable(dat.summary,
-#                  out = "latex", file = "../TeX Files/SummaryStats.tex", anchor = "SumStats")
-
 
 # boxplots for dependent variables
 pdf("DepVarsBoxplot.pdf",
@@ -274,6 +262,60 @@ plot_usmap(data = dat.plot,
         plot.margin = grid::unit(c(0,0,0,0), "mm"),
         strip.text.x = element_text(size = 12))
 dev.off()
+
+
+
+
+
+# Plot ethnic shares by relative time
+pdf("EthnicComposition.pdf", width = wid, height = hei)
+
+# add third color
+col3 <- c(col, 3)
+
+par(mar = c(4, 4, 1, 1))
+layout(matrix(c(1, 2, 3, 3), nrow = 2, ncol = 2, byrow = TRUE),
+       heights = c(4, 1))
+
+invis.lapply(c("FEMA", "Storms"), function(type){
+  if(type == "FEMA"){
+    dat.ethnic <- dat[, lapply(.SD, mean, na.rm = TRUE),
+                      by = .(RelTime),
+                      .SDcols = c("perhsp", "perblk", "perwht")]
+  }
+  if(type == "Storms"){
+    dat.ethnic <- dat[, lapply(.SD, mean, na.rm = TRUE),
+                      by = .(RelTime = RelTimeStorm),
+                      .SDcols = c("perhsp", "perblk", "perwht")]
+  }
+  
+  dat.ethnic <- dat.ethnic[!is.na(RelTime)][order(RelTime)]
+  
+  
+  matplot(dat.ethnic$RelTime, dat.ethnic[, -1], type = "n",
+          xlab = "Years to treatment", ylab = "Share")
+  abline(v = 0, lty = "dashed")
+  grid()
+  matlines(dat.ethnic$RelTime, dat.ethnic[, -1],
+           col = col3, lty = 1, lwd = 2)
+  
+})
+
+# add legend
+par(mai=c(0,0,0,0))
+plot.new()
+legend(x = "center", legend = c("Hispanic", "Black", "White"),
+       col = col3, lwd = 2, cex = 1, inset = 0, horiz = TRUE)
+
+
+dev.off()
+
+
+
+
+
+
+
 
 
 

@@ -282,6 +282,10 @@ dat[, `:=`(TreatStart = ifelse(any(DisasterTreat == 1),
     , by = fips]
 
 
+# add relative time variable
+dat[, `:=`(RelTime = ifelse(TreatStart == 3000, NA, year - TreatStart),
+           RelTimeStorm = ifelse(TreatStartStorm == 3000, NA, year - TreatStartStorm))]
+
 
 # export as RDS
 saveRDS(dat, "Data.RDS")
