@@ -49,7 +49,11 @@ dev.off()
 # types of natural disasters
 fema.disasters <- setDT(rfema::open_fema("DisasterDeclarationsSummaries",
                                          ask_before_call = FALSE))
-fema.disasters <- fema.disasters[fyDeclared %in% 2009:2018]
+
+# filter for time and exclude terrorism
+fema.disasters <- fema.disasters[fyDeclared %in% 2009:2018 & incidentType != "Terrorist"]
+
+
 
 vtable::sumtable(fema.disasters[, .("Disaster Type" = factor(incidentType))],
                  out = "latex", file = "../TeX Files/DisasterTypes.tex",

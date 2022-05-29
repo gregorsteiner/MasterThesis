@@ -247,8 +247,8 @@ dat.storms[, Storms := rowSums(dat.storms[, .(Tornadoes, Hurricanes)], na.rm = T
 # merge seda and fema no. of disasters
 dat <- merge(fema.dis.agg, seda.comb[, .(fips = sedacounty, year, grade, subject,
                                          cs_mn_all, cs_mn_blk, cs_mn_hsp,
-                                         cs_mn_fem, cs_mn_ecd,
-                                         lninc50all)],
+                                         cs_mn_fem, cs_mn_ecd, lninc50all,
+                                         perhsp, perblk, perwht)],
              by = c("fips", "year"),
              all.x = TRUE, all.y = TRUE)
 
