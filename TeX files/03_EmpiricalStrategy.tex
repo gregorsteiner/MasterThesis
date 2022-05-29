@@ -25,7 +25,7 @@ where $D_{i, t-5}$ indicates treatment for any $l \leq 5$.
 
 It is implausible that the treatment effects are constant in our setting. The extent of disasters varies substantially, and also the level of preparation for such disasters likely displays high variance across counties. Also, some counties may experience additional natural disasters after the first one, while others only experience one. Naturally, we would expect larger treatment effects for the former group.
 
-With heterogenous treatment effects, standard two-way fixed-effects estimators are inadequate \citep{deChaisemartin_2020, deChaisemartin_2022, Sun_2021}. Therefore, we use an alternative estimation procedure by \cite{Sun_2021}, which will be explained below.
+With heterogenous treatment effects, standard two-way fixed-effects estimators are inadequate \citep{deChaisemartin_2020, deChaisemartin_2022, Sun_2021}. Therefore, we use an alternative estimation procedure by \cite{Sun_2021}, which will be explained below. A similar estimator was introduced by \cite{Callaway_2021}. However, the latter is unable to handle multiple observations for the same unit-period combination. Since we have multiple grades for each county-year combination this would be a severe restriction in our setting. That is why, \cite{Sun_2021} is better suited.
 
 Treatment adoption varies in time and is therefore assigned in clusters: Counties that are first treated in a given year form a cluster. Following the recommendation by \cite{Abadie_2017}, standard errors are therefore clustered at the cohort level. 
 
