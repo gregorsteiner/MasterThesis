@@ -22,6 +22,8 @@ seda.comb <- setDT(readRDS("SedaData.RDS"))
 fema.disasters <- setDT(rfema::open_fema("DisasterDeclarationsSummaries",
                                          ask_before_call = FALSE))
 
+# drop terrorism
+fema.disasters <- fema.disasters[incidentType != "Terrorist"]
 
 
 # assistance data
