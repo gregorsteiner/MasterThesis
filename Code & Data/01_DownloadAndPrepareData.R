@@ -275,8 +275,9 @@ dat[, `:=`(DisasterTreat = as.numeric(cumsum(Disasters) > 0),
            StormTreat = as.numeric(cumsum(Storms) > 0)),
     by = fips]
 
-# add indicator whether they had a disaster before 2009
-dat[, DisasterBefore2009 := as.numeric(fips %in% fema.disasters[syDeclared < 2009, as.numeric(paste0(fipsStateCode, fipsCountyCode))])]
+# add indicators whether they had a disaster before 2009 or 2016
+dat[, `:=`(DisasterBefore2009 = as.numeric(fips %in% fema.disasters[syDeclared < 2009, as.numeric(paste0(fipsStateCode, fipsCountyCode))]),
+           DisasterBeforeOct2016 = as.numeric(fips %in% fema.disasters[as.Date(declarationDate) < as.Date("2016-10-01"), as.numeric(paste0(fipsStateCode, fipsCountyCode))]))]
 
 
 # add year of first treatment

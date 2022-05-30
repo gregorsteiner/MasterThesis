@@ -296,14 +296,14 @@ dat.app[, Applied := factor(Applied, levels = c(0, 1), labels = c("Did not apply
 
 
 pdf("AssistanceCovBoxplot.pdf",
-    width = wid, height = wid)
+    width = wid, height = hei + 1)
 
 par(mfrow = c(2, 2), mar = c(3, 4, 1, 1))
 invis.Map(function(x, ylab){
   # create boxplot
   boxplot(x ~ Applied,
           data = dat.app[Disasters > 1], col = col,
-          xlab = "", ylab = ylab)
+          xlab = "", ylab = ylab, cex = 0.7)
   
 }, dat.app[Disasters > 1, .(MedInc2016, ShareDem2016, PovertyRate, SingleMother)],
 c("Median Income (2016)", "Democratic Votes (2016 Election)",
