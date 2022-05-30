@@ -314,32 +314,21 @@ dev.off()
 
 
 # logistic regression for assistance covariates
-assist.cov$MedInclog <- log(assist.cov$MedInc2016)
-model.logit.ass <- feglm(AssistanceApplicant ~ ShareDem2016 + MedInclog
-                         + PovertyRate + SingleMother, data = assist.cov,
-                         family = binomial("logit"))
-
-# 
-# assist.cov <- merge(assist.cov, tmp,
-#                     by = "fips", all.x = TRUE, all.y = FALSE)
-# 
-# model.logit.dec <- feglm(Declared ~ ShareDem2008 + MedInclog
-#                          + PovertyRate + SingleMother, data = assist.cov,
-#                          family = binomial("logit"))
+dat.app$MedInclog <- log(dat.app$MedInc2016)
+dat.app[, AppliedNum := ifelse(Applied == "Applied", 1, 0)]
+model.logit.ass <- fixest::feglm(AppliedNum ~ ShareDem2016 + MedInclog
+                                 + PovertyRate + SingleMother, data = dat.app[Disasters > 0],
+                                 family = binomial("logit"))
 
 
-
-etable(list(model.logit.ass), file = "../TeX Files/ResultsLogit.tex", replace = TRUE,
-       label = "ResultsLogit", title = "Determinants of Assistance Application",
-       dict = c(ShareDem2016 = "Share of democratic voters (2016)",
-                ShareDem2008 = "Share of democratic voters (2008)",
-                MedInclog = "Median Income (logs)",
-                PovertyRate = "Poverty Rate", 
-                SingleMother = "Share of single mothers"))
-
-
-
-
+fixest::etable(list(model.logit.ass), file = "../TeX Files/ResultsLogit.tex", replace = TRUE,
+               label = "ResultsLogit", title = "Determinants of Assistance Application",
+               dict = c(ShareDem2016 = "Share of democratic voters (2016)",
+                        ShareDem2008 = "Share of democratic voters (2008)",
+                        MedInclog = "Median Income (logs)",
+                        PovertyRate = "Poverty Rate", 
+                        SingleMother = "Share of single mothers",
+                        AppliedNum = "Applied"))
 
 
 
