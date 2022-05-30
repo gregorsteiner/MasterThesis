@@ -38,7 +38,17 @@ fema.assistance <- fema.assistance[declarationTitle != "COVID-19"]
 fema.assistance <- fema.assistance[stateName != "Puerto Rico"]
 
 # add county fips to the assistance data
-fema.assistance[, fips := as.numeric(mapply(names_to_fips, stateName, countyApplicantJurisdiction))]
+fema.disasters$designatedArea <- gsub("[()]", "", fema.disasters$designatedArea)
+fema.assistance <- merge(fema.assistance, fema.disasters[, .(disasterNumber, designatedArea, fipsStateCode, fipsCountyCode)],
+                         all.x = TRUE, all.y = FALSE,
+                         by.x = c("disasterNumber", "countyApplicantJurisdiction"),
+                         by.y = c("disasterNumber", "designatedArea"))
+fema.assistance[, fips := as.numeric(paste0(fipsStateCode, fipsCountyCode))]
+
+
+# export
+saveRDS(fema.assistance, "AssistanceDataRawWithFIPS.RDS")
+
 
 # aggreagte assistance data by county and year
 fema.assist.agg <- fema.assistance[, .(totalDamage = sum(as.numeric(totalAppDamageCost)),
@@ -60,11 +70,6 @@ fema.assist.agg <- fema.assist.agg[!is.na(fips)]
 # fill NAs with zero
 fema.assist.agg[, totalDamage := ifelse(is.na(totalDamage), 0, totalDamage)]
 fema.assist.agg[, federalAssistance := ifelse(is.na(federalAssistance), 0, federalAssistance)]                  
-
-# control for statewide cases
-
-
-
 
 
 
@@ -110,6 +115,7 @@ fema.dis.agg <- fema.disasters[, .(Disasters = length(unique(disasterNumber))),
                                by = .(fips = as.numeric(paste0(fipsStateCode, fipsCountyCode)),
                                       year = syDeclared)]
 
+
 # add statewide to each county in the state
 ind.statewide <- substring(fema.dis.agg$fips, 3, 5) == "000"
 
@@ -139,7 +145,6 @@ fema.dis.agg <- merge(empty, fema.dis.agg,
 
 # fill NA disaster values with 0
 fema.dis.agg[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
-
 
 
 
@@ -270,6 +275,9 @@ dat[, Storms := ifelse(is.na(Storms), 0, Storms)]
 dat[, `:=`(DisasterTreat = as.numeric(cumsum(Disasters) > 0),
            StormTreat = as.numeric(cumsum(Storms) > 0)),
     by = fips]
+
+# add indicator whether they had a disaster before 2009
+dat[, DisasterBefore2009 := as.numeric(fips %in% fema.disasters[syDeclared < 2009, as.numeric(paste0(fipsStateCode, fipsCountyCode))])]
 
 
 # add year of first treatment

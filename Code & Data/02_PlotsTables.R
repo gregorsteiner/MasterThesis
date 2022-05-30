@@ -51,37 +51,6 @@ vtable::sumtable(fema.disasters[, .("Disaster Type" = factor(incidentType))],
 
 ######## Application characteristics ########
 
-# voter share and median income by applicant status
-
-
-# png("AssistanceCovDensity.png",
-#     width = wid, height = 16, units = "cm", res = 1200)
-# 
-# col <- c(3, 4)
-# 
-# par(mfrow = c(2, 2), mar = c(4, 4, 1, 1))
-# invis.Map(function(x, xlab){
-#   # filter by applicant status and remove nas
-#   bool1 <- assist.cov$AssistanceApplicant == 1 & !is.na(x)
-#   bool2 <- assist.cov$AssistanceApplicant == 0 & !is.na(x)
-#   # plot
-#   plot(density(x[bool2]),
-#        main = "", xlab = xlab, type = "n", cex = 0.8)
-#   grid()
-#   
-#   lines(density(x[bool1]),
-#         col = col[1], lwd = 2)
-#   lines(density(x[bool2]),
-#         col = col[2], lwd = 2)
-#   # add legend
-#   legend("topright", legend = c("Applied", "Did not apply"),
-#          lwd = 2, col = col)
-# }, assist.cov[, .(MedInc2016, ShareDem2016, PovertyRate, SingleMother)],
-# c("Median Income (2016)", "Democratic Votes (2016 Election)",
-#   "Poverty Rate (2016)", "Share of Single Mothers (2016)"))
-# 
-# dev.off()
-
 
 
 # Boxplots
@@ -313,9 +282,32 @@ dev.off()
 
 
 
+# Who applies ?
 
 
+# load assistance data
+fema.assistance <- readRDS("AssistanceDataRawWithFIPS.RDS")
+fema.assistance[, year := dplyr::case_when(
+  # if in september to december add 1 to the year (Schoolyear x/x+1 is x+1)
+  as.numeric(format(declarationDate, "%m")) %in% 9:12 ~ as.numeric(format(declarationDate, "%Y")) + 1,
+  as.numeric(format(declarationDate, "%m")) %in% 1:3 ~ as.numeric(format(declarationDate, "%Y")),
+  as.numeric(format(declarationDate, "%m")) %in% 4:8 ~ NA_real_
+)]
+fema.assistance[, fipsyear := paste0(fips, year)]
 
+# extract years that overlap with the assistance data
+dat.app <- dat[year %in% unique(fema.assistance$year)]
+
+# create fipsyear
+dat.app[, fipsyear := paste0(fips, year)]
+
+# add application dummy
+dat.app[, Applied := as.numeric(fipsyear %in% fema.assistance$fipsyear)]
+
+
+# check if there are cases where they had a disaster but did not apply
+bool <- dat.app$Disasters > 0 & dat.app$Applied == 0
+sum(bool, na.rm = TRUE) / sum(dat.app$Disasters > 0, na.rm = TRUE)
 
 
 
