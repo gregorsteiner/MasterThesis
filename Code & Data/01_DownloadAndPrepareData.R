@@ -160,8 +160,7 @@ assist.cov <- elec[,
                    .(ShareDem2016 = candidatevotes[party == "DEMOCRAT" & year == 2016] / totalvotes[party == "DEMOCRAT" & year == 2016],
                      ShareRep2016 = candidatevotes[party == "REPUBLICAN" & year == 2016] / totalvotes[party == "REPUBLICAN" & year == 2016],
                      ShareDem2008 = candidatevotes[party == "DEMOCRAT" & year == 2008] / totalvotes[party == "DEMOCRAT" & year == 2008],
-                     ShareRep2008 = candidatevotes[party == "REPUBLICAN" & year == 2008] / totalvotes[party == "REPUBLICAN" & year == 2008],
-                     AssistanceApplicant = as.numeric(fips %in% fema.assistance$fips)),
+                     ShareRep2008 = candidatevotes[party == "REPUBLICAN" & year == 2008] / totalvotes[party == "REPUBLICAN" & year == 2008]),
                    by = .(fips = county_fips)]
 
 # add median income

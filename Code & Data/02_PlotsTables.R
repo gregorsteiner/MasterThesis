@@ -49,36 +49,6 @@ vtable::sumtable(fema.disasters[, .("Disaster Type" = factor(incidentType))],
                  fit.page = NA)
 
 
-######## Application characteristics ########
-
-
-
-# Boxplots
-
-# set applicant status as factor
-assist.cov[, AssistanceApplicant := factor(AssistanceApplicant,
-                                           levels = c(0, 1),
-                                           labels = c("Did not apply", "Applied"))]
-
-
-
-pdf("AssistanceCovBoxplot.pdf",
-    width = wid, height = wid)
-
-par(mfrow = c(2, 2), mar = c(3, 4, 1, 1))
-invis.Map(function(x, ylab){
-  # create boxplot
-  boxplot(x ~ AssistanceApplicant,
-          data = assist.cov, col = col,
-          xlab = "", ylab = ylab)
-  
-}, assist.cov[, .(MedInc2016, ShareDem2016, PovertyRate, SingleMother)],
-c("Median Income (2016)", "Democratic Votes (2016 Election)",
-  "Poverty Rate (2016)", "Share of Single Mothers (2016)"))
-
-dev.off()
-
-
 ######## Parallel Trends Plots ########
 
 # loop over fema and storm data
@@ -282,7 +252,10 @@ dev.off()
 
 
 
-# Who applies ?
+
+
+
+######## Application characteristics ########
 
 
 # load assistance data
@@ -293,6 +266,7 @@ fema.assistance[, year := dplyr::case_when(
   as.numeric(format(declarationDate, "%m")) %in% 1:3 ~ as.numeric(format(declarationDate, "%Y")),
   as.numeric(format(declarationDate, "%m")) %in% 4:8 ~ NA_real_
 )]
+
 fema.assistance[, fipsyear := paste0(fips, year)]
 
 # extract years that overlap with the assistance data
@@ -306,8 +280,67 @@ dat.app[, Applied := as.numeric(fipsyear %in% fema.assistance$fipsyear)]
 
 
 # check if there are cases where they had a disaster but did not apply
-bool <- dat.app$Disasters > 0 & dat.app$Applied == 0
-sum(bool, na.rm = TRUE) / sum(dat.app$Disasters > 0, na.rm = TRUE)
+boolDis <- dat.app$Disasters > 0
+boolApp <- dat.app$Applied == 0
+
+# proportion
+sum(boolDis & boolApp, na.rm = TRUE) / sum(boolDis, na.rm = TRUE)
+
+# add some covariate data
+dat.app <- merge(dat.app, assist.cov, by = "fips", all.x = TRUE, all.y = FALSE)
+
+
+
+# set applicant status as factor
+dat.app[, Applied := factor(Applied, levels = c(0, 1), labels = c("Did not apply", "Applied"))]
+
+
+pdf("AssistanceCovBoxplot.pdf",
+    width = wid, height = wid)
+
+par(mfrow = c(2, 2), mar = c(3, 4, 1, 1))
+invis.Map(function(x, ylab){
+  # create boxplot
+  boxplot(x ~ Applied,
+          data = dat.app[Disasters > 1], col = col,
+          xlab = "", ylab = ylab)
+  
+}, dat.app[Disasters > 1, .(MedInc2016, ShareDem2016, PovertyRate, SingleMother)],
+c("Median Income (2016)", "Democratic Votes (2016 Election)",
+  "Poverty Rate (2016)", "Share of Single Mothers (2016)"))
+
+dev.off()
+
+
+
+# logistic regression for assistance covariates
+assist.cov$MedInclog <- log(assist.cov$MedInc2016)
+model.logit.ass <- feglm(AssistanceApplicant ~ ShareDem2016 + MedInclog
+                         + PovertyRate + SingleMother, data = assist.cov,
+                         family = binomial("logit"))
+
+# 
+# assist.cov <- merge(assist.cov, tmp,
+#                     by = "fips", all.x = TRUE, all.y = FALSE)
+# 
+# model.logit.dec <- feglm(Declared ~ ShareDem2008 + MedInclog
+#                          + PovertyRate + SingleMother, data = assist.cov,
+#                          family = binomial("logit"))
+
+
+
+etable(list(model.logit.ass), file = "../TeX Files/ResultsLogit.tex", replace = TRUE,
+       label = "ResultsLogit", title = "Determinants of Assistance Application",
+       dict = c(ShareDem2016 = "Share of democratic voters (2016)",
+                ShareDem2008 = "Share of democratic voters (2008)",
+                MedInclog = "Median Income (logs)",
+                PovertyRate = "Poverty Rate", 
+                SingleMother = "Share of single mothers"))
+
+
+
+
+
 
 
 
