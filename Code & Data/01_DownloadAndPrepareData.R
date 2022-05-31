@@ -28,9 +28,6 @@ fema.disasters <- fema.disasters[incidentType != "Terrorist"]
 # drop Covid
 fema.disasters <- fema.disasters[declarationTitle != "COVID-19"]
 
-# save to save time
-saveRDS(fema.disasters, "DisasterDataNoTerrorismNoCovid.RDS")
-
 # assistance data
 fema.assistance <- setDT(rfema::open_fema("PublicAssistanceApplicantsProgramDeliveries",
                                           ask_before_call = FALSE))
@@ -113,6 +110,10 @@ fema.disasters[, syDeclared := dplyr::case_when(
   as.numeric(format(declarationDate, "%m")) %in% 1:3 ~ as.numeric(fyDeclared),
   as.numeric(format(declarationDate, "%m")) %in% 4:8 ~ NA_real_
   )]
+
+
+# save to save time
+saveRDS(fema.disasters, "DisasterDataNoTerrorismNoCovid.RDS")
 
 
 

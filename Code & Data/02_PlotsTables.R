@@ -316,9 +316,26 @@ dev.off()
 # by type
 fema.disasters <- readRDS("DisasterDataNoTerrorismNoCovid.RDS")
 
+# filter for relevant time period
+fema.disasters <- fema.disasters[syDeclared %in% c(2017, 2018)]
+
 # create id (disasterNumber + fips)
 fema.disasters[, dnFips := paste0(disasterNumber, as.numeric(paste0(fipsStateCode, fipsCountyCode)))]
 fema.assistance[, dnFips := paste0(disasterNumber, fips)]
+
+
+# create application indicator (1 if county applied, 0 else)
+fema.disasters[, Applied := as.numeric(dnFips %in% fema.assistance$dnFips)]
+
+# create table 
+res <- cbind("Number of Cases" = table(fema.disasters[, .("Disaster Type" = factor(incidentType))]),
+             "Applied for Assistance (in %)" = 100 * tapply(fema.disasters$Applied, fema.disasters$incidentType, mean, na.rm = TRUE))
+res <- rbind(res, "Total" = c(nrow(fema.disasters), 100 * mean(fema.disasters$Applied)))
+
+# export as .tex table
+writeLines(knitr::kable(res, digits = 2, format = "latex",
+                        label = "AppsByType", caption = "Share of counties that applied for federal assistance following a disaster by disaster type"),
+           "../TeX Files/ApplicationsByType.tex")
 
 
 
