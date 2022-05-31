@@ -26,7 +26,7 @@ fema.disasters <- setDT(rfema::open_fema("DisasterDeclarationsSummaries",
 fema.disasters <- fema.disasters[incidentType != "Terrorist"]
 
 # drop Covid
-fema.disasters <- fema.disasters[declarationTitle != "COVID-19"]
+fema.disasters <- fema.disasters[!(declarationTitle %in% c("COVID-19", "COVID-19 PANDEMIC"))]
 
 # assistance data
 fema.assistance <- setDT(rfema::open_fema("PublicAssistanceApplicantsProgramDeliveries",
@@ -34,7 +34,7 @@ fema.assistance <- setDT(rfema::open_fema("PublicAssistanceApplicantsProgramDeli
 
 
 # remove COVID 19
-fema.assistance <- fema.assistance[declarationTitle != "COVID-19"]
+fema.assistance <- fema.assistance[!(declarationTitle %in% c("COVID-19", "COVID-19 PANDEMIC"))]
 
 # drop Puerto Rico
 fema.assistance <- fema.assistance[stateName != "Puerto Rico"]

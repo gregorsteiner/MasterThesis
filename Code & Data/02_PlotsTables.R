@@ -24,6 +24,18 @@ col <- c("firebrick", "cornflowerblue")
 
 ######## Disaster Count ########
 
+dat.plot <- fema.disasters[, .(.N), by = .(Year = as.numeric(format(declarationDate, "%Y")))]
+dat.plot <- dat.plot[Year != 2022]
+
+pdf("DisasterCount.pdf", width = wid, height = 8 / 2.5)
+
+par(mar = c(3, 3, 1, 1))
+plot(dat.plot$Year, dat.plot$N, type = "n",
+     xlab = "", ylab = "", cex.axis = 0.9)
+grid()
+lines(dat.plot$Year, dat.plot$N, lwd = 2, col = col[1])
+
+dev.off()
 
 
 
@@ -44,16 +56,12 @@ boxplot(dat[, .("Overall" = cs_mn_all,
 dev.off()
 
 
-# types of natural disasters
-fema.disasters <- setDT(rfema::open_fema("DisasterDeclarationsSummaries",
-                                         ask_before_call = FALSE))
-
 # filter for time and exclude terrorism
-fema.disasters <- fema.disasters[fyDeclared %in% 2009:2018 & incidentType != "Terrorist"]
+fema.disastersSQ <- fema.disasters[syDeclared %in% 2009:2018]
 
 
 
-vtable::sumtable(fema.disasters[, .("Disaster Type" = factor(incidentType))],
+vtable::sumtable(fema.disastersSQ[, .("Disaster Type" = factor(incidentType))],
                  out = "latex", file = "../TeX Files/DisasterTypes.tex",
                  anchor = "DisasterTypes", title = "Disasters from 2009 to 2018 by type",
                  fit.page = NA)
