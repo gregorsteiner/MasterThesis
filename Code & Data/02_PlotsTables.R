@@ -313,6 +313,18 @@ dev.off()
 
 
 
+# by type
+fema.disasters <- readRDS("DisasterDataNoTerrorismNoCovid.RDS")
+
+# create id (disasterNumber + fips)
+fema.disasters[, dnFips := paste0(disasterNumber, as.numeric(paste0(fipsStateCode, fipsCountyCode)))]
+fema.assistance[, dnFips := paste0(disasterNumber, fips)]
+
+
+
+
+
+
 # logistic regression for assistance covariates
 dat.app$MedInclog <- log(dat.app$MedInc2016)
 dat.app[, AppliedNum := ifelse(Applied == "Applied", 1, 0)]

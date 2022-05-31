@@ -25,6 +25,11 @@ fema.disasters <- setDT(rfema::open_fema("DisasterDeclarationsSummaries",
 # drop terrorism
 fema.disasters <- fema.disasters[incidentType != "Terrorist"]
 
+# drop Covid
+fema.disasters <- fema.disasters[declarationTitle != "COVID-19"]
+
+# save to save time
+saveRDS(fema.disasters, "DisasterDataNoTerrorismNoCovid.RDS")
 
 # assistance data
 fema.assistance <- setDT(rfema::open_fema("PublicAssistanceApplicantsProgramDeliveries",
@@ -70,6 +75,7 @@ fema.assist.agg <- fema.assist.agg[!is.na(fips)]
 # fill NAs with zero
 fema.assist.agg[, totalDamage := ifelse(is.na(totalDamage), 0, totalDamage)]
 fema.assist.agg[, federalAssistance := ifelse(is.na(federalAssistance), 0, federalAssistance)]                  
+
 
 
 
