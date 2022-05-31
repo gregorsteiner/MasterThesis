@@ -13,11 +13,21 @@ dat <- setDT(readRDS("Data.RDS"))
 assist <- setDT(readRDS("AssistanceData.RDS"))
 assist.cov <- setDT(readRDS("AssistanceCovData.RDS"))
 
+
+fema.disasters <- readRDS("DisasterDataNoTerrorismNoCovid.RDS")
+
+
 # color scheme
 col <- c("firebrick", "cornflowerblue")
 
-######## Summary Statistics ########
 
+
+######## Disaster Count ########
+
+
+
+
+######## Summary Statistics ########
 
 # boxplots for dependent variables
 pdf("DepVarsBoxplot.pdf",
@@ -312,9 +322,6 @@ c("Median Income (2016)", "Democratic Votes (2016 Election)",
 dev.off()
 
 
-
-# by type
-fema.disasters <- readRDS("DisasterDataNoTerrorismNoCovid.RDS")
 
 # filter for relevant time period
 fema.disasters <- fema.disasters[syDeclared %in% c(2017, 2018)]
