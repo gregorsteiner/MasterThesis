@@ -106,8 +106,8 @@ fema.cum <- rbindlist(apply(statewide[order(as.numeric(statewide$fips)), ], 1, f
 # add school year variable based on declaration date (as explained in the main text)
 fema.disasters[, syDeclared := dplyr::case_when(
   # if in september to december add 1 to the year (Schoolyear x/x+1 is x+1)
-  as.numeric(format(declarationDate, "%m")) %in% 9:12 ~ as.numeric(fyDeclared) + 1,
-  as.numeric(format(declarationDate, "%m")) %in% 1:3 ~ as.numeric(fyDeclared),
+  as.numeric(format(declarationDate, "%m")) %in% 9:12 ~ as.numeric(format(declarationDate, "%Y")) + 1,
+  as.numeric(format(declarationDate, "%m")) %in% 1:3 ~ as.numeric(format(declarationDate, "%Y")),
   as.numeric(format(declarationDate, "%m")) %in% 4:8 ~ NA_real_
   )]
 
