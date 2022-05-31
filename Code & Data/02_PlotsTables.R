@@ -43,7 +43,7 @@ dev.off()
 
 # boxplots for dependent variables
 pdf("DepVarsBoxplot.pdf",
-    width = wid, height = hei)
+    width = wid, height = 8 / 2.5)
 
 par(mar = c(3, 3, 1, 1))
 boxplot(dat[, .("Overall" = cs_mn_all,
