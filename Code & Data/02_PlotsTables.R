@@ -334,7 +334,8 @@ res <- rbind(res, "Total" = c(nrow(fema.disasters), 100 * mean(fema.disasters$Ap
 
 # export as .tex table
 writeLines(knitr::kable(res, digits = 2, format = "latex",
-                        label = "AppsByType", caption = "Share of counties that applied for federal assistance following a disaster by disaster type"),
+                        label = "AppsByType", caption = "Share of counties that applied for federal assistance following a disaster by disaster type",
+                        booktabs = TRUE),
            "../TeX Files/ApplicationsByType.tex")
 
 

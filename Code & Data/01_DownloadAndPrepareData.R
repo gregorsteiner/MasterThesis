@@ -69,12 +69,6 @@ fema.assist.agg <- merge(empty, fema.assist.agg,
 # remove NA fips
 fema.assist.agg <- fema.assist.agg[!is.na(fips)]
 
-# fill NAs with zero
-fema.assist.agg[, totalDamage := ifelse(is.na(totalDamage), 0, totalDamage)]
-fema.assist.agg[, federalAssistance := ifelse(is.na(federalAssistance), 0, federalAssistance)]                  
-
-
-
 
 # compute cumulative disasters by county
 fema.cum <- fema.disasters[, .(Disasters = length(unique(disasterNumber))),
@@ -153,6 +147,15 @@ fema.dis.agg <- merge(empty, fema.dis.agg,
 # fill NA disaster values with 0
 fema.dis.agg[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
 
+
+
+# merge disaster and assistance data
+fema.dis.agg <- merge(fema.dis.agg, fema.assist.agg, all.x = TRUE, all.y = FALSE)
+
+
+# fill NAs with zero
+fema.dis.agg[, totalDamage := ifelse(is.na(totalDamage), 0, totalDamage)]
+fema.dis.agg[, federalAssistance := ifelse(is.na(federalAssistance), 0, federalAssistance)]                  
 
 
 
