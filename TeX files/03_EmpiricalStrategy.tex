@@ -27,7 +27,7 @@ It is implausible that the treatment effects are constant in our setting. The ex
 
 With heterogenous treatment effects, standard two-way fixed-effects estimators are inadequate \citep{deChaisemartin_2020, deChaisemartin_2022, Sun_2021}. Therefore, we use an alternative estimation procedure by \cite{Sun_2021}, which will be explained below. A similar estimator was introduced by \cite{Callaway_2021}. However, the latter is unable to handle multiple observations for the same unit-period combination. Since we have multiple grades for each county-year combination this would be a severe restriction in our setting. That is why, \cite{Sun_2021} is better suited.
 
-Treatment adoption varies in time and is therefore assigned in clusters: Counties that are first treated in a given year form a cluster. Following the recommendation by \cite{Abadie_2017}, standard errors are therefore clustered at the cohort level. 
+Treatment adoption varies in time: Counties that are first treated in a given year form a cluster, that is treatment assignment happens in clusters. The results in \cite{Abadie_2017} show that in such settings it is necessary to cluster standard errors at level of treatment assignment. Therefore, standard errors are clustered at the cohort level.
 
 
 
