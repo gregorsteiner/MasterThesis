@@ -123,6 +123,42 @@ dev.off()
 
 
 
+ 
+
+# Power Analysis
+cols <- viridisLite::viridis(length(0:8))
+pdf("PowerAnalysis.pdf", width = 15 / 2.5, height = 12 / 2.5)
+
+layout(matrix(c(1, 2, 3, 3), nrow = 2, byrow = TRUE), heights = c(5, 1))
+invis.Map(function(model, subject){
   
+  N <- model$nobs
+  k <- model$nparams
   
+  par(mar = c(4, 4, 2, 1))
+  plot(c(-0.1, 0.1), c(0, 1), type = "n",
+       xlab = "True Value", ylab = "Power", main = subject)
   
+  invis.Map(function(i, col){
+    id <- paste0("year::", i)
+    sigma.hat <- model$coeftable[id, "Std. Error"]
+    
+    power <- function(beta, N, k, sigma.hat, alpha = 0.05){
+      # compute power
+      pow <- 1 - pt(qt(1 - alpha/2, N-k) - beta / sigma.hat, N-k) + pt(qt(alpha/2, N-k) - beta / sigma.hat, N-k)
+      return(pow)
+    }
+    
+    betas <- seq(-0.1, 0.1, 0.0001)
+    lines(betas, power(betas, N = N, k = k, sigma.hat = sigma.hat),
+          type = "l", col = col, lwd = 2)
+    
+  }, 0:8, cols)
+}, list(model.math[[1]], model.rla[[1]]), c("Mathematics", "RLA"))
+
+par(mai=c(0,0,0,0))
+plot.new()
+legend(x = "center", legend = paste0("Year ", 0:8),
+       col = cols, lwd = 2, cex = 1, inset = 0, ncol = 5)
+
+dev.off()

@@ -48,9 +48,32 @@ The same plot based on the NWS storm data shows a different picture. Here, all t
 A more in-depth analysis of migration responses to natural disasters and their role in academic achievement is unfortunately not possible with this data. Prior research based on individual level data indicates that it does play an important role \citep[for example][]{Sacerdote_2012}.
 
 
+\subsection{Power Analysis}
 
+A power analysis can be used to check how much wen can trust the non-significant results. High Power implies a low type 2 error probability, that is it is unlikely to not reject the null hypothesis whent it actually should be rejected. Based on the asymptotic distribution of our estimators,
+\begin{align*}
+	\sqrt{N} (\widehat{\beta}_{g} - \beta_{g}) \overset{d}{\to} N(0, \sigma^2)
+\end{align*}
+we can compute the power of the t-test. Since, the variance has to be estimated, 
+\begin{align*}
+	\sqrt{N} \frac{\widehat{\beta}_{g} - \beta_{g}}{\widehat{\sigma}} \overset{a}{\sim} t(n-k),
+\end{align*}
+where $k$ is the number of parameters in the model. The t-test rejects $H_0: \beta_g = 0$, with probability
+\begin{align*}
+	\Prob \left( \lvert \sqrt{N} \frac{\widehat{\beta}_{g} - 0}{\widehat{\sigma}} \rvert \geq t_{1-\alpha/2}  \right) &= \Prob \left(  \sqrt{N} \frac{\widehat{\beta}_{g}}{\widehat{\sigma}}  \leq -t_{1-\alpha/2}  \right) + \Prob \left( \sqrt{N} \frac{\widehat{\beta}_{g}}{\widehat{\sigma}} \geq t_{1-\alpha/2}  \right) \\
+	&= \Prob \left(  \sqrt{N} \frac{\widehat{\beta}_{g} - \beta_g}{\widehat{\sigma}}  \leq -t_{1-\alpha/2} - \frac{\sqrt{N}}{\widehat{\sigma}} \beta_{g}  \right) + \Prob \left( \sqrt{N} \frac{\widehat{\beta}_{g} - \beta_g}{\widehat{\sigma}} \geq t_{1-\alpha/2}  - \frac{\sqrt{N}}{\widehat{\sigma}} \beta_{g} \right) \\
+	&= T\left( -t_{1-\alpha/2} - \frac{\sqrt{N}}{\widehat{\sigma}} \beta_{g} \right) + 1 - T \left(  t_{1-\alpha/2}  - \frac{\sqrt{N}}{\widehat{\sigma}} \beta_{g} \right)
+\end{align*}
+where $T$ is the cumulative distribution function of a t-distribution with $n-k$ degrees of freedom. Thus, for all $\beta_g \neq 0$ this expression is the power of the t-test. Using this expression, we can have a look at the power based on our data.
 
+Figure \ref{Power} shows the power on the relative treatment indicators after treatment as a function of the true parameter value for overall mean scores based on the FEMA declarations. Power is decreasing in the temporal distance to treatment. Also, power for the mathematics scores tends to be lower overall than power for RLA scores. 
 
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=1]{"../Code & Data/PowerAnalysis.pdf"}
+	\caption{Power of the t-test as a function of the true parameter value}
+	\label{Power}
+\end{figure}
 
 
 
