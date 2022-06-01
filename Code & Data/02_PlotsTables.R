@@ -27,11 +27,11 @@ col <- c("firebrick", "cornflowerblue")
 dat.plot <- fema.disasters[, .(.N), by = .(Year = as.numeric(format(declarationDate, "%Y")))]
 dat.plot <- dat.plot[Year != 2022]
 
-pdf("DisasterCount.pdf", width = wid, height = 8 / 2.5)
+pdf("DisasterCount.pdf", width = wid, height = 7 / 2.5)
 
-par(mar = c(3, 3, 1, 1))
+par(mar = c(2, 2, 1, 1))
 plot(dat.plot$Year, dat.plot$N, type = "n",
-     xlab = "", ylab = "", cex.axis = 0.9)
+     xlab = "", ylab = "", cex.axis = 0.85)
 grid()
 lines(dat.plot$Year, dat.plot$N, lwd = 2, col = col[1])
 
