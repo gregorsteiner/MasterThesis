@@ -43,15 +43,29 @@ dev.off()
 
 # boxplots for dependent variables
 pdf("DepVarsBoxplot.pdf",
-    width = wid, height = 8 / 2.5)
+    width = wid, height = 10 / 2.5)
 
-par(mar = c(3, 3, 1, 1))
-boxplot(dat[, .("Overall" = cs_mn_all,
+layout(matrix(c(1, 2, 3), ncol = 1, byrow = TRUE), heights = c(4, 4, 1))
+par(mar = c(2, 3, 1, 1))
+boxplot(dat[subject == "mth", .("Overall" = cs_mn_all,
                 "Black" = cs_mn_blk,
                 "Hispanic" = cs_mn_hsp,
                 "Female" = cs_mn_fem,
                 "Econ. disadv." = cs_mn_ecd)],
-        col = col)
+        col = col[1], cex.axis = 1)
+par(mar = c(2, 3, 1, 1))
+boxplot(dat[subject == "rla", .("Overall" = cs_mn_all,
+                                "Black" = cs_mn_blk,
+                                "Hispanic" = cs_mn_hsp,
+                                "Female" = cs_mn_fem,
+                                "Econ. disadv." = cs_mn_ecd)],
+        col = col[2], cex.axis = 1)
+
+
+par(mai=c(0,0,0,0))
+plot.new()
+legend(x = "center", legend = c("Mathematics", "RLA"),
+       fill = col, cex = 1, inset = 0, horiz = TRUE)
 
 dev.off()
 
