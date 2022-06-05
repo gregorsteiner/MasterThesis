@@ -292,64 +292,13 @@ dev.off()
 
 # load assistance data
 fema.assistance <- readRDS("AssistanceDataRawWithFIPS.RDS")
-fema.assistance[, year := dplyr::case_when(
-  # if in september to december add 1 to the year (Schoolyear x/x+1 is x+1)
-  as.numeric(format(declarationDate, "%m")) %in% 9:12 ~ as.numeric(format(declarationDate, "%Y")) + 1,
-  as.numeric(format(declarationDate, "%m")) %in% 1:3 ~ as.numeric(format(declarationDate, "%Y")),
-  as.numeric(format(declarationDate, "%m")) %in% 4:8 ~ NA_real_
-)]
-
-fema.assistance[, fipsyear := paste0(fips, year)]
-
-# extract years that overlap with the assistance data
-dat.app <- dat[year %in% unique(fema.assistance$year)]
-
-# create fipsyear
-dat.app[, fipsyear := paste0(fips, year)]
-
-# add application dummy
-dat.app[, Applied := as.numeric(fipsyear %in% fema.assistance$fipsyear)]
-
-
-# check if there are cases where they had a disaster but did not apply
-boolDis <- dat.app$Disasters > 0
-boolApp <- dat.app$Applied == 0
-
-# proportion
-sum(boolDis & boolApp, na.rm = TRUE) / sum(boolDis, na.rm = TRUE)
-
-# add some covariate data
-dat.app <- merge(dat.app, assist.cov, by = "fips", all.x = TRUE, all.y = FALSE)
-
-
-
-# set applicant status as factor
-dat.app[, Applied := factor(Applied, levels = c(0, 1), labels = c("Did not apply", "Applied"))]
-
-
-pdf("AssistanceCovBoxplot.pdf",
-    width = wid, height = hei + 1)
-
-par(mfrow = c(2, 2), mar = c(3, 4, 1, 1))
-invis.Map(function(x, ylab){
-  # create boxplot
-  boxplot(x ~ Applied,
-          data = dat.app[Disasters > 1], col = col,
-          xlab = "", ylab = ylab, cex = 0.7)
-  
-}, dat.app[Disasters > 1, .(MedInc2016, ShareDem2016, PovertyRate, SingleMother)],
-c("Median Income (2016)", "Democratic Votes (2016 Election)",
-  "Poverty Rate (2016)", "Share of Single Mothers (2016)"))
-
-dev.off()
-
-
 
 # filter for relevant time period
 fema.disasters <- fema.disasters[syDeclared %in% c(2017, 2018)]
 
 # create id (disasterNumber + fips)
-fema.disasters[, dnFips := paste0(disasterNumber, as.numeric(paste0(fipsStateCode, fipsCountyCode)))]
+fema.disasters[, fips := as.numeric(paste0(fipsStateCode, fipsCountyCode))]
+fema.disasters[, dnFips := paste0(disasterNumber, fips)]
 fema.assistance[, dnFips := paste0(disasterNumber, fips)]
 
 
@@ -363,9 +312,31 @@ res <- rbind(res, "Total" = c(nrow(fema.disasters), 100 * mean(fema.disasters$Ap
 
 # export as .tex table
 writeLines(knitr::kable(res, digits = 2, format = "latex",
-                        label = "AppsByType", caption = "Share of counties that applied for federal assistance following a disaster by disaster type",
+                        label = "AppsByType", caption = "Share of counties that applied for federal assistance following a disaster by disaster type (schoolyears 2016/2017 and 2017/2018)",
                         booktabs = TRUE),
            "../TeX Files/ApplicationsByType.tex")
+
+# add covariates
+fema.disasters <- merge(fema.disasters, assist.cov, by = "fips", all.x = TRUE, all.y = FALSE)
+
+fema.disasters[, Applied := factor(Applied, levels = c(0, 1), labels = c("Did not apply", "Applied"))]
+
+
+pdf("AssistanceCovBoxplot.pdf",
+    width = wid, height = hei + 1)
+
+par(mfrow = c(2, 2), mar = c(3, 4, 1, 1))
+invis.Map(function(x, ylab){
+  # create boxplot
+  boxplot(x ~ Applied,
+          data = fema.disasters, col = col,
+          xlab = "", ylab = ylab, cex = 0.7)
+  
+}, fema.disasters[, .(MedInc2016, ShareDem2016, PovertyRate, SingleMother)],
+c("Median Income (2016)", "Democratic Votes (2016 Election)",
+  "Poverty Rate (2016)", "Share of Single Mothers (2016)"))
+
+dev.off()
 
 
 
