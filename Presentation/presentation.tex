@@ -73,9 +73,9 @@
 	\begin{itemize}
 		\item Event-study design:
 		\begin{align*}
-			y_{i, t, g} = \beta_{-5}  D_{i, t-5} + \sum_{l = -4, l \neq -1}^{8} \beta_l D_{i, t-l} + \alpha_i + \lambda_t + \zeta_g + \varepsilon_{i, t, g}
+			y_{i, t, g} &= \beta_{-5}  \mathds{1}\{t - E_i \leq 5\} + \sum_{l = -4, l \neq -1}^{8} \beta_l \mathds{1}\{t - E_i = l\} \\ &+ \alpha_i + \lambda_t + \zeta_g + \varepsilon_{i, t, g}
 		\end{align*}
-		\item Treatment begins in the period of first disaster and is absorbing (staggered adoption)
+		\item Treatment begins in the period of first disaster ($E_i$) and is absorbing (staggered adoption)
 		\item But: Always-treated (i.e. disaster in the first year) counties are dropped
 		\item Never-treated counties act as the baseline
 	\end{itemize}
