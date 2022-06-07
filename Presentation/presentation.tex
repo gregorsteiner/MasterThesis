@@ -41,7 +41,7 @@
 		\item \textbf{Standardized testing outcomes} from the Stanford Education Data Archive \citep{SEDA}:
 		\begin{itemize}
 			\item Cohort standardized average scores by county in Mathematics \& Reading Language Arts (RLA)
-			\item Grades 3 through 8 for schoolyears 2008/2009 to 2017/2018
+			\item Grades 3 through 8 for schoolyears 2008-09 to 2017-18
 		\end{itemize}
 		\item \textbf{Public Assistance applications and payments} from FEMA
 	\end{itemize}
@@ -53,6 +53,16 @@
 		\includegraphics[scale=0.68]{"../Code & Data/DepVarsBoxplot.pdf"}
 		\caption{Boxplots of mean test scores by subgroup}
 		\label{DepVarsBoxplot}
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}{Natural Disasters in the US}
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[scale=0.65]{"../Code & Data/DisasterMap.pdf"}
+		\caption{Number of declared natural disasters in school years 2008-09 through 2017-18}
+		\label{DisasterMap}
 	\end{figure}
 \end{frame}
 
@@ -74,7 +84,7 @@
 	\begin{itemize}
 		\item Event-study design:
 		\begin{align*}
-			y_{i, t, g} &= \beta_{-5}  \mathds{1}\{t - E_i \leq 5\} + \sum_{l = -4, l \neq -1}^{8} \beta_l \mathds{1}\{t - E_i = l\} \\ &+ \alpha_i + \lambda_t + \zeta_g + \varepsilon_{i, t, g}
+			y_{i, t, g} &= \beta_{-5}  \mathds{1}\{t - E_i \leq 5\} + \sum_{l = -4, \; l \neq -1}^{8} \beta_l \mathds{1}\{t - E_i = l\} \\ &+ \alpha_i + \lambda_t + \zeta_g + \varepsilon_{i, t, g}
 		\end{align*}
 		\item Treatment begins in the period of first disaster ($E_i$) and is absorbing (staggered adoption)
 		\item But: Always-treated (i.e. disaster in the first year) counties are dropped

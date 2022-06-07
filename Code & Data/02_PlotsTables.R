@@ -159,22 +159,15 @@ invis.lapply(c("FEMA", "Storm"), function(type){
 
 # plot cumulative disasters
 dat[, CumuDisasters := cumsum(Disasters), by = .(fips, grade, subject)]
-fema.cum <- aggregate(list("Disasters" = as.numeric(dat$CumuDisasters)),
-                      list("fips" = dat$fips), function(x) {
-                        
-                        res <- x[!is.na(x)][length(x[!is.na(x)])]
-                        if(length(res) == 0) return(0)
-                        
-                        return(res)
-                        
-                        })
+
+fema.cum <- dat[, .(Disasters = CumuDisasters[!is.na(CumuDisasters)][.N]), by = fips]
+fema.cum[, DisastersGrouped := factor(cut(Disasters, breaks = c(-Inf, 0, 2, 5, 10, Inf)), labels = c("0", "1-2", "3-5", "6-10", "11+"))]
 
 pdf("DisasterMap.pdf",
     width = wid, height = hei)
 
-plot_usmap(data = fema.cum, values = "Disasters") +
-  scale_fill_viridis_c(name = "", option = "H",
-                       breaks = c(0, 5, 10, max(fema.cum$Disasters, na.rm = TRUE))) +
+plot_usmap(data = fema.cum, values = "DisastersGrouped") +
+  scale_fill_manual(values = viridisLite::viridis(5), name = "") +
   theme(legend.position = "right",
         legend.key.size = grid::unit(1, "cm"),
         legend.text = element_text(size = 12),
@@ -187,20 +180,16 @@ dev.off()
 
 # plot cumulative Storms
 dat[, CumuStorms := cumsum(Storms), by = .(fips, grade, subject)]
-storms.cum <- aggregate(list("Storms" = as.numeric(dat$CumuStorms)),
-                        list("fips" = dat$fips), function(x) {
-                          res <- x[!is.na(x)][length(x[!is.na(x)])]
-                          if(length(res) == 0) return(0)
-                          
-                          return(res)
-                        })
+storms.cum <- dat[, .(Storms = CumuStorms[!is.na(CumuStorms)][.N]), by = fips]
+
+storms.cum[, StormsGrouped := factor(cut(Storms, breaks = c(-Inf, 0, 2, 4, Inf)), labels = c("0", "1-2", "3-4", "5"))]
+
 
 pdf("StormMap.pdf",
     width = wid, height = hei)
 
-plot_usmap(data = storms.cum, values = "Storms") +
-  scale_fill_viridis_c(name = "", option = "H",
-                       breaks = c(0, 5, 10, 15, max(storms.cum$Storms))) +
+plot_usmap(data = storms.cum, values = "StormsGrouped") +
+  scale_fill_manual(values = viridisLite::viridis(length(levels(storms.cum$StormsGrouped))), name = "") +
   theme(legend.position = "right",
         legend.key.size = grid::unit(1, "cm"),
         legend.text = element_text(size = 12),
@@ -312,7 +301,7 @@ res <- rbind(res, "Total" = c(nrow(fema.disasters), 100 * mean(fema.disasters$Ap
 
 # export as .tex table
 writeLines(knitr::kable(res, digits = 2, format = "latex",
-                        label = "AppsByType", caption = "Share of counties that applied for federal assistance following a disaster by disaster type (schoolyears 2016/2017 and 2017/2018)",
+                        label = "AppsByType", caption = "Share of counties that applied for federal assistance following a disaster by disaster type (schoolyears 2016-17 and 2017-18)",
                         booktabs = TRUE),
            "../TeX Files/ApplicationsByType.tex")
 
@@ -339,26 +328,6 @@ c("Median Income (2016)", "Democratic Votes (2016 Election)",
 dev.off()
 
 
-
-
-
-
-# logistic regression for assistance covariates
-dat.app$MedInclog <- log(dat.app$MedInc2016)
-dat.app[, AppliedNum := ifelse(Applied == "Applied", 1, 0)]
-model.logit.ass <- fixest::feglm(AppliedNum ~ ShareDem2016 + MedInclog
-                                 + PovertyRate + SingleMother, data = dat.app[Disasters > 0],
-                                 family = binomial("logit"))
-
-
-fixest::etable(list(model.logit.ass), file = "../TeX Files/ResultsLogit.tex", replace = TRUE,
-               label = "ResultsLogit", title = "Determinants of Assistance Application",
-               dict = c(ShareDem2016 = "Share of democratic voters (2016)",
-                        ShareDem2008 = "Share of democratic voters (2008)",
-                        MedInclog = "Median Income (logs)",
-                        PovertyRate = "Poverty Rate", 
-                        SingleMother = "Share of single mothers",
-                        AppliedNum = "Applied"))
 
 
 
