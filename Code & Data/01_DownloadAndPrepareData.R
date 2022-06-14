@@ -277,10 +277,39 @@ stations <- rbindlist(rnoaa::meteo_nearby_stations(lat_lon_df = data.frame(id = 
 stations$fips <- housingData::geoCounty[, "fips"]
 
 # get data for these stations
-dat.weather <- rnoaa::meteo_pull_monitors(stations[, "id"], var = "TAVG",
-                                          date_min = "2008-01-01", date_max = "2018-12-31")
+dat.weather <- setDT(rnoaa::meteo_pull_monitors(stations[1:100, "id"], var = "TMAX",
+                                                date_min = "2008-01-01", date_max = "2018-12-31"))
 
 
+# add (school)year column
+dat.weather[, year := dplyr::case_when(
+  # if in september to december add 1 to the year (Schoolyear x/x+1 is x+1)
+  as.numeric(format(date, "%m")) %in% 9:12 ~ as.numeric(format(date, "%Y")) + 1,
+  as.numeric(format(date, "%m")) %in% 1:3 ~ as.numeric(format(date, "%Y")),
+  as.numeric(format(date, "%m")) %in% 4:8 ~ NA_real_
+)]
+
+# divide temperature by ten to get degrees
+dat.weather[, tmax := tmax / 10]
+
+
+# aggregate by schoolyear and id
+dat.weather.agg <- dat.weather[!is.na(year), .(tmax = mean(tmax, na.rm = TRUE),
+                                               DaysAbove30 = sum(tmax > 30, na.rm = TRUE)),
+                               by = .(id, year)]
+
+# only keep relevant school years
+dat.weather.agg <- dat.weather.agg[year %in% 2009:2018]
+
+
+# merge with fips
+dat.weather.agg <- merge(dat.weather.agg, stations[, c("id", "fips")])
+
+# drop id column
+dat.weather.agg$id <- NULL
+
+# fips as numeric
+dat.weather.agg[, fips := as.numeric(fips)]
 
 
 
