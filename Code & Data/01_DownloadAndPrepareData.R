@@ -194,7 +194,7 @@ saveRDS(fema.assist.agg, "AssistanceData.RDS")
 
 
 
-######## Alternative Disaster Data ########
+######## Alternative Disaster Data (Storms) ########
 
 # read hurricanes 
 dat.hur <- fread("Raw Data/storm_data_search_results.csv")
@@ -255,6 +255,33 @@ dat.storms <- merge(dat.tor, dat.hur,
 
 # add tornadoes and Hurricanes
 dat.storms[, Storms := rowSums(dat.storms[, .(Tornadoes, Hurricanes)], na.rm = TRUE)]
+
+
+
+
+######## Alternative Disaster Data (Heat) ########
+
+
+# stations data
+stationsraw <- setDT(rnoaa::ghcnd_stations())
+stationsraw <- stationsraw[first_year <= 2008 & last_year >= 2018]
+
+# find closest station based on centroid coordinates
+stations <- rbindlist(rnoaa::meteo_nearby_stations(lat_lon_df = data.frame(id = housingData::geoCounty[, "fips"],
+                                                                           latitude = housingData::geoCounty[, "lat"],
+                                                                           longitude = housingData::geoCounty[, "lon"]),
+                                                   station_data = stationsraw,
+                                                   limit = 1))
+
+# add fips id
+stations$fips <- housingData::geoCounty[, "fips"]
+
+# get data for these stations
+dat.weather <- rnoaa::meteo_pull_monitors(stations[, "id"], var = "TAVG",
+                                          date_min = "2008-01-01", date_max = "2018-12-31")
+
+
+
 
 
 
