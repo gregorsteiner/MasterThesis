@@ -277,7 +277,7 @@ stations <- rbindlist(rnoaa::meteo_nearby_stations(lat_lon_df = data.frame(id = 
 stations$fips <- housingData::geoCounty[, "fips"]
 
 # get data for these stations
-dat.weather <- setDT(rnoaa::meteo_pull_monitors(stations[1:100, "id"], var = "TMAX",
+dat.weather <- setDT(rnoaa::meteo_pull_monitors(stations[, "id"], var = "TMAX",
                                                 date_min = "2008-01-01", date_max = "2018-12-31"))
 
 
@@ -309,7 +309,7 @@ dat.weather.agg <- merge(dat.weather.agg, stations[, c("id", "fips")])
 dat.weather.agg$id <- NULL
 
 # fips as numeric
-dat.weather.agg[, fips := as.numeric(fips)]
+dat.weather.agg[, fips := as.numeric(as.character(fips))]
 
 
 
@@ -341,9 +341,15 @@ dat[, `:=`(DisasterTreat = as.numeric(cumsum(Disasters) > 0),
            StormTreat = as.numeric(cumsum(Storms) > 0)),
     by = fips]
 
-# add indicators whether they had a disaster before 2009 or 2016
-dat[, `:=`(DisasterBefore2009 = as.numeric(fips %in% fema.disasters[syDeclared < 2009, as.numeric(paste0(fipsStateCode, fipsCountyCode))]),
-           DisasterBeforeOct2016 = as.numeric(fips %in% fema.disasters[as.Date(declarationDate) < as.Date("2016-10-01"), as.numeric(paste0(fipsStateCode, fipsCountyCode))]))]
+# add heat data
+dat <- merge(dat, dat.weather.agg,
+             by = c("fips", "year"),
+             all.x = TRUE, all.y = TRUE)
+
+
+# # add indicators whether they had a disaster before 2009 or 2016
+# dat[, `:=`(DisasterBefore2009 = as.numeric(fips %in% fema.disasters[syDeclared < 2009, as.numeric(paste0(fipsStateCode, fipsCountyCode))]),
+#            DisasterBeforeOct2016 = as.numeric(fips %in% fema.disasters[as.Date(declarationDate) < as.Date("2016-10-01"), as.numeric(paste0(fipsStateCode, fipsCountyCode))]))]
 
 
 # add year of first treatment
