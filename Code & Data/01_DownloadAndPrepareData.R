@@ -264,7 +264,7 @@ dat.storms[, Storms := rowSums(dat.storms[, .(Tornadoes, Hurricanes)], na.rm = T
 
 # stations data
 stationsraw <- setDT(rnoaa::ghcnd_stations())
-stationsraw <- stationsraw[first_year <= 2008 & last_year >= 2018]
+stationsraw <- stationsraw[first_year <= 20078 & last_year >= 2018]
 
 # find closest station based on centroid coordinates
 stations <- rbindlist(rnoaa::meteo_nearby_stations(lat_lon_df = data.frame(id = housingData::geoCounty[, "fips"],
@@ -277,7 +277,7 @@ stations <- rbindlist(rnoaa::meteo_nearby_stations(lat_lon_df = data.frame(id = 
 stations$fips <- housingData::geoCounty[, "fips"]
 
 # get data for these stations
-dat.weather <- setDT(rnoaa::meteo_pull_monitors(stations[, "id"], var = "TMAX",
+dat.weather <- setDT(rnoaa::meteo_pull_monitors(unique(stations[, "id"]), var = "TMAX",
                                                 date_min = "2008-01-01", date_max = "2018-12-31"))
 
 
