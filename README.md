@@ -4,7 +4,11 @@ In my thesis I explore the link between natural disasters and education
 outcomes. The Stanford Education Data Archive (Reardon et al. 2021)
 provides standardized test scores by county, year, grade and subject.
 Data on natural disasters is available at the FEMA database and the
-**rfema** package (Turner 2022) provides easy access.
+**rfema** package (Turner 2022) provides easy access. The map below
+shows natural disaster exposure by county for schoolyears 2008-09
+through 2017-2018.
+
+![](README_files/figure-markdown_github/unnamed-chunk-2-1.png)
 
 The outcomes of interest are mean test scores by county, and mean test
 scores for black, hispanic, female, and economically disadvantaged
@@ -178,7 +182,11 @@ Mean test score (economically disadvantaged students)
 
 To identify a causal effect, I use an event study design. Due to likely
 very heterogenous treatment effects, I employ the estimator by Sun and
-Abraham (2021).
+Abraham (2021). Below you can see the results of my main analysis,
+indicating that natural disasters do have a negative short-term effect
+on academic achievement in mathematics.
+
+![](README_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
 ## References
 

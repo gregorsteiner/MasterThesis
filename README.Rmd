@@ -26,15 +26,35 @@ knitr::opts_chunk$set(echo = FALSE,
 library(data.table)
 library(usmap)
 library(ggplot2)
+library(fixest)
 
-dat <- readRDS("Code & Data/Data.RDS")
+dat <- setDT(readRDS("Code & Data/Data.RDS"))
 
 ```
 
 
 # Natural Disasters and Education
 
-In my thesis I explore the link between natural disasters and education outcomes. The Stanford Education Data Archive [@SEDA] provides standardized test scores by county, year, grade and subject. Data on natural disasters is available at the FEMA database and the **rfema** package [@rfema] provides easy access.
+In my thesis I explore the link between natural disasters and education outcomes. The Stanford Education Data Archive [@SEDA] provides standardized test scores by county, year, grade and subject. Data on natural disasters is available at the FEMA database and the **rfema** package [@rfema] provides easy access. The map below shows natural disaster exposure by county for schoolyears 2008-09 through 2017-2018.
+
+```{r}
+
+# plot cumulative disasters
+dat[, CumuDisasters := cumsum(Disasters), by = .(fips, grade, subject)]
+
+fema.cum <- dat[, .(Disasters = CumuDisasters[!is.na(CumuDisasters)][.N]), by = fips]
+fema.cum[, DisastersGrouped := factor(cut(Disasters, breaks = c(-Inf, 0, 2, 5, 10, Inf)), labels = c("0", "1-2", "3-5", "6-10", "11+"))]
+
+plot_usmap(data = fema.cum, values = "DisastersGrouped") +
+  scale_fill_manual(values = viridisLite::viridis(5), name = "") +
+  theme(legend.position = "right",
+        legend.key.size = grid::unit(1, "cm"),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14),
+        plot.margin= grid::unit(c(0,0,0,0), "mm"))
+
+```
+
 
 The outcomes of interest are mean test scores by county, and mean test scores for black, hispanic, female, and economically disadvantaged students.
 
@@ -48,7 +68,51 @@ dat.summary <- dat[, .("Mean test score" = cs_mn_all,
 vtable::sumtable(dat.summary)
 ```
 
-To identify a causal effect, I use an event study design. Due to likely very heterogenous treatment effects, I employ the estimator by @Sun_2021.
+To identify a causal effect, I use an event study design. Due to likely very heterogenous treatment effects, I employ the estimator by @Sun_2021. Below you can see the results of my main analysis, indicating that natural disasters do have a negative short-term effect on academic achievement in mathematics.
+
+```{r fig.height=8}
+
+# fema
+model.math <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+                 sunab(TreatStart, year, ref.p = c(-1, -3000), bin.rel = c(-5:-3000)) | year + fips + grade,
+               data = dat[subject == "mth"], cluster = "TreatStart")
+
+model.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+                     sunab(TreatStart, year, ref.p = c(-1, -3000), bin.rel = c(-5:-9)) | year + fips + grade,
+                   data = dat[subject == "rla"], cluster = "TreatStart")
+
+
+
+# dependent variables
+dep.vars <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")
+
+# color scheme
+cols <- c("firebrick", "cornflowerblue")
+
+# plot results
+layout(matrix(c(1, 1:6, 6), ncol = 2, byrow = TRUE), heights = c(4, 4, 4, 1))
+
+par(mar = c(2, 4, 2, 1))
+iplot(list(model.math[[1]], model.rla[[1]]), main = "Overall", xlab = "Years to treatment",
+      col = cols, ci.col = cols, ci.lwd = 1, ci.width = 0.2,
+      pt.pch = 19, ylim = c(-0.07, 0.07))
+
+invisible(Map(function(math, rla, name){
+  
+  iplot(list(math, rla), main = name, xlab = "Years to treatment",
+        col = cols, ci.col = cols, pt.pch = 19,
+        ci.lwd = 1, ci.width = 0.2, ylim = c(-0.12, 0.12))
+  
+}, model.math[2:5], model.rla[2:5], dep.vars[2:5]))
+
+par(mai=c(0,0,0,0))
+plot.new()
+legend(x = "center", legend = c("Math", "RLA"),
+       col = cols, lwd = 2, cex = 1, inset = 0, horiz = TRUE)
+
+
+```
+
 
 
 
