@@ -276,10 +276,16 @@ stations <- rbindlist(rnoaa::meteo_nearby_stations(lat_lon_df = data.frame(id = 
 # add fips id
 stations$fips <- housingData::geoCounty[, "fips"]
 
-# get data for these stations
-dat.weather <- setDT(rnoaa::meteo_pull_monitors(unique(stations[, "id"]), var = "TMAX",
-                                                date_min = "2008-01-01", date_max = "2018-12-31"))
+# get data for these stations (first download as list and then rbind)
+tmplist <- lapply(list(1:800, 801:1600, 1601:2400, 2401:nrow(stations)),
+                  function(ind){
+                    res <- rnoaa::meteo_pull_monitors(unique(stations[ind, "id"]), var = "TMAX", 
+                                                      date_min = "2008-01-01", date_max = "2018-12-31")
+                    return(res)
+                  })
 
+dat.weather <- setDT(do.call(rbind, tmplist))
+rm(tmplist) # delete the list again to save memory
 
 # add (school)year column
 dat.weather[, year := dplyr::case_when(
