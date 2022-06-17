@@ -199,6 +199,28 @@ plot_usmap(data = storms.cum, values = "StormsGrouped") +
 dev.off()
 
 
+# heat map (literally)
+heat <- melt(dat[, .(MaximumTemperature = mean(tmax, na.rm = TRUE),
+                     DaysAbove30 = mean(DaysAbove30, na.rm = TRUE)),
+                 by = .(fips)],
+             id.vars = c("fips"), measure.vars = c("MaximumTemperature", "DaysAbove30"))
+
+heat[, value := factor(cut(value, breaks = c(-Inf, 10, 20, 30, 40, Inf)),
+                       labels = c("<10", "10-20", "20-30", "30-40", ">40"))]
+
+pdf("HeatMap.pdf", width = wid, height = hei)
+
+plot_usmap(data = heat, values = "value") +
+  scale_fill_manual(name = "", values = viridisLite::viridis(length(levels(heat$value)))) +
+  facet_grid(cols = vars(variable)) +
+  theme(legend.position = "right",
+        legend.key.size = grid::unit(1, "cm"),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14),
+        plot.margin= grid::unit(c(0,0,0,0), "mm"))
+  
+dev.off()
+
 # plot assistance received
 
 dat.plot <- melt(assist[, .("Damage" = sum(totalDamage, na.rm = TRUE) + 1,
@@ -225,9 +247,8 @@ dev.off()
 
 
 
+######## ethnic shares by relative time ########
 
-
-# Plot ethnic shares by relative time
 pdf("EthnicComposition.pdf", width = wid, height = hei)
 
 # add third color
