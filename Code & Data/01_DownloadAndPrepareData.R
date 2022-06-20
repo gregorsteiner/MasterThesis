@@ -264,28 +264,42 @@ dat.storms[, Storms := rowSums(dat.storms[, .(Tornadoes, Hurricanes)], na.rm = T
 
 # stations data
 stationsraw <- setDT(rnoaa::ghcnd_stations())
-stationsraw <- stationsraw[first_year <= 20078 & last_year >= 2018]
+stationsraw <- stationsraw[first_year <= 2008 & last_year >= 2018]
 
-# find closest station based on centroid coordinates
-stations <- rbindlist(rnoaa::meteo_nearby_stations(lat_lon_df = data.frame(id = housingData::geoCounty[, "fips"],
-                                                                           latitude = housingData::geoCounty[, "lat"],
-                                                                           longitude = housingData::geoCounty[, "lon"]),
-                                                   station_data = stationsraw,
-                                                   limit = 1))
+# get fips with coordinates
+fips <- housingData::geoCounty
 
-# add fips id
-stations$fips <- housingData::geoCounty[, "fips"]
 
-# get data for these stations (first download as list and then rbind)
-tmplist <- lapply(list(1:800, 801:1600, 1601:2400, 2401:nrow(stations)),
-                  function(ind){
-                    res <- rnoaa::meteo_pull_monitors(unique(stations[ind, "id"]), var = "TMAX", 
-                                                      date_min = "2008-01-01", date_max = "2018-12-31")
-                    return(res)
-                  })
+# download weather data for all counties based on the closest measurement station
+dat.weather <- setDT(do.call(rbind, lapply(1:nrow(fips), function(x, ids = 5){
+  # get best ID for each county (i.e. id for closest station)
+  idlist <- rnoaa::meteo_nearby_stations(lat_lon_df = data.frame(id = fips[x, "fips"],
+                                                                 latitude = fips[x, "lat"],
+                                                                 longitude = fips[x, "lon"]),
+                                         station_data = stationsraw,
+                                         limit = ids)
+  # unlist
+  id <- unlist(idlist[[1]][, "id"])
+  
+  # try ids until download works (up to five closest ids)
+  counter <- 1
+  res <- data.frame()
+  while (nrow(res) == 0 & counter < ids) {
+    
+    id.int <- id[counter]
+    # download data for that ID
+    res <- rnoaa::meteo_pull_monitors(id.int, var = "TMAX", 
+                                      date_min = "2008-01-01", date_max = "2018-12-31")
+    # and increase counter
+    counter <- counter + 1
+  }
+  # add fips
+  res$fips <- fips[x, "fips"]
+  
+  # return
+  return(res)
+})))
 
-dat.weather <- setDT(do.call(rbind, tmplist))
-rm(tmplist) # delete the list again to save memory
 
 # add (school)year column
 dat.weather[, year := dplyr::case_when(
@@ -302,21 +316,10 @@ dat.weather[, tmax := tmax / 10]
 # aggregate by schoolyear and id
 dat.weather.agg <- dat.weather[!is.na(year), .(tmax = mean(tmax, na.rm = TRUE),
                                                DaysAbove30 = sum(tmax > 30, na.rm = TRUE)),
-                               by = .(id, year)]
+                               by = .(fips = as.numeric(as.character(fips)), year)]
 
 # only keep relevant school years
 dat.weather.agg <- dat.weather.agg[year %in% 2009:2018]
-
-
-# merge with fips
-dat.weather.agg <- merge(dat.weather.agg, stations[, c("id", "fips")])
-
-# drop id column
-dat.weather.agg$id <- NULL
-
-# fips as numeric
-dat.weather.agg[, fips := as.numeric(as.character(fips))]
-
 
 
 
