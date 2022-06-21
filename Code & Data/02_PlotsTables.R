@@ -161,7 +161,7 @@ invis.lapply(c("FEMA", "Storm"), function(type){
 dat[, CumuDisasters := cumsum(Disasters), by = .(fips, grade, subject)]
 
 fema.cum <- dat[, .(Disasters = CumuDisasters[!is.na(CumuDisasters)][.N]), by = fips]
-fema.cum[, DisastersGrouped := factor(cut(Disasters, breaks = c(-Inf, 0, 2, 5, 10, Inf)), labels = c("0", "1-2", "3-5", "6-10", "11+"))]
+fema.cum[, DisastersGrouped := factor(cut(Disasters, breaks = c(-Inf, 0, 2, 5, 10, Inf)), labels = c("0", "1-2", "3-5", "6-10", ">10"))]
 
 pdf("DisasterMap.pdf",
     width = wid, height = hei)
@@ -200,19 +200,21 @@ dev.off()
 
 
 # heat map (literally)
-heat <- melt(dat[, .(MaximumTemperature = mean(tmax, na.rm = TRUE),
-                     DaysAbove30 = mean(DaysAbove30, na.rm = TRUE)),
-                 by = .(fips)],
-             id.vars = c("fips"), measure.vars = c("MaximumTemperature", "DaysAbove30"))
+heat <- dat[, .(MaximumTemperature = mean(tmax, na.rm = TRUE),
+                DaysAbove30 = mean(DaysAbove30, na.rm = TRUE)),
+            by = .(fips)]
 
-heat[, value := factor(cut(value, breaks = c(-Inf, 10, 20, 30, 40, Inf)),
-                       labels = c("<10", "10-20", "20-30", "30-40", ">40"))]
+heat[, `:=`(DaysAbove30Grouped = factor(cut(DaysAbove30, breaks = c(-Inf, 5, 10, 20, 30, 40, Inf)),
+                                        labels = c("<5", "5-10", "10-20", "20-30", "30-40", ">40")),
+            MaxTempGrouped = factor(cut(MaximumTemperature, breaks = c(-Inf, 10, 15, 20, 25, Inf)),
+                                    labels = c("<10", "10-15", "15-20", "20-25", ">25")))]
 
-pdf("HeatMap.pdf", width = wid, height = hei)
 
-plot_usmap(data = heat, values = "value") +
-  scale_fill_manual(name = "", values = viridisLite::viridis(length(levels(heat$value)))) +
-  facet_grid(cols = vars(variable)) +
+
+pdf("HeatMapTemp.pdf", width = wid, height = hei)
+
+plot_usmap(data = heat, values = "MaxTempGrouped") +
+  scale_fill_manual(name = "", values = viridisLite::viridis(length(levels(heat$MaxTempGrouped)))) +
   theme(legend.position = "right",
         legend.key.size = grid::unit(1, "cm"),
         legend.text = element_text(size = 12),
@@ -220,6 +222,19 @@ plot_usmap(data = heat, values = "value") +
         plot.margin= grid::unit(c(0,0,0,0), "mm"))
   
 dev.off()
+
+pdf("HeatMapDays.pdf", width = wid, height = hei)
+
+plot_usmap(data = heat, values = "DaysAbove30Grouped") +
+  scale_fill_manual(name = "", values = viridisLite::viridis(length(levels(heat$DaysAbove30Grouped)))) +
+  theme(legend.position = "right",
+        legend.key.size = grid::unit(1, "cm"),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14),
+        plot.margin= grid::unit(c(0,0,0,0), "mm"))
+
+dev.off()
+
 
 # plot assistance received
 

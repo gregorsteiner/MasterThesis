@@ -44,19 +44,26 @@ The National Weather Service (NWS) provides data on storm events. In particular,
 
 We only consider severe storms which are likely to cause substantial damage. Tornadoes can be classified based on estimated peak wind speeds on the Enhanced Fujita (EF) scale \citep[for more details see][]{EF_Scale}. Tornadoes with an EF scale of 0 or 1 (wind speeds of up to 110 mph) are characterized as weak. Therefore, we exclude those and only keep tornadoes with an EF scale of at least 2 (wind speeds of at least 111 mph). Unfortunately, the hurricane data does not include a similar measure, but it does include an estimated amount of property damage. We exclude all hurricanes with an estimated property damage of zero.  Storm exposure by county is shown in figure \ref{StormMap}.
 
-To measure heat exposure, we exploit daily temperature data from the Global Historical Climatology Network \citep{Menne_2012}. Each county is assigned the measurement station with the lowest distance to the county's center. Following \cite{Park_2020} cumulative heat exposure is measured in two ways: The average daily maximum temperature and the number of days with a maximum temperature above 30°C in a school year.
+To measure heat exposure, we exploit daily temperature data from the Global Historical Climatology Network \citep{Menne_2012}. Each county is assigned the measurement station with the lowest distance to the county's center. Following \cite{Park_2020}, we use two measures of yearly cumulative heat exposure: The average daily maximum temperature and the number of days with a maximum temperature above 30°C in a school year. The threshold of 30°C is somewhat arbitrary, however, changing it slightly does not change the results in a meaningful way. Figures \ref{HeatMapTemp} and \ref{HeatMapDays} show the distribution across counties. As expected, the variation in heat exposure is largely driven by location.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=1]{"../Code & Data/HeatMapTemp.pdf"}
+	\caption{Average daily maximum temperature in school years 2008-09 through 2017-18}
+	\label{HeatMapTemp}
+\end{figure}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=1]{"../Code & Data/HeatMapDays.pdf"}
+	\caption{Average number of days above 30°C in school years 2008-09 through 2017-18}
+	\label{HeatMapDays}
+\end{figure}
 
 
 \subsection{Assistance Applications}
 
-FEMA also provides a dataset on  their Public Assistance Applicants Program Deliveries. It contains information on applicants and their recovery priorities, including the amount of damage caused and amount of federal disaster assistance granted. This is the main program for federal public disaster assistance, averaging USD 4.7 billion in assistance each year. Figure \ref{AssistanceMap} shows the total federal assistance awarded to counties. Note that counties that do not receive public assistance may still benefit from individual assistance or from the Hazard Mitigation Assistance program.
-
-\begin{figure}[!h]
-	\centering
-	\includegraphics[scale=1]{"../Code & Data/AssistanceMap.pdf"}
-	\caption{Amount of disaster damage reported by and federal disaster assistance awarded to counties since October 2016 (both in USD)}
-	\label{AssistanceMap}
-\end{figure}
+FEMA also provides a dataset on  their Public Assistance Applicants Program Deliveries. It contains information on applicants and their recovery priorities, including the amount of damage caused and amount of federal disaster assistance granted. This is the main program for federal public disaster assistance, averaging USD 4.7 billion in assistance each year. However, note that counties that do not receive public assistance may still benefit from individual assistance or from the Hazard Mitigation Assistance program.
 
 Unfortunately, this data is only available starting in October 2016. Based on the temporal overlap between this dataset and our main dataset, that is schoolyears 2016/2017 and 2017/2018, it is possible to analyze whether counties that are affected by disasters receive federal assistance. This can be done by checking whether a county that experienced a disaster in 2016/2017 or 2017/2018 appears in the Public Assistance Applicants Program Deliveries database. In fact, only about 17.78\% of counties that experienced a disaster in that period did apply for federal assistance. Table \ref{tab:AppsByType} shows the number of disasters and the share of counties that applied for assistance following such a disaster by disaster type. It seems that the number varies dramatically by disaster type. While about 80\% of counties affected by a tornado applied for federal assistance, only about 10\% of counties affected by fires or floods did so.
 
