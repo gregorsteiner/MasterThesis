@@ -24,26 +24,6 @@ model.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
                      sunab(TreatStart, year, ref.p = c(-1, -3000), bin.rel = c(-5:-9)) | year + fips + grade,
                    data = dat[subject == "rla"], cluster = "TreatStart")
 
-# # automatically export as tex file
-# etable(model.math, file = "../TeX Files/MainResultsMath.tex", replace = TRUE,
-#        label = "MainResultsMath", title = "Results (Mathematics)",
-#        dict = c(cs_mn_all = "Overall",
-#                 cs_mn_blk = "Black",
-#                 cs_mn_hsp = "Hispanic",
-#                 cs_mn_fem = "Female",
-#                 cs_mn_ecd = "Econ. Disadv.",
-#                 year = "Year", grade = "Grade", fips = "County",
-#                 TreatStart = "Cohort"))
-# 
-# etable(model.rla, file = "../TeX Files/MainResultsRLA.tex", replace = TRUE,
-#        label = "MainResultsRLA", title = "Results (RLA)",
-#        dict = c(cs_mn_all = "Overall",
-#                 cs_mn_blk = "Black",
-#                 cs_mn_hsp = "Hispanic",
-#                 cs_mn_fem = "Female",
-#                 cs_mn_ecd = "Econ. Disadv.",
-#                 year = "Year", grade = "Grade", fips = "County",
-#                 TreatStart = "Cohort"))
 
 
 # STorms
@@ -55,6 +35,48 @@ model.math.storm <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ec
 model.rla.storm <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                            sunab(TreatStartStorm, year, ref.p = c(-1, -3000), bin.rel = c(-5:-9)) | year + fips + grade,
                          data = dat[subject == "rla"])
+
+
+
+# heat models
+
+model.temp.math <-  feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
+                            tmax | year + fips + grade,
+                          data = dat[subject == "mth"], vcov = "iid")
+
+model.temp.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
+                          tmax | year + fips + grade,
+                        data = dat[subject == "rla"], vcov = "iid")
+
+model.days.math <-  feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
+                            DaysAbove30 | year + fips + grade,
+                          data = dat[subject == "mth"], vcov = "iid")
+
+model.days.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
+                          DaysAbove30 | year + fips + grade,
+                        data = dat[subject == "rla"], vcov = "iid")
+
+# export tables
+dict <- c(cs_mn_all = "Overall", cs_mn_blk = "Black", cs_mn_hsp = "Hispanic",
+          cs_mn_fem = "Female", cs_mn_ecd = "Econ. Disadv.",
+          year = "Year", grade = "Grade", fips = "County",
+          tmax = "Max. Temp.", DaysAbove30 = "Days ab. 30")
+
+etable(model.temp.rla, file = "../TeX Files/TempResultsRLA.tex", replace = TRUE,
+       label = "TempResultsRLA", title = "Temperature Results (RLA)",
+       dict = dict)
+
+etable(model.temp.math, file = "../TeX Files/TempResultsMath.tex", replace = TRUE,
+       label = "TempResultsMath", title = "Temperature Results (Mathematics)",
+       dict = dict)
+
+etable(model.days.rla, file = "../TeX Files/DaysResultsRLA.tex", replace = TRUE,
+       label = "DaysResultsRLA", title = "Hot Days Results (RLA)",
+       dict = dict)
+
+etable(model.days.math, file = "../TeX Files/DaysResultsMath.tex", replace = TRUE,
+       label = "DaysResultsMath", title = "Hot Days Results (Mathematics)",
+       dict = dict)
 
 
 

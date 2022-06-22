@@ -84,5 +84,19 @@ Testing for parallel trends is problematic for two reasons: These tests tend to 
 Both identifying assumptions should be fulfilled and the IW-Estimator consistently estimates a weighted average of the cohort average treatment effects on the treated.
 
 
+\subsection{Heat}
+
+For the effect of heat exposure we utilize a different design. A binary treatment indicator is not-well suited to capture the effect of cumulative heat exposure. Instead, we rely on the two aforementioned measures: average maximum daily temperature and days above 30°C. These give rise to an interesting marginal interpretation: What is the effect of a 1°C hotter school year or of one additional day above 30°C on average test scores?
+
+Again, conditional on location and year heat exposure should be independent of other factors determining academic performance. Also, there is no threat of endogenous selection into test-taking \citep[as in][]{Goodman_2020}, since all students are required to take these standardized tests. Thus, we estimate a simple fixed effects regression of the form
+\begin{align}
+	y_{i, t, g} = \beta H_{i, t} + \alpha_i + \lambda_t + \zeta_g + \varepsilon_{i, t, g} \;,
+\end{align}
+where $H_{i, t}$ is the measure of heat exposure at the county-schoolyear level. This design provides unconfounded estimates of the effect of heat on performance in standardized tests.
+
+
+
+
+
 
 
