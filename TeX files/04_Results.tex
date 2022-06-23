@@ -1,5 +1,7 @@
 \section{Results} \label{Results}
 
+\subsection{Main Results}
+
 Figure \ref{ResultsPlot} shows estimated dynamic treatment effects and 95\% confidence intervals for all students and the four subgroups of interest. 
 
 \begin{figure}[!h]
@@ -16,8 +18,6 @@ Note that the number of observed units decreases with the distance in time from 
 
 For the subgroups we find some surprising results. Black students seem to perform better in RLA in the medium term after a disaster. That is, there are significantly positive results one to seven years after treatment. The effect sizes are substantial: Seven years after treatment the increase in RLA performance goes up to 0.1 standard deviations. In other words, the average black student sees an increase in performance of up to 0.1 standard deviations of the national reference cohort. Also, hispanic students score significantly lower in mathematics in the year following a disaster.
 
-
-
 Positive effects of disasters on performance are not unheard of in the literature. In fact, this is somewhat consistent with the findings by \cite{Sacerdote_2012}. Many students have to switch schools and some may even benefit from attending a higher quality school after the disaster. Black students may disproportionally attend lower quality schools and are therefore more likely to benefit from having to switch schools. 
 
 Figures \ref{ResultsPlotStorm} shows the same graphs based on the storm treatment. The results look very similar. In the period of the storm there is a significant decrease in mathematics scores of up to -0.015 standard deviations. For the years following treatment there are no significant effects.
@@ -31,14 +31,10 @@ For female students there is a significant decrease in both subjects in the peri
 	\label{ResultsPlotStorm}
 \end{figure}
 
+Appendix \ref{PowerAna} provides an analysis of the power. For the short-term effects the power is relatively large for plausible true parameter values. Thus, we can be relatively certain that non-significant results are true negatives.
 
-\input{TempResultsMath.tex}
 
-\input{TempResultsRLA.tex}
-
-\input{DaysResultsMath.tex}
-
-\input{DaysResultsRLA.tex}
+\subsection{Migration Response}
 
 It could be the case that medium- and long-term effects are largely driven by migration. That's why it may be interesting to have a look at the ethnic composition of the counties relative to initial treatment. Figure \ref{EthnicComposition} shows ethnic shares for the treated counties in relative time.
 
@@ -53,7 +49,27 @@ In the left panel we see that the share of black students decreases in counties 
 
 The same plot based on the NWS storm data shows a different picture. Here, all three shares remain somewhat constant until five years fter treatment. Then the share of black students increases, while the share of white students decreases. This suggests that the migration response to storms may be qualitatively different than the response to other forms of disasters. At least for the storms data this does not seem to be a major driver of the results.
 
-A more in-depth analysis of migration responses to natural disasters and their role in academic achievement is unfortunately not possible with this data. There is some prior research based on individual level data indicating that it does play an important role \citep[for example][]{Sacerdote_2012}. Analyzing migration responses for different types of natural disasters may be a promising area for future research.
+A more in-depth analysis of migration responses to natural disasters and their role in academic achievement is unfortunately not possible with this data. There is some prior research based on individual level data indicating that it does play an important role \citep[for example][]{Sacerdote_2012}. Analyzing migration responses and their link to academic achievement for different types of natural disasters may be a promising area for future research.
 
-Appendix \ref{PowerAna} provides an analysis of the power. For the short-term effects the power is relatively large for plausible true parameter values. Thus, we can be relatively certain that non-significant results are true negatives.
+
+\subsection{Heat Results}
+
+Tables \ref{TempResultsMath} and \ref{TempResultsRLA} provide the estimation results for the  average maximum temperature for mathematics and RLA respectively. At a 0.05 significance level the estimate is not significant for the entire student population in both mathematics and RLA. However, we find significant results for the subgroups with point estimates between $-0.001$ and $-0.002$. This implies, the effect of an on average 5°C hotter school year is comparable to the average effect of a natural disaster in the same year.
+
+\input{TempResultsMath.tex}
+
+\input{TempResultsRLA.tex}
+
+For the number of days above 30°C we only find a significant effect on hispanic and female students in RLA. For hispanic students the point estimate is $-0.0005$, meaning about 20 additional days above 30°C would be somewhat comparable to the average effect of a natural disaster in the same year.
+
+\input{DaysResultsMath.tex}
+
+\input{DaysResultsRLA.tex}
+
+In total, we only find weak evidence for a negative effect of heat on the achievement in standardized tests. However, it is more pronounced among some subgroups. For hispanic students the estimates indicate significantly negative effects in three out of four specifications with rather large effect sizes. The larger impact on the academic performance of minority students is consistent with other authors' findings \citep[for example][]{Goodman_2020}
+
+One explaining factor could be the presence of air-conditioning. The results in \cite{Goodman_2020} suggest that air conditioning offsets about three quarters of the negative effect of heat exposure. Possibly, counties with higher shares of minority students tend to have a lower presence of air-conditioning in schools. Also, black and hispanic households tend to be poorer on average and may therefore be less likely to have air-conditioning at home. This could explain some of the heterogeneity in the effect of heat.
+
+
+
 
