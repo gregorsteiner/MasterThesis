@@ -56,6 +56,49 @@ model.days.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd)
                           DaysAbove30 | year + fips + grade,
                         data = dat[subject == "rla"], vcov = "iid")
 
+
+# Create table with coefficients
+my_round = function(x, n = 3) {
+  max(abs(round(x, n)), abs(signif(x, 1))) * sign(x)
+}
+
+
+coefmatrix <- do.call(rbind, lapply(list(model.temp.math, model.temp.rla, model.days.math, model.days.rla), function(model){
+  # get coefficients and standard errors
+  coefs <- sapply(model, "[[", "coefficients")
+  ses <- sapply(model, "[[", "se")
+  
+
+  # add dollar sign placeholders for math mode and round
+  coefs.round <- paste0("dollar", my_round(coefs), "dollar")
+  ses.round <- paste0("dollar", my_round(ses), "dollar")
+  
+  # paste them together
+  res <- matrix(c(coefs.round, paste0("(", ses.round, ")")),
+                ncol = 5, byrow = TRUE)
+  
+  # and potentially add star placeholders
+  res[1, ] <- ifelse(abs(coefs / ses) > 1.96, paste0(res[1, ], "star"), res[1, ])
+  
+  return(res)
+  
+}))
+
+rownames(coefmatrix) <- c("Max. Temp. (Math)", "", "Max. Temp. (RLA)", "",
+                          "Days ab. 30 (Math)", "", "Days ab. 30 (RLA)", "")
+colnames(coefmatrix) <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")
+    
+# create tex table
+textable <- knitr::kable(coefmatrix, format = "latex")
+# gsub special characters
+textable <- gsub("dollar", "$", gsub("star", "^{***}", textable))
+
+
+writeLines(textable, "../TeX Files/HeatResults.tex")
+
+
+
+
 # export tables
 dict <- c(cs_mn_all = "Overall", cs_mn_blk = "Black", cs_mn_hsp = "Hispanic",
           cs_mn_fem = "Female", cs_mn_ecd = "Econ. Disadv.",
