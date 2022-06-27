@@ -57,39 +57,32 @@ model.days.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd)
                         data = dat[subject == "rla"], vcov = "iid")
 
 
-# Create table with coefficients
-my_round = function(x, n = 3) {
-  max(abs(round(x, n)), abs(signif(x, 1))) * sign(x)
-}
-
-
-coefmatrix <- do.call(rbind, lapply(list(model.temp.math, model.temp.rla, model.days.math, model.days.rla), function(model){
+coefmatrix <- do.call(rbind, Map(function(model, digs){
   # get coefficients and standard errors
   coefs <- sapply(model, "[[", "coefficients")
   ses <- sapply(model, "[[", "se")
-  
-
-  # add dollar sign placeholders for math mode and round
-  coefs.round <- paste0("dollar", my_round(coefs), "dollar")
-  ses.round <- paste0("dollar", my_round(ses), "dollar")
-  
+  # round
+  coefs.round <- round(coefs, digs)
+  ses.round <- round(ses, digs)
   # paste them together
-  res <- matrix(c(coefs.round, paste0("(", ses.round, ")")),
+  res <- matrix(c(coefs.round, ses.round),
                 ncol = 5, byrow = TRUE)
-  
   # and potentially add star placeholders
   res[1, ] <- ifelse(abs(coefs / ses) > 1.96, paste0(res[1, ], "star"), res[1, ])
+  # add dollar sign placeholders for math mode and 
+  res[1, ] <- paste0("dollar", res[1, ], "dollar")
+  res[2, ] <- paste0("dollar(", res[2, ], ")dollar")
   
   return(res)
   
-}))
+}, list(model.temp.math, model.temp.rla, model.days.math, model.days.rla), c(4, 4, 6, 6)))
 
 rownames(coefmatrix) <- c("Max. Temp. (Math)", "", "Max. Temp. (RLA)", "",
                           "Days ab. 30 (Math)", "", "Days ab. 30 (RLA)", "")
 colnames(coefmatrix) <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")
     
 # create tex table
-textable <- knitr::kable(coefmatrix, format = "latex")
+textable <- knitr::kable(coefmatrix, format = "latex", booktabs = TRUE)
 # gsub special characters
 textable <- gsub("dollar", "$", gsub("star", "^{***}", textable))
 
