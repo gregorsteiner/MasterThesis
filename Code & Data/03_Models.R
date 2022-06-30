@@ -82,7 +82,8 @@ rownames(coefmatrix) <- c("Max. Temp. (Math)", "", "Max. Temp. (RLA)", "",
 colnames(coefmatrix) <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")
     
 # create tex table
-textable <- knitr::kable(coefmatrix, format = "latex", booktabs = TRUE)
+textable <- knitr::kable(coefmatrix, format = "latex", booktabs = TRUE,
+                         linesep = c('', '\\addlinespace'))
 # gsub special characters
 textable <- gsub("dollar", "$", gsub("star", "^{***}", textable))
 

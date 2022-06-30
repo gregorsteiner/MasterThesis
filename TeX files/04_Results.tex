@@ -33,9 +33,30 @@ For female students there is a significant decrease in both subjects in the peri
 	\label{ResultsPlotStorm}
 \end{figure}
 
-Appendix \ref{PowerAna} provides an analysis of the power. For the short-term effects the power is relatively large for plausible true parameter values. Thus, we can be relatively certain that non-significant results are true negatives.
 
-\subsection{Changes in County Composition}
+\subsection{Heat Results}
+
+Table \ref{HeatResults} provides the estimation results for the heat models. Rows 1 and 2 show the estimated coefficients and standard errors for the maximum temperature variable for mathematics and RLA respectively.
+
+At a 0.05 significance level the estimate is not significant for the entire student population in both mathematics and RLA. However, we find significant results for the subgroups with point estimates between $-0.001$ and $-0.002$. This implies, the effect of an on average 5°C hotter school year is comparable to the average effect of a natural disaster in the same year.
+
+\begin{table}
+	\caption{Estimated coefficients for heat models}
+	\label{HeatResults}
+	\input{HeatResults.tex}
+	{\raggedright Note: Standard errors in parentheses. Stars ($^{***}$) indicate significance at a 5\% level \par}
+\end{table}
+
+Rows 3 and 4 of Table \ref{HeatResults} show the same results for the number of days above 30°C. Here, we only find a significant effect on hispanic and female students in RLA. For hispanic students the point estimate is $-0.0005$, meaning about 20 additional days above 30°C would be somewhat comparable to the average effect of a natural disaster in the same year.
+
+In total, we only find weak evidence for a negative effect of heat on the achievement in standardized tests. However, it is more pronounced among some subgroups. For hispanic students the estimates indicate significantly negative effects in three out of four specifications with rather large effect sizes. The larger impact on the academic performance of minority students is consistent with other authors' findings \citep[for example][]{Goodman_2020}
+
+One explaining factor could be the presence of air-conditioning. The results in \cite{Goodman_2020} suggest that air conditioning offsets about three quarters of the negative effect of heat exposure. Possibly, counties with higher shares of minority students tend to have a lower presence of air-conditioning in schools. Also, black and hispanic households tend to be poorer on average and may therefore be less likely to have air-conditioning at home. This could explain some of the heterogeneity in the effect of heat.
+
+
+\subsection{Discussion}
+
+For the main results, we conducted a power analysis. Based on the overall test scores, Appendix \ref{PowerAna} provides graphs of the t-test's statistical power as a function of the true parameter value. For the short-term effects the power is relatively large for plausible true parameter values. Thus, we can be relatively certain that non-significant results for the periods close to treatment are actually true negatives.
 
 It could be the case that medium- and long-term effects are largely driven by migration. That's why it may be interesting to have a look at the ethnic composition of the counties relative to initial treatment. Figure \ref{EthnicComposition} shows ethnic shares for the treated counties in relative time.
 
@@ -52,25 +73,7 @@ The same plot based on the NWS storm data shows a different picture. Here, all t
 
 A more in-depth analysis of migration responses to natural disasters and their role in academic achievement is unfortunately not possible with this data. There is some prior research based on individual level data indicating that it does play an important role \citep[for example][]{Sacerdote_2012}. Analyzing migration responses and their link to academic achievement for different types of natural disasters may be a promising area for future research.
 
-
-\subsection{Heat Results}
-
-Table \ref{HeatResults} provides the estimation results for the heat models. Rows 1 and 2 show the estimated coefficients and standard errors for the maximum temperature variable for mathematics and RLA respectively.
-
-At a 0.05 significance level the estimate is not significant for the entire student population in both mathematics and RLA. However, we find significant results for the subgroups with point estimates between $-0.001$ and $-0.002$. This implies, the effect of an on average 5°C hotter school year is comparable to the average effect of a natural disaster in the same year.
-
-\begin{table}
-	\caption{Estimated coefficients and standard errors}
-	\label{HeatResults}
-	\input{HeatResults.tex}
-	{\raggedright Note: Standard errors in parentheses. Stars ($^{***}$) indicate significance at a 5\% level \par}
-\end{table}
-
-Rows 3 and 4 of Table \ref{HeatResults} show the same results for the number of days above 30°C. Here, we only find a significant effect on hispanic and female students in RLA. For hispanic students the point estimate is $-0.0005$, meaning about 20 additional days above 30°C would be somewhat comparable to the average effect of a natural disaster in the same year.
-
-In total, we only find weak evidence for a negative effect of heat on the achievement in standardized tests. However, it is more pronounced among some subgroups. For hispanic students the estimates indicate significantly negative effects in three out of four specifications with rather large effect sizes. The larger impact on the academic performance of minority students is consistent with other authors' findings \citep[for example][]{Goodman_2020}
-
-One explaining factor could be the presence of air-conditioning. The results in \cite{Goodman_2020} suggest that air conditioning offsets about three quarters of the negative effect of heat exposure. Possibly, counties with higher shares of minority students tend to have a lower presence of air-conditioning in schools. Also, black and hispanic households tend to be poorer on average and may therefore be less likely to have air-conditioning at home. This could explain some of the heterogeneity in the effect of heat.
+For the heat results, we find substantial heterogeneity: Minorities seem to be more prone to adverse effects of heat exposure. The results in \cite{Goodman_2020} indicate that air-conditioning mitigates a large part of the negative effect. Based on that, we speculate that inequality in air-conditioning is the main driver of said heterogeneity, since minority students tend to have less access to air-conditioning. Improving the air-conditioning coverage in more affected schools could be an easy way for policymakers to adress the adverse effects of heat on academic achievement. However, to the best of our knowledge \cite{Goodman_2020} is the only paper to study this relationship. More research on the interconnection between heat, learning, and air-conditioning may be useful to make policy decisions.
 
 
 
