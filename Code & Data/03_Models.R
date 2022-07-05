@@ -91,29 +91,27 @@ textable <- gsub("dollar", "$", gsub("star", "^{***}", textable))
 writeLines(textable, "../TeX Files/HeatResults.tex")
 
 
-
-
-# export tables
-dict <- c(cs_mn_all = "Overall", cs_mn_blk = "Black", cs_mn_hsp = "Hispanic",
-          cs_mn_fem = "Female", cs_mn_ecd = "Econ. Disadv.",
-          year = "Year", grade = "Grade", fips = "County",
-          tmax = "Max. Temp.", DaysAbove30 = "Days ab. 30")
-
-etable(model.temp.rla, file = "../TeX Files/TempResultsRLA.tex", replace = TRUE,
-       label = "TempResultsRLA", title = "Temperature Results (RLA)",
-       dict = dict)
-
-etable(model.temp.math, file = "../TeX Files/TempResultsMath.tex", replace = TRUE,
-       label = "TempResultsMath", title = "Temperature Results (Mathematics)",
-       dict = dict)
-
-etable(model.days.rla, file = "../TeX Files/DaysResultsRLA.tex", replace = TRUE,
-       label = "DaysResultsRLA", title = "Hot Days Results (RLA)",
-       dict = dict)
-
-etable(model.days.math, file = "../TeX Files/DaysResultsMath.tex", replace = TRUE,
-       label = "DaysResultsMath", title = "Hot Days Results (Mathematics)",
-       dict = dict)
+# # export tables
+# dict <- c(cs_mn_all = "Overall", cs_mn_blk = "Black", cs_mn_hsp = "Hispanic",
+#           cs_mn_fem = "Female", cs_mn_ecd = "Econ. Disadv.",
+#           year = "Year", grade = "Grade", fips = "County",
+#           tmax = "Max. Temp.", DaysAbove30 = "Days ab. 30")
+# 
+# etable(model.temp.rla, file = "../TeX Files/TempResultsRLA.tex", replace = TRUE,
+#        label = "TempResultsRLA", title = "Temperature Results (RLA)",
+#        dict = dict)
+# 
+# etable(model.temp.math, file = "../TeX Files/TempResultsMath.tex", replace = TRUE,
+#        label = "TempResultsMath", title = "Temperature Results (Mathematics)",
+#        dict = dict)
+# 
+# etable(model.days.rla, file = "../TeX Files/DaysResultsRLA.tex", replace = TRUE,
+#        label = "DaysResultsRLA", title = "Hot Days Results (RLA)",
+#        dict = dict)
+# 
+# etable(model.days.math, file = "../TeX Files/DaysResultsMath.tex", replace = TRUE,
+#        label = "DaysResultsMath", title = "Hot Days Results (Mathematics)",
+#        dict = dict)
 
 
 
