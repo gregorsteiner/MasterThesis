@@ -19,7 +19,25 @@
     \maketitle
 \end{frame}
 
-\begin{frame}{Introduction}
+\begin{frame}{Motivation: Natural disasters over time}
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[scale=0.7]{"../Code & Data/DisasterCount.pdf"}
+		\caption{Number of county-level natural disasters by year}
+		\label{DisasterCount}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Motivation: Distribution of natural disasters}
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[scale=0.65]{"../Code & Data/DisasterMap.pdf"}
+		\caption{Number of declared natural disasters in school years 2008-09 through 2017-18}
+		\label{DisasterMap}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Research question}
 	I exploit quasi-random variation in natural disaster exposure in the United States to answer two questions:
 	\begin{itemize}
 		\item \textbf{What is the causal effect of natural disasters on academic achievement as measured by standardized test scores?}
@@ -56,15 +74,6 @@
 	\end{figure}
 \end{frame}
 
-
-\begin{frame}{Natural Disasters in the US}
-	\begin{figure}[!h]
-		\centering
-		\includegraphics[scale=0.65]{"../Code & Data/DisasterMap.pdf"}
-		\caption{Number of declared natural disasters in school years 2008-09 through 2017-18}
-		\label{DisasterMap}
-	\end{figure}
-\end{frame}
 
 \begin{frame}{When do counties apply for assistance?}
 	\small
@@ -149,11 +158,41 @@
 	\end{figure}
 \end{frame}
 
+\begin{frame}{Empirical Strategy: Heat}
+	\begin{itemize}
+		\item A binary treatment indicator is not well-suited to measure cumulative heat exposure. Following \cite{Park_2020}, I use two measures:
+		\begin{itemize}
+			\item Average daily maximum temperature
+			\item Number of days above 30°C
+		\end{itemize}
+		\item Linear model with county, year, and grade fixed effects:
+		\begin{align*}
+			y_{i, t, g} = \beta H_{i, t} + \alpha_i + \lambda_t + \zeta_g + \varepsilon_{i, t, g}
+		\end{align*}
+		\item Conditional on location and year, heat exposure is exogenous
+		\item Interesting marginal interpretation of $\beta$: What is the effect of a 1°C hotter school year or of one additional	day above 30°C on average test scores?
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Heat Results}
+	\begin{itemize}
+		\item No significant overall effect, but minorities seem to be more affected
+		\item Possibly driven by unequal access to air-conditiong \citep{Park_2020}
+	\end{itemize}
+	\tiny
+	\begin{table}
+		\caption{Estimated coefficients for heat models}
+		\label{HeatResults}
+		\input{HeatResults.tex}
+		{\raggedright Note: Standard errors in parentheses. Stars ($^{***}$) indicate significance at a 5\% level \par}
+	\end{table}
+\end{frame}
 
 \begin{frame}{Conclusion}
 	\begin{itemize}
 		\item Negative short-term effect of disasters on achievement in mathematics
 		\item Some positive long-term effects among subgroups (but not very robust)
+		\item No overall effect of heat on average test scores, but negative effects for some subgroups
 		\item Socially vulnerable counties are more likely to need federal assistance following a disaster
 	\end{itemize}
 \end{frame}
