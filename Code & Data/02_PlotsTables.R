@@ -338,7 +338,8 @@ res <- rbind(res, "Total" = c(nrow(fema.disasters), 100 * mean(fema.disasters$Ap
 # export as .tex table
 writeLines(knitr::kable(res, digits = 2, format = "latex",
                         label = "AppsByType", caption = "Share of counties that applied for federal assistance following a disaster by disaster type (schoolyears 2016-17 and 2017-18)",
-                        booktabs = TRUE),
+                        booktabs = TRUE,
+                        linesep = c(rep("", nrow(res) - 2), '\\addlinespace')),
            "../TeX Files/ApplicationsByType.tex")
 
 # add covariates
