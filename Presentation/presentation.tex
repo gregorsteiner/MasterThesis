@@ -149,7 +149,6 @@
 
 
 \begin{frame}{Are these results driven by changes in county composition?}
-	
 	\begin{figure}[!h]
 		\centering
 		\includegraphics[scale=0.6]{"../Code & Data/EthnicComposition.pdf"}
@@ -160,7 +159,7 @@
 
 \begin{frame}{Empirical Strategy: Heat}
 	\begin{itemize}
-		\item A binary treatment indicator is not well-suited to measure cumulative heat exposure. Following \cite{Park_2020}, I use two measures:
+		\item A binary treatment indicator is not well-suited to measure cumulative heat exposure. Following \cite{Goodman_2020}, I use two measures:
 		\begin{itemize}
 			\item Average daily maximum temperature
 			\item Number of days above 30°C
@@ -174,10 +173,28 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}{Heat: Average daily maximum temperature}
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[scale=0.65]{"../Code & Data/HeatMapTemp.pdf"}
+		\caption{Average daily maximum temperature (in °C) in school years 2008-09 through 2017-18}
+		\label{HeatMapTemp}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Heat: Average number of days above 30°C}
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[scale=0.65]{"../Code & Data/HeatMapDays.pdf"}
+		\caption{Average number of days above 30°C in school years 2008-09 through 2017-18}
+		\label{HeatMapDays}
+	\end{figure}
+\end{frame}
+
 \begin{frame}{Heat Results}
 	\begin{itemize}
 		\item No significant overall effect, but minorities seem to be more affected
-		\item Possibly driven by unequal access to air-conditiong \citep{Park_2020}
+		\item Possibly driven by unequal access to air-conditiong \citep{Goodman_2020}
 	\end{itemize}
 	\tiny
 	\begin{table}
@@ -186,6 +203,14 @@
 		\input{HeatResults.tex}
 		{\raggedright Note: Standard errors in parentheses. Stars ($^{***}$) indicate significance at a 5\% level \par}
 	\end{table}
+\end{frame}
+
+\begin{frame}{Limitations/Weaknesses}
+	\begin{itemize}
+		\item Potential violations of the parallel trends assumption in the main results based on the FEMA data
+		\item ``Better'' heat data would be desirable
+		\item Greater overlap between the disaster and public assistance data would allow for a more detailed analysis of the role of aid
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{Conclusion}
