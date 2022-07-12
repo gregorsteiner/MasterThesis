@@ -48,13 +48,15 @@ pdf("DepVarsBoxplot.pdf",
 layout(matrix(c(1, 2, 3), ncol = 1, byrow = TRUE), heights = c(4, 4, 1))
 par(mar = c(2, 3, 1, 1))
 boxplot(dat[subject == "mth", .("Overall" = cs_mn_all,
-                "Black" = cs_mn_blk,
-                "Hispanic" = cs_mn_hsp,
-                "Female" = cs_mn_fem,
-                "Econ. disadv." = cs_mn_ecd)],
+                                "White" = cs_mn_wht,
+                                "Black" = cs_mn_blk,
+                                "Hispanic" = cs_mn_hsp,
+                                "Female" = cs_mn_fem,
+                                "Econ. disadv." = cs_mn_ecd)],
         col = col[1], cex.axis = 1)
 par(mar = c(2, 3, 1, 1))
 boxplot(dat[subject == "rla", .("Overall" = cs_mn_all,
+                                "White" = cs_mn_wht,
                                 "Black" = cs_mn_blk,
                                 "Hispanic" = cs_mn_hsp,
                                 "Female" = cs_mn_fem,

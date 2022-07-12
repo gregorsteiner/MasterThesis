@@ -16,11 +16,11 @@ assist.cov <- readRDS("AssistanceCovData.RDS")
 ######## Models ########
 
 # fema
-model.math <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+model.math <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                  sunab(TreatStart, year, ref.p = c(-1, -3000), bin.rel = c(-5:-3000)) | year + fips + grade,
                data = dat[subject == "mth"], cluster = "TreatStart")
 
-model.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+model.rla <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                      sunab(TreatStart, year, ref.p = c(-1, -3000), bin.rel = c(-5:-9)) | year + fips + grade,
                    data = dat[subject == "rla"], cluster = "TreatStart")
 
@@ -28,11 +28,11 @@ model.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
 
 # STorms
 
-model.math.storm <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+model.math.storm <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                             sunab(TreatStartStorm, year, ref.p = c(-1, -3000), bin.rel = c(-5:-3000)) | year + fips + grade,
                           data = dat[subject == "mth"])
 
-model.rla.storm <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+model.rla.storm <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                            sunab(TreatStartStorm, year, ref.p = c(-1, -3000), bin.rel = c(-5:-9)) | year + fips + grade,
                          data = dat[subject == "rla"])
 
@@ -40,19 +40,19 @@ model.rla.storm <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd
 
 # heat models
 
-model.temp.math <-  feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
+model.temp.math <-  feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
                             tmax | year + fips + grade,
                           data = dat[subject == "mth"], vcov = "iid")
 
-model.temp.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
+model.temp.rla <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
                           tmax | year + fips + grade,
                         data = dat[subject == "rla"], vcov = "iid")
 
-model.days.math <-  feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
+model.days.math <-  feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
                             DaysAbove30 | year + fips + grade,
                           data = dat[subject == "mth"], vcov = "iid")
 
-model.days.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
+model.days.rla <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~
                           DaysAbove30 | year + fips + grade,
                         data = dat[subject == "rla"], vcov = "iid")
 
@@ -66,7 +66,7 @@ coefmatrix <- do.call(rbind, Map(function(model, digs){
   ses.round <- round(ses, digs)
   # paste them together
   res <- matrix(c(coefs.round, ses.round),
-                ncol = 5, byrow = TRUE)
+                ncol = 6, byrow = TRUE)
   # and potentially add star placeholders
   res[1, ] <- ifelse(abs(coefs / ses) > 1.96, paste0(res[1, ], "star"), res[1, ])
   # add dollar sign placeholders for math mode and 
@@ -79,39 +79,23 @@ coefmatrix <- do.call(rbind, Map(function(model, digs){
 
 rownames(coefmatrix) <- c("Max. Temp. (Math)", "", "Max. Temp. (RLA)", "",
                           "Days ab. 30 (Math)", "", "Days ab. 30 (RLA)", "")
-colnames(coefmatrix) <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")
-    
+colnames(coefmatrix) <- c("Overall", "White", "Black", "Hispanic", "Female", "Econ. Disadv.")
+
+
+# add mean as last row
+coefmatrix <- rbind(coefmatrix,
+                    "Mean" = round(sapply(dat[, .(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd)], mean, na.rm = TRUE), 3))
+
 # create tex table
 textable <- knitr::kable(coefmatrix, format = "latex", booktabs = TRUE,
                          linesep = c('', '\\addlinespace'))
+
 # gsub special characters
 textable <- gsub("dollar", "$", gsub("star", "^{***}", textable))
 
 
 writeLines(textable, "../TeX Files/HeatResults.tex")
 
-
-# # export tables
-# dict <- c(cs_mn_all = "Overall", cs_mn_blk = "Black", cs_mn_hsp = "Hispanic",
-#           cs_mn_fem = "Female", cs_mn_ecd = "Econ. Disadv.",
-#           year = "Year", grade = "Grade", fips = "County",
-#           tmax = "Max. Temp.", DaysAbove30 = "Days ab. 30")
-# 
-# etable(model.temp.rla, file = "../TeX Files/TempResultsRLA.tex", replace = TRUE,
-#        label = "TempResultsRLA", title = "Temperature Results (RLA)",
-#        dict = dict)
-# 
-# etable(model.temp.math, file = "../TeX Files/TempResultsMath.tex", replace = TRUE,
-#        label = "TempResultsMath", title = "Temperature Results (Mathematics)",
-#        dict = dict)
-# 
-# etable(model.days.rla, file = "../TeX Files/DaysResultsRLA.tex", replace = TRUE,
-#        label = "DaysResultsRLA", title = "Hot Days Results (RLA)",
-#        dict = dict)
-# 
-# etable(model.days.math, file = "../TeX Files/DaysResultsMath.tex", replace = TRUE,
-#        label = "DaysResultsMath", title = "Hot Days Results (Mathematics)",
-#        dict = dict)
 
 
 
@@ -262,41 +246,43 @@ legend(x = "center", legend = c("Math", "RLA"),
 
 dev.off()
 
-######## Power Analysis ########
 
-cols <- viridisLite::viridis(length(0:8))
-pdf("PowerAnalysis.pdf", width = 15 / 2.5, height = 12 / 2.5)
 
-layout(matrix(c(1, 2, 3, 3), nrow = 2, byrow = TRUE), heights = c(5, 1))
-invis.Map(function(model, subject){
-  
-  N <- model$nobs
-  k <- model$nparams
-  
-  par(mar = c(4, 4, 2, 1))
-  plot(c(-0.1, 0.1), c(0, 1), type = "n",
-       xlab = "True Value", ylab = "Power", main = subject)
-  
-  invis.Map(function(i, col){
-    id <- paste0("year::", i)
-    sigma.hat <- model$coeftable[id, "Std. Error"]
-    
-    power <- function(beta, N, k, sigma.hat, alpha = 0.05){
-      # compute power
-      pow <- 1 - pt(qt(1 - alpha/2, N-k) - beta / sigma.hat, N-k) + pt(qt(alpha/2, N-k) - beta / sigma.hat, N-k)
-      return(pow)
-    }
-    
-    betas <- seq(-0.1, 0.1, 0.0001)
-    lines(betas, power(betas, N = N, k = k, sigma.hat = sigma.hat),
-          type = "l", col = col, lwd = 2)
-    
-  }, 0:8, cols)
-}, list(model.math[[1]], model.rla[[1]]), c("Mathematics", "RLA"))
-
-par(mai=c(0,0,0,0))
-plot.new()
-legend(x = "center", legend = paste0("Year ", 0:8),
-       col = cols, lwd = 2, cex = 1, inset = 0, ncol = 5)
-
-dev.off()
+# ######## Power Analysis ########
+# 
+# cols <- viridisLite::viridis(length(0:8))
+# pdf("PowerAnalysis.pdf", width = 15 / 2.5, height = 12 / 2.5)
+# 
+# layout(matrix(c(1, 2, 3, 3), nrow = 2, byrow = TRUE), heights = c(5, 1))
+# invis.Map(function(model, subject){
+#   
+#   N <- model$nobs
+#   k <- model$nparams
+#   
+#   par(mar = c(4, 4, 2, 1))
+#   plot(c(-0.1, 0.1), c(0, 1), type = "n",
+#        xlab = "True Value", ylab = "Power", main = subject)
+#   
+#   invis.Map(function(i, col){
+#     id <- paste0("year::", i)
+#     sigma.hat <- model$coeftable[id, "Std. Error"]
+#     
+#     power <- function(beta, N, k, sigma.hat, alpha = 0.05){
+#       # compute power
+#       pow <- 1 - pt(qt(1 - alpha/2, N-k) - beta / sigma.hat, N-k) + pt(qt(alpha/2, N-k) - beta / sigma.hat, N-k)
+#       return(pow)
+#     }
+#     
+#     betas <- seq(-0.1, 0.1, 0.0001)
+#     lines(betas, power(betas, N = N, k = k, sigma.hat = sigma.hat),
+#           type = "l", col = col, lwd = 2)
+#     
+#   }, 0:8, cols)
+# }, list(model.math[[1]], model.rla[[1]]), c("Mathematics", "RLA"))
+# 
+# par(mai=c(0,0,0,0))
+# plot.new()
+# legend(x = "center", legend = paste0("Year ", 0:8),
+#        col = cols, lwd = 2, cex = 1, inset = 0, ncol = 5)
+# 
+# dev.off()

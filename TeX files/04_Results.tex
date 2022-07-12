@@ -41,10 +41,11 @@ Table \ref{HeatResults} provides the estimation results for the heat models. Row
 At a 0.05 significance level the estimate is not significant for the entire student population in both mathematics and RLA. However, we find significant results for the subgroups with point estimates between $-0.001$ and $-0.002$. This implies, the effect of an on average 5°C hotter school year is comparable to the average effect of a natural disaster in the same year.
 
 \begin{table}
+	\small
 	\caption{Estimated coefficients for heat models}
 	\label{HeatResults}
 	\input{HeatResults.tex}
-	{\raggedright Note: Standard errors in parentheses. Stars ($^{***}$) indicate significance at a 5\% level \par}
+	{\raggedright Note: Standard errors in parentheses. Stars ($^{***}$) indicate significance at a 5\% level. Dependent variable mean in the last row for comparison. \par}
 \end{table}
 
 Rows 3 and 4 of Table \ref{HeatResults} show the same results for the number of days above 30°C. Here, we only find a significant effect on hispanic and female students in RLA. For hispanic students the point estimate is $-0.0005$, meaning about 20 additional days above 30°C would be somewhat comparable to the average effect of a natural disaster in the same year.
@@ -56,12 +57,12 @@ One explaining factor could be the presence of air-conditioning. The results in 
 
 \subsection{Discussion}
 
-It could be the case that medium- and long-term effects are largely driven by migration. This is a prominent theme in previous studies on disasters and learning \citep{Pane_2008, Sacerdote_2012}. That's why it may be interesting to have a look at the ethnic composition of the counties relative to initial treatment. Figure \ref{EthnicComposition} shows ethnic shares for the treated counties in relative time.
+It could be the case that medium- and long-term effects are largely driven by migration. This is a prominent theme in previous studies on disasters and learning \citep{Pane_2008, Sacerdote_2012}. That's why it may be interesting to have a look at the ethnic composition of the counties relative to initial treatment. Figure \ref{EthnicComposition} shows ethnic shares of enrolled students for the treated counties in relative time.
 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[scale=1]{"../Code & Data/EthnicComposition.pdf"}
-	\caption{Aggregated ethnic shares by treatment timing based on FEMA disasters (left) and on NWS storms (right)}
+	\caption{Aggregated ethnic shares of enrolled students by treatment timing based on FEMA disasters (left) and on NWS storms (right)}
 	\label{EthnicComposition}
 \end{figure}
 
@@ -70,8 +71,6 @@ In the left panel we see that the share of black students decreases in counties 
 The same plot based on the NWS storm data shows a different picture. Here, all three shares remain somewhat constant until five years fter treatment. Then the share of black students increases, while the share of white students decreases. This suggests that the migration response to storms may be qualitatively different than the response to other forms of disasters. At least for the storms data this does not seem to be a major driver of the results.
 
 A more in-depth analysis of migration responses to natural disasters and their role in academic achievement is unfortunately not possible with this data. There is some prior research based on individual level data indicating that it does play an important role \citep[for example][]{Sacerdote_2012}. Analyzing migration responses and their link to academic achievement for different types of natural disasters may be a promising area for future research.
-
-For the main results, we conducted a power analysis. Based on the overall test scores, Appendix \ref{PowerAna} provides graphs of the t-test's statistical power as a function of the true parameter value. For the short-term effects the power is relatively large for plausible true parameter values. Thus, we can be relatively certain that non-significant results for the periods close to treatment are actually true negatives.
 
 For the heat results, we find substantial heterogeneity: Minorities seem to be more prone to adverse effects of heat exposure. The results in \cite{Goodman_2020} indicate that air-conditioning mitigates a large part of the negative effect. Based on that, we speculate that inequality in air-conditioning is the main driver of said heterogeneity, since minority students tend to have less access to air-conditioning. Improving the air-conditioning coverage in more affected schools could be an easy way for policymakers to adress the adverse effects of heat on academic achievement. However, to the best of our knowledge \cite{Goodman_2020} is the only paper to study this relationship. More research on the interconnection between heat, learning, and air-conditioning may be useful to make policy decisions.
 
