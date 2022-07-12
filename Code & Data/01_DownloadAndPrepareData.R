@@ -327,7 +327,7 @@ dat.weather.agg <- dat.weather.agg[year %in% 2009:2018]
 
 # merge seda and fema no. of disasters
 dat <- merge(fema.dis.agg, seda.comb[, .(fips = sedacounty, year, grade, subject,
-                                         cs_mn_all, cs_mn_blk, cs_mn_hsp,
+                                         cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp,
                                          cs_mn_fem, cs_mn_ecd, lninc50all,
                                          perhsp, perblk, perwht)],
              by = c("fips", "year"),
@@ -354,11 +354,6 @@ dat[, `:=`(DisasterTreat = as.numeric(cumsum(Disasters) > 0),
 dat <- merge(dat, dat.weather.agg,
              by = c("fips", "year"),
              all.x = TRUE, all.y = TRUE)
-
-
-# # add indicators whether they had a disaster before 2009 or 2016
-# dat[, `:=`(DisasterBefore2009 = as.numeric(fips %in% fema.disasters[syDeclared < 2009, as.numeric(paste0(fipsStateCode, fipsCountyCode))]),
-#            DisasterBeforeOct2016 = as.numeric(fips %in% fema.disasters[as.Date(declarationDate) < as.Date("2016-10-01"), as.numeric(paste0(fipsStateCode, fipsCountyCode))]))]
 
 
 # add year of first treatment
