@@ -26,6 +26,7 @@ col <- c("firebrick", "cornflowerblue")
 
 dat.plot <- fema.disasters[, .(.N), by = .(Year = as.numeric(format(declarationDate, "%Y")))]
 dat.plot <- dat.plot[Year != 2022]
+dat.plot <- dat.plot[order(Year)]
 
 pdf("DisasterCount.pdf", width = wid, height = 7 / 2.5)
 
@@ -73,7 +74,7 @@ dev.off()
 
 
 # filter for time and exclude terrorism
-fema.disastersSQ <- fema.disasters[syDeclared %in% 2009:2018]
+fema.disastersSQ <- fema.disasters[syDisaster %in% 2009:2018]
 
 
 
@@ -321,7 +322,7 @@ dev.off()
 fema.assistance <- readRDS("AssistanceDataRawWithFIPS.RDS")
 
 # filter for relevant time period
-fema.disasters <- fema.disasters[syDeclared %in% c(2017, 2018)]
+fema.disasters <- fema.disasters[syDisaster %in% c(2017, 2018)]
 
 # create id (disasterNumber + fips)
 fema.disasters[, fips := as.numeric(paste0(fipsStateCode, fipsCountyCode))]
