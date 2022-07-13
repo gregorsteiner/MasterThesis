@@ -139,13 +139,19 @@ dev.off()
 # change plot layout for slides
 
 # overall fema
-pdf("ResultsPlotPresentation.pdf", width = 15 / 2.5, height = 12 / 2.5)
-layout(matrix(c(1, 2), ncol = 1, byrow = TRUE), heights = c(4, 1))
+pdf("ResultsPlotPresentation.pdf", width = 22 / 2.5, height = 16 / 2.5)
+
+layout(matrix(c(1:6, 7, 7), ncol = 2, byrow = TRUE), heights = c(4, 4, 4, 1))
 
 par(mar = c(2, 4, 2, 1))
-iplot(list(model.math[[1]], model.rla[[1]]), main = "", xlab = "Years to treatment",
-      col = cols, ci.col = cols, ci.lwd = 1, ci.width = 0.2,
-      pt.pch = 19, ylim = c(-0.07, 0.07))
+
+invis.Map(function(math, rla, name){
+  
+  iplot(list(math, rla), main = name, xlab = "Years to treatment",
+        col = cols, ci.col = cols, pt.pch = 19,
+        ci.lwd = 1, ci.width = 0.2)
+  
+}, model.math, model.rla, dep.vars)
 
 par(mai=c(0,0,0,0))
 plot.new()
@@ -154,67 +160,49 @@ legend(x = "center", legend = c("Math", "RLA"),
 
 dev.off()
 
-# subgroups fema
-pdf("ResultsPlotPresentationSubgroups.pdf", width = 15 / 2.5, height = 12 / 2.5)
+# storms
+pdf("ResultsPlotStormPresentation.pdf", width = 22 / 2.5, height = 16 / 2.5)
 
-layout(matrix(c(1:5, 5), ncol = 2, byrow = TRUE), heights = c(4, 4, 1))
+layout(matrix(c(1:6, 7, 7), ncol = 2, byrow = TRUE), heights = c(4, 4, 4, 1))
 
 par(mar = c(2, 4, 2, 1))
 invis.Map(function(math, rla, name){
   
   iplot(list(math, rla), main = name, xlab = "Years to treatment",
         col = cols, ci.col = cols, pt.pch = 19,
-        ci.lwd = 1, ci.width = 0.2, ylim = c(-0.12, 0.12))
+        ci.lwd = 1, ci.width = 0.2)
   
-}, model.math[2:5], model.rla[2:5], dep.vars[2:5])
+}, model.math.storm, model.rla.storm, dep.vars)
 
 par(mai=c(0,0,0,0))
 plot.new()
 legend(x = "center", legend = c("Math", "RLA"),
        col = cols, lwd = 2, cex = 1, inset = 0, horiz = TRUE)
 
-dev.off()
-
-
-
-# overall storms
-pdf("ResultsPlotStormsPresentation.pdf", width = 15 / 2.5, height = 12 / 2.5)
-
-layout(matrix(c(1, 2), ncol = 1, byrow = TRUE), heights = c(4, 1))
-
-par(mar = c(2, 4, 2, 1))
-iplot(list(model.math.storm[[1]], model.rla.storm[[1]]), main = "", xlab = "Years to treatment",
-      col = cols, ci.col = cols, ci.lwd = 1, ci.width = 0.2,
-      pt.pch = 19, ylim = c(-0.07, 0.07))
-
-par(mai=c(0,0,0,0))
-plot.new()
-legend(x = "center", legend = c("Math", "RLA"),
-       col = cols, lwd = 2, cex = 1, inset = 0, horiz = TRUE)
 
 dev.off()
 
-# subgroups storms
-pdf("ResultsPlotStormsPresentationSubgroups.pdf", width = 15 / 2.5, height = 12 / 2.5)
+# fema storms
+pdf("ResultsPlotFEMAStormPresentation.pdf", width = 22 / 2.5, height = 16 / 2.5)
 
-layout(matrix(c(1:5, 5), ncol = 2, byrow = TRUE), heights = c(4, 4, 1))
+layout(matrix(c(1:6, 7, 7), ncol = 2, byrow = TRUE), heights = c(4, 4, 4, 1))
 
 par(mar = c(2, 4, 2, 1))
 invis.Map(function(math, rla, name){
   
   iplot(list(math, rla), main = name, xlab = "Years to treatment",
         col = cols, ci.col = cols, pt.pch = 19,
-        ci.lwd = 1, ci.width = 0.2, ylim = c(-0.12, 0.12))
+        ci.lwd = 1, ci.width = 0.2)
   
-}, model.math.storm[2:5], model.rla.storm[2:5], dep.vars[2:5])
+}, model.math.fema.storm, model.rla.fema.storm, dep.vars)
 
 par(mai=c(0,0,0,0))
 plot.new()
 legend(x = "center", legend = c("Math", "RLA"),
        col = cols, lwd = 2, cex = 1, inset = 0, horiz = TRUE)
 
-dev.off()
 
+dev.off()
 
 
 
@@ -259,7 +247,7 @@ coefmatrix <- do.call(rbind, Map(function(model, digs){
   
   return(res)
   
-}, list(model.temp.math, model.temp.rla, model.days.math, model.days.rla), c(4, 4, 6, 6)))
+}, list(model.temp.math, model.temp.rla, model.days.math, model.days.rla), c(5, 5, 6, 6)))
 
 rownames(coefmatrix) <- c("Max. Temp. (Math)", "", "Max. Temp. (RLA)", "",
                           "Days ab. 30 (Math)", "", "Days ab. 30 (RLA)", "")
@@ -272,14 +260,22 @@ coefmatrix <- rbind(coefmatrix,
 
 # create tex table
 textable <- knitr::kable(coefmatrix, format = "latex", booktabs = TRUE,
-                         linesep = c('', '\\addlinespace'))
+                         linesep = c(rep(c('', '\\addlinespace'), 3), "", "\\midrule"),
+                         caption = "Estimated coefficients for heat models",
+                         label = "HeatResults")
+
+# add footnote
+textable <- kableExtra::add_footnote(textable, notation = "none",
+                                     label = "Note: Standard errors in parentheses. Stars indicate significance at a 5% level.")
+
+# scaled down version for presentation
+textable <- kableExtra::kable_styling(textable, latex_options = "scale_down")
 
 # gsub special characters
 textable <- gsub("dollar", "$", gsub("star", "^{***}", textable))
 
 
 writeLines(textable, "../TeX Files/HeatResults.tex")
-
-
+writeLines(textable, "../Presentation/HeatResults.tex")
 
 
