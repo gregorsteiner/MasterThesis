@@ -93,9 +93,11 @@ Data on academic achievement is available from the Stanford Education Data Archi
 
 Test scores are cohort-standardized, meaning they can be interpreted relatively to an average national reference cohort in the same grade. This makes the dataset very attractive, as test scores are nationally comparable. For instance, a county mean of 0.5 indicates that the average student in the county scored approximately one half of a standard deviation higher than the average national student in the same grade.
 
-In addition to overall mean test scores, the data includes mean test scores for various subgroups, e.g. by ethnicity. In particular, we consider mean test scores for black, hispanic, female, and economically disadvantaged students to investigate whether the effects differ by ethnicity, gender, or socioeconomic position. These are only reported if the subgroups' sample sizes are large enough to guarantee anonymization. Thus, the number of observations for some of the groups is substantially smaller.
+In addition to overall mean test scores, the data includes mean test scores for various subgroups, e.g. by ethnicity. In particular, we consider mean test scores for white, black, hispanic, female, and economically disadvantaged students to investigate whether the effects differ by ethnicity, gender, or socioeconomic position. These are only reported if the subgroups' sample sizes are large enough to guarantee anonymization. Thus, the number of observations for some of the groups is substantially smaller.
 
-The outcomes of interest are overall mean test scores by county, and mean test scores for black, hispanic, female, and economically disadvantaged students. Figure \ref{DepVarsBoxplot} shows boxplots for the five outcomes of interest. All five mean test scores are measured on the cohort standardized scale, that is a given observation measures the distance in standard deviations from the national reference cohort. 
+The outcomes of interest are overall mean test scores by county, and mean test scores for white, black, hispanic, female, and, economically disadvantaged students. Figure \ref{DepVarsBoxplot} shows boxplots for the five outcomes of interest and Table \ref{tab:SumStats} provides summary statistics. Due to the way the scale is constructed, overall test scores are distributed symmetrically around zero, except for a few outliers. The mean scores for black, hispanic, and economically disadvantaged students tend to be lower than the overall means, while white students tend to perform slightly better than the overall average. Female mean scores are slightly above overall mean scores, meaning that female students perform slightly better than male students on average.
+
+\input{SumStats.tex}
 
 \begin{figure}[!h]
 	\centering
@@ -104,11 +106,8 @@ The outcomes of interest are overall mean test scores by county, and mean test s
 	\label{DepVarsBoxplot}
 \end{figure}
 
-Due to the way the scale is constructed, overall test scores are distributed symmetrically around zero, except for a few outliers. The mean scores for black, hispanic, and economically disadvantaged students are shifted downwards by -0.48, -0.281, and -0.283 standard deviations respectively. Female mean scores are slightly above overall mean scores, meaning that female students perform slightly better than male students on average.
 
-Furthermore, the Stanford Education Data Archive maintains a large set of covariates for each county and year. They include variables like the county's median income, unemployment and poverty rate.
-
-Natural disasters should only have an effect on test scores if they occur before the test. Standardized tests are generally administered during spring. We will use March 1st as a cut-off point. Thus, any disaster happening within the same school year before the 1st of March will be considered. School years tend to start in late August or early September with some variation across states. We will use September 1st, meaning any disaster happening between September 1st and March 1st will be counted for a given school year. Disasters occuring in the summer or in the spring after the exams should have much less influence on performance. Thus, we do not consider disasters that occur between March 1st and September 1st.
+Natural disasters should only have an effect on test scores if they occur before the test. Standardized tests are generally administered in March, April, or May. We will use March 1st as a cut-off point. Thus, any disaster happening within the same school year before the 1st of March will be considered. School years tend to start in late August or early September with some variation across states. We will use September 1st, meaning any disaster happening between September 1st and March 1st will be counted for a given school year. Disasters occuring in the summer or in the spring after the exams should have much less influence on performance. Thus, we do not consider disasters that occur between March 1st and September 1st.
 
 Each disaster is assigned to a school year as described above. Then, disaster and test score data can be merged by school year and county. This yields a panel data set with six grades and two subjects for each county-year combination.
 

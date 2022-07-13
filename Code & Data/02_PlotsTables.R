@@ -42,6 +42,24 @@ dev.off()
 
 ######## Summary Statistics ########
 
+# summary table for dependent variables
+tab <- t(mapply(function(f){
+  sapply(dat[, .("Overall" = cs_mn_all,
+                 "White" = cs_mn_wht,
+                 "Black" = cs_mn_blk,
+                 "Hispanic" = cs_mn_hsp,
+                 "Female" = cs_mn_fem,
+                 "Econ. disadv." = cs_mn_ecd)], f, na.rm = TRUE)
+}, list(mean, sd, min, max)))
+
+rownames(tab) <- c("Mean", "Std. Dev.", "Min.", "Max.")
+
+writeLines(kable(tab, format = "latex", booktabs = TRUE, digits = 3,
+                 caption = "Summary statistics for dependent variables",
+                 label = "SumStats"),
+           "../TeX Files/SumStats.tex")
+
+
 # boxplots for dependent variables
 pdf("DepVarsBoxplot.pdf",
     width = wid, height = 10 / 2.5)
