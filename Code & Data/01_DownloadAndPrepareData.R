@@ -28,10 +28,65 @@ fema.disasters <- fema.disasters[incidentType != "Terrorist"]
 # drop Covid
 fema.disasters <- fema.disasters[!(declarationTitle %in% c("COVID-19", "COVID-19 PANDEMIC"))]
 
+
+# add school year variable based on date (as explained in the main text)
+fema.disasters[, syDisaster := dplyr::case_when(
+  # if in september to december add 1 to the year (Schoolyear x/x+1 is x+1)
+  as.numeric(format(incidentBeginDate, "%m")) %in% 9:12 ~ as.numeric(format(incidentBeginDate, "%Y")) + 1,
+  as.numeric(format(incidentBeginDate, "%m")) %in% 1:3 ~ as.numeric(format(incidentBeginDate, "%Y")),
+  as.numeric(format(incidentBeginDate, "%m")) %in% 4:8 ~ NA_real_
+)]
+
+
+# save to save time
+saveRDS(fema.disasters, "DisasterDataNoTerrorismNoCovid.RDS")
+
+
+# aggregate fema disasters by year and county and add to the empty set
+fema.dis.agg <- fema.disasters[, .(Disasters = .N,
+                                   StormsFEMA = length(unique(disasterNumber[incidentType %in% c("Tornado", "Hurricane", "Severe Storm(s)")]))),
+                               by = .(fips = as.numeric(paste0(fipsStateCode, fipsCountyCode)),
+                                      year = syDisaster)]
+
+
+# add statewide to each county in the state
+# create boolean to indicate statewide cases
+ind.statewide <- grepl("000", fema.dis.agg$fips)
+
+# isolate the statewide data
+statewide <- fema.dis.agg[ind.statewide]
+fema.dis.agg <- fema.dis.agg[!ind.statewide]
+
+for (i in 1:nrow(statewide)) {
+  # check matching years and fips
+  bool <- fema.dis.agg[, fips] == statewide[i, fips] & fema.dis.agg[, year] == statewide[i, year]
+  
+  # for those add the number of disasters
+  if(!is.null(nrow(fema.dis.agg[bool, Disasters]))){
+    fema.dis.agg[bool, Disasters] <- fema.dis.agg[bool, Disasters] + statewide[i, Disasters]
+    fema.dis.agg[bool, StormsFEMA] <- fema.dis.agg[bool, StormsFEMA] + statewide[i, StormsFEMA]
+  }
+  
+}
+
+
+# create empty data expanded to the seda format
+empty <- data.table(expand.grid("fips" = as.numeric(usmap::countypop[, "fips", drop = TRUE]),
+                                "year" = min(seda.comb$year):max(seda.comb$year)))
+fema.dis.agg <- merge(empty, fema.dis.agg,
+                      all.x = TRUE, all.y = FALSE)
+
+# fill NA disaster values with 0
+fema.dis.agg[, `:=`(Disasters = ifelse(is.na(Disasters), 0, Disasters),
+                    StormsFEMA = ifelse(is.na(StormsFEMA), 0, StormsFEMA))]
+
+
+
+######## FEMA assistance data ########
+
 # assistance data
 fema.assistance <- setDT(rfema::open_fema("PublicAssistanceApplicantsProgramDeliveries",
                                           ask_before_call = FALSE))
-
 
 # remove COVID 19
 fema.assistance <- fema.assistance[!(declarationTitle %in% c("COVID-19", "COVID-19 PANDEMIC"))]
@@ -69,93 +124,13 @@ fema.assist.agg <- merge(empty, fema.assist.agg,
 # remove NA fips
 fema.assist.agg <- fema.assist.agg[!is.na(fips)]
 
-
-# compute cumulative disasters by county
-fema.cum <- fema.disasters[, .(Disasters = length(unique(disasterNumber))),
-                           by = .(fips = paste0(fipsStateCode, fipsCountyCode))]
-
-# and add statewide cases to all counties within the state
-ind.statewide <- substring(fema.cum$fips, 3, 5) == "000"
-
-# isolate the statewide data
-statewide <- fema.cum[ind.statewide]
-fema.cum <- fema.cum[!ind.statewide]
-
-# by state add statewide cases to all counties
-fema.cum <- rbindlist(apply(statewide[order(as.numeric(statewide$fips)), ], 1, function(x){
-  # check for all counties in that state
-  bool <- substring(fema.cum$fips, 1, 2) == substring(x[1], 1, 2)
-  
-  # and add the number of disasters for those
-  res <- fema.cum[bool]
-  res[, "Disasters"] <- res[, "Disasters"] + as.numeric(x[2])
-  
-  # sort and return
-  return(res[order(res$fips), ])
-}))
-
-
-
-
-# add school year variable based on declaration date (as explained in the main text)
-fema.disasters[, syDeclared := dplyr::case_when(
-  # if in september to december add 1 to the year (Schoolyear x/x+1 is x+1)
-  as.numeric(format(declarationDate, "%m")) %in% 9:12 ~ as.numeric(format(declarationDate, "%Y")) + 1,
-  as.numeric(format(declarationDate, "%m")) %in% 1:3 ~ as.numeric(format(declarationDate, "%Y")),
-  as.numeric(format(declarationDate, "%m")) %in% 4:8 ~ NA_real_
-  )]
-
-
-# save to save time
-saveRDS(fema.disasters, "DisasterDataNoTerrorismNoCovid.RDS")
-
-
-
-# aggregate fema disasters by year and county and add to the empty set
-fema.dis.agg <- fema.disasters[, .(Disasters = length(unique(disasterNumber))),
-                               by = .(fips = as.numeric(paste0(fipsStateCode, fipsCountyCode)),
-                                      year = syDeclared)]
-
-
-# add statewide to each county in the state
-ind.statewide <- substring(fema.dis.agg$fips, 3, 5) == "000"
-
-# isolate the statewide data
-statewide <- fema.dis.agg[ind.statewide]
-fema.dis.agg <- fema.dis.agg[!ind.statewide]
-
-for (i in 1:nrow(statewide)) {
-  # check matching years and fips
-  bool <- fema.dis.agg[, fips] == statewide[i, fips] & fema.dis.agg[, year] == statewide[i, year]
-  
-  # for those add the number of disasters
-  if(!is.null(nrow(fema.dis.agg[bool, Disasters]))){
-    fema.dis.agg[bool, Disasters] <- fema.dis.agg[bool, Disasters] + statewide[i, Disasters]
-  }
-  
-}
-
-
-
-# create empty data expanded to the seda format
-empty <- data.table(expand.grid("fips" = as.numeric(usmap::countypop[, "fips", drop = TRUE]),
-                                "year" = min(seda.comb$year):max(seda.comb$year)))
-fema.dis.agg <- merge(empty, fema.dis.agg,
-                      all.x = TRUE, all.y = FALSE)
-
-
-# fill NA disaster values with 0
-fema.dis.agg[, Disasters := ifelse(is.na(Disasters), 0, Disasters)]
-
-
-
 # merge disaster and assistance data
 fema.dis.agg <- merge(fema.dis.agg, fema.assist.agg, all.x = TRUE, all.y = FALSE)
 
 
 # fill NAs with zero
-fema.dis.agg[, totalDamage := ifelse(is.na(totalDamage), 0, totalDamage)]
-fema.dis.agg[, federalAssistance := ifelse(is.na(federalAssistance), 0, federalAssistance)]                  
+fema.dis.agg[, `:=`(totalDamage = ifelse(is.na(totalDamage), 0, totalDamage),
+                    federalAssistance = ifelse(is.na(federalAssistance), 0, federalAssistance))]
 
 
 
@@ -271,7 +246,7 @@ fips <- housingData::geoCounty
 
 
 # download weather data for all counties based on the closest measurement station
-dat.weather <- setDT(do.call(rbind, lapply(1:nrow(fips), function(x, ids = 5){
+dat.weather <- setDT(do.call(rbind, lapply(1:nrow(fips), function(x, ids = 10){
   # get best ID for each county (i.e. id for closest station)
   idlist <- rnoaa::meteo_nearby_stations(lat_lon_df = data.frame(id = fips[x, "fips"],
                                                                  latitude = fips[x, "lat"],
@@ -347,7 +322,8 @@ dat[, Storms := ifelse(is.na(Storms), 0, Storms)]
 
 # add absorbing treatment (as described in Sun & Abraham)
 dat[, `:=`(DisasterTreat = as.numeric(cumsum(Disasters) > 0),
-           StormTreat = as.numeric(cumsum(Storms) > 0)),
+           StormTreat = as.numeric(cumsum(Storms) > 0),
+           StormFEMATreat = as.numeric(cumsum(StormsFEMA) > 0)),
     by = fips]
 
 # add heat data
@@ -362,13 +338,17 @@ dat[, `:=`(TreatStart = ifelse(any(DisasterTreat == 1),
                                3000),
            TreatStartStorm = ifelse(any(StormTreat == 1),
                                     min(year[StormTreat == 1], na.rm = TRUE),
-                                    3000))
+                                    3000),
+           TreatStartStormFEMA = ifelse(any(StormFEMATreat == 1),
+                                        min(year[StormFEMATreat == 1], na.rm = TRUE),
+                                        3000))
     , by = fips]
 
 
 # add relative time variable
 dat[, `:=`(RelTime = ifelse(TreatStart == 3000, NA, year - TreatStart),
-           RelTimeStorm = ifelse(TreatStartStorm == 3000, NA, year - TreatStartStorm))]
+           RelTimeStorm = ifelse(TreatStartStorm == 3000, NA, year - TreatStartStorm),
+           RelTimeStormFEMA = ifelse(TreatStartStormFEMA == 3000, NA, year - TreatStartStormFEMA))]
 
 
 # export as RDS
