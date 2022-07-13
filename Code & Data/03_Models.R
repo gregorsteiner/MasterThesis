@@ -41,11 +41,11 @@ model.rla.storm <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem
 # fema with only storms as robustness check
 
 model.math.fema.storm <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
-                                 sunab(TreatStart, year, ref.p = c(-1, -3000), bin.rel = c(-3:-3000, 6:9)) | year + fips + grade,
+                                 sunab(TreatStartStormFEMA, year, ref.p = c(-1, -3000), bin.rel = c(-3:-3000, 6:9)) | year + fips + grade,
                                data = dat[subject == "mth"], cluster = "TreatStart")
 
 model.rla.fema.storm <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
-                                sunab(TreatStart, year, ref.p = c(-1, -3000), bin.rel = c(-3:-3000, 6:9)) | year + fips + grade,
+                                sunab(TreatStartStormFEMA, year, ref.p = c(-1, -3000), bin.rel = c(-3:-3000, 6:9)) | year + fips + grade,
                               data = dat[subject == "rla"], cluster = "TreatStart")
 
 
@@ -109,10 +109,34 @@ dev.off()
 
 
 
+# fema storms
+pdf("ResultsPlotFEMAStorm.pdf", width = 15 / 2.5, height = 20 / 2.5)
+
+layout(matrix(c(1:6, 7, 7), ncol = 2, byrow = TRUE), heights = c(4, 4, 4, 1))
+
+par(mar = c(2, 4, 2, 1))
+invis.Map(function(math, rla, name){
+  
+  iplot(list(math, rla), main = name, xlab = "Years to treatment",
+        col = cols, ci.col = cols, pt.pch = 19,
+        ci.lwd = 1, ci.width = 0.2)
+  
+}, model.math.fema.storm, model.rla.fema.storm, dep.vars)
+
+par(mai=c(0,0,0,0))
+plot.new()
+legend(x = "center", legend = c("Math", "RLA"),
+       col = cols, lwd = 2, cex = 1, inset = 0, horiz = TRUE)
+
+
+dev.off()
+
+
+
+
 
 
 # change plot layout for slides
-
 
 # overall fema
 pdf("ResultsPlotPresentation.pdf", width = 15 / 2.5, height = 12 / 2.5)
@@ -212,6 +236,10 @@ model.days.rla <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem,
                           DaysAbove30 | year + fips + grade,
                         data = dat[subject == "rla"], vcov = "iid")
 
+
+
+# change cientifc notation options such that the coefficient table looks as desired
+options(scipen = 99)
 
 coefmatrix <- do.call(rbind, Map(function(model, digs){
   # get coefficients and standard errors

@@ -8,6 +8,19 @@ Below we report logistic regression results for the applicant status, that is wh
 \input{ResultsLogit.tex}
 
 
+\subsection{Results for storms based on FEMA data}
+
+Below we repeat the main analysis based on the FEMA data only considering storms. That is, all disasters that are categorized as Tornadoes, Hurricanes, or Severe Storms. The results are shown in Figure \ref{ResultsPlotFEMAStorm}.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=1]{"../Code & Data/ResultsPlotFEMAStorm.pdf"}
+	\caption{Dynamic Treatment effects in relative time: FEMA data (storms only)}
+	\label{ResultsPlotFEMAStorm}
+\end{figure}
+
+\newpage
+
 \section{Pre-Treatment Trends} \label{PreTrends}
 
 Here we show plots of aggregated pre-treatment trends to justify the parallel trends assumption. Mean test scores are aggregated by cohort (year of first treatment) and relative time to treatment, and never treated units act as the control group. We only display these plots for overall test scores for both datasets, but not for subgroups. However, the plots for the subgroups look very similar.
