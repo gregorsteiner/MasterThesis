@@ -19,23 +19,22 @@ assist.cov <- readRDS("AssistanceCovData.RDS")
 # fema
 model.math <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                  sunab(TreatStart, year, ref.p = c(-1, -3000), bin.rel = c(-3:-3000, 6:9)) | year + fips + grade,
-               data = dat[subject == "mth"], cluster = "TreatStart")
+               data = dat[subject == "mth"], cluster = "fips")
 
 model.rla <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                      sunab(TreatStart, year, ref.p = c(-1, -3000), bin.rel = c(-3:-3000, 6:9)) | year + fips + grade,
-                   data = dat[subject == "rla"], cluster = "TreatStart")
+                   data = dat[subject == "rla"], cluster = "fips")
 
 
 
 # STorms
-
 model.math.storm <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                             sunab(TreatStartStorm, year, ref.p = c(-1, -3000), bin.rel = c(-3:-3000, 6:9)) | year + fips + grade,
-                          data = dat[subject == "mth"])
+                          data = dat[subject == "mth"], cluster = "fips")
 
 model.rla.storm <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                            sunab(TreatStartStorm, year, ref.p = c(-1, -3000), bin.rel = c(-3:-3000, 6:9)) | year + fips + grade,
-                         data = dat[subject == "rla"])
+                         data = dat[subject == "rla"], cluster = "fips")
 
 
 
@@ -43,11 +42,11 @@ model.rla.storm <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem
 
 model.math.fema.storm <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                                  sunab(TreatStartStormFEMA, year, ref.p = c(-1, -3000), bin.rel = c(-3:-3000, 6:9)) | year + fips + grade,
-                               data = dat[subject == "mth"], cluster = "TreatStart")
+                               data = dat[subject == "mth"], cluster = "fips")
 
 model.rla.fema.storm <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                                 sunab(TreatStartStormFEMA, year, ref.p = c(-1, -3000), bin.rel = c(-3:-3000, 6:9)) | year + fips + grade,
-                              data = dat[subject == "rla"], cluster = "TreatStart")
+                              data = dat[subject == "rla"], cluster = "fips")
 
 
 
