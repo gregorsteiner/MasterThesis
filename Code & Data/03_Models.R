@@ -13,6 +13,7 @@ dat <- readRDS("Data.RDS")
 assist.cov <- readRDS("AssistanceCovData.RDS")
 
 
+
 ######## Models ########
 
 # fema
@@ -48,6 +49,23 @@ model.rla.fema.storm <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_m
                                 sunab(TreatStartStormFEMA, year, ref.p = c(-1, -3000), bin.rel = c(-3:-3000, 6:9)) | year + fips + grade,
                               data = dat[subject == "rla"], cluster = "TreatStart")
 
+
+
+######## Get observations per bin ########
+
+dat.reltime <- unique(dat[, .(fips, RelTime, RelTimeStorm, RelTimeStormFEMA)])
+
+tab <- t(mapply(function(x){
+  table(x)
+}, dat.reltime[, -1]))
+
+rownames(tab) <- c("FEMA Disasters", "NWS Storms", "FEMA Storms")
+
+writeLines(kableExtra::kable_styling(knitr::kable(tab, format = "latex", booktabs = TRUE,
+                                                  caption = "Number of counties per relative period",
+                                                  label = "BinSizes"),
+                                     latex_options = "scale_down"),
+           "../TeX Files/BinSizes.tex")
 
 
 

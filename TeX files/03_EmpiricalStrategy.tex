@@ -17,10 +17,14 @@ where $y_{i, t, g}$ is the outcome of interest for county $i$, year $t$, and gra
 
 Since we consider the time period 2009-2018, $-9 \leq l \leq 9$, but note that $l = 9$ would correspond to a unit that experienced a disaster in the first period and is therefore always treated. As recommended by \cite{Sun_2021} and \cite{Callaway_2021}, these units are dropped from estimation. Neither can treatment effects be identified for that group nor are they useful as a comparison group under standard parallel trends assumptions.
 
-Also, we need to drop at least two leads or lags to avoid a multicollinearity problem. A complete set of treatment leads and lags is perfectly collinear with unit and time fixed-effects \citep[for an extensive discussion of this issue see][section 3.2]{Borusyak_2021}. It is common to drop the first relative indicator prior to treatment (i.e. $\beta_{-1} = 0$). This acts as a normalization of treatment relative to the period before treatment. Furthermore, we bin the distant leads, that is we combine the treatment indicators for $l \leq -5$. Thus, equation (\ref{baseline}) turns into
+Also, we need to drop at least two leads or lags to avoid a multicollinearity problem. A complete set of treatment leads and lags is perfectly collinear with unit and time fixed-effects \citep[for an extensive discussion of this issue see][section 3.2]{Borusyak_2021}. It is common to drop the first relative indicator prior to treatment (i.e. $\beta_{-1} = 0$). This acts as a normalization of treatment relative to the period before treatment. Furthermore, we bin the distant leads, that is we combine the treatment indicators for $l \leq -5$. This solves the collinearity problem.
+
+Apart from avoiding the collinearity issue, there is also another reason for binning: Distant treatment leads have relatively few observations (see Table \ref{tab:BinSizes}). In other words, few counties are first treated very late and therefore only few counties experience many years before treatment. In that sense, binning increases the sample size on the distant leads. This makes the estimates more precise and more robust to outliers. Thus, equation (\ref{baseline}) turns into
 \begin{align} \label{baselineBinned}
 	y_{i, t, g} = \beta_{-5}  \mathds{1}\{t - E_i \leq 5\} + \sum_{l = -4, l \neq -1}^{8} \beta_l \mathds{1}\{t - E_i = l\} + \alpha_i + \lambda_t + \zeta_g + \varepsilon_{i, t, g} \;.
 \end{align}
+
+\input{BinSizes.tex}
 
 It is implausible that the treatment effects are constant in our setting. The extent of disasters varies substantially, and also the level of preparation for such disasters likely displays high variance across counties. Also, some counties may experience additional natural disasters after the first one, while others only experience one. Naturally, we would expect larger treatment effects for the former group.
 
