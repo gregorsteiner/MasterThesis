@@ -96,18 +96,18 @@ To identify a causal effect, I use an event study design. Due to likely very het
 ```{r fig.height=8}
 
 # fema models
-model.math <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+model.math <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                  sunab(TreatStart, year, ref.p = c(-1, -3000), bin.rel = c(-5:-3000)) | year + fips + grade,
                data = dat[subject == "mth"], cluster = "TreatStart")
 
-model.rla <- feols(c(cs_mn_all, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
+model.rla <- feols(c(cs_mn_all, cs_mn_wht, cs_mn_blk, cs_mn_hsp, cs_mn_fem, cs_mn_ecd) ~ 
                      sunab(TreatStart, year, ref.p = c(-1, -3000), bin.rel = c(-5:-9)) | year + fips + grade,
                    data = dat[subject == "rla"], cluster = "TreatStart")
 
 
 
 # dependent variables
-dep.vars <- c("Overall", "Black", "Hispanic", "Female", "Econ. Disadv.")
+dep.vars <- c("Overall", "White", "Black", "Hispanic", "Female", "Econ. Disadv.")
 
 # plot results
 layout(matrix(c(1:6, 7, 7), ncol = 2, byrow = TRUE), heights = c(4, 4, 4, 1))
