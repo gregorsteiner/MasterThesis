@@ -45,10 +45,11 @@ In my thesis I explore the link between natural disasters and education outcomes
 dat[, CumuDisasters := cumsum(Disasters), by = .(fips, grade, subject)]
 
 fema.cum <- dat[, .(Disasters = CumuDisasters[!is.na(CumuDisasters)][.N]), by = fips]
-fema.cum[, DisastersGrouped := factor(cut(Disasters, breaks = c(-Inf, 0, 2, 5, 10, Inf)), labels = c("0", "1-2", "3-5", "6-10", "11+"))]
+fema.cum[, DisastersGrouped := factor(cut(Disasters, breaks = c(-Inf, 0, 2, 5, 10, Inf)), labels = c("0", "1-2", "3-5", "6-10", ">10"))]
 
 plot_usmap(data = fema.cum, values = "DisastersGrouped") +
-  scale_fill_manual(values = viridisLite::viridis(5), name = "") +
+  scale_fill_manual(values = viridisLite::viridis(length(levels(fema.cum$DisastersGrouped))),
+                    name = "") +
   theme(legend.position = "right",
         legend.key.size = grid::unit(1, "cm"),
         legend.text = element_text(size = 12),
