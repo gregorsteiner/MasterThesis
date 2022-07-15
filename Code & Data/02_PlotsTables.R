@@ -54,9 +54,9 @@ tab <- t(mapply(function(f){
 
 rownames(tab) <- c("Mean", "Std. Dev.", "Min.", "Max.")
 
-writeLines(kable(tab, format = "latex", booktabs = TRUE, digits = 3,
-                 caption = "Summary statistics for dependent variables",
-                 label = "SumStats"),
+writeLines(knitr::kable(tab, format = "latex", booktabs = TRUE, digits = 3,
+                        caption = "Summary statistics for dependent variables",
+                        label = "SumStats"),
            "../TeX Files/SumStats.tex")
 
 
@@ -91,15 +91,24 @@ legend(x = "center", legend = c("Mathematics", "RLA"),
 dev.off()
 
 
-# filter for time and exclude terrorism
-fema.disastersSQ <- fema.disasters[syDisaster %in% 2009:2018]
 
 
+# create disaster type table
 
-vtable::sumtable(fema.disastersSQ[, .("Disaster Type" = factor(incidentType))],
-                 out = "latex", file = "../TeX Files/DisasterTypes.tex",
-                 anchor = "DisasterTypes", title = "Disasters from 2009 to 2018 by type",
-                 fit.page = NA)
+fema.disasters[incidentType %in% c("Tsunami", "Chemical", "Earthquake", "Dam/Levee Break",
+                                   "Other", "Freezing", "Volcano"),
+               incidentType := "Other"]
+types <- fema.disasters[syDisaster %in% 2009:2018,
+                        .(N = .N), by = .(Type = incidentType)]
+
+types[, "%" := round(100 * N / sum(N), 2)]
+
+writeLines(knitr::kable(types[order(-N)], format = "latex", booktabs = TRUE,
+                        linesep = "",
+                        caption = "Number of disasters by type",
+                        label = "DisasterTypes"),
+           "../TeX Files/DisasterTypes.tex")
+
 
 
 ######## Parallel Trends Plots ########
