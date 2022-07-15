@@ -110,6 +110,57 @@ writeLines(knitr::kable(types[order(-N)], format = "latex", booktabs = TRUE,
            "../TeX Files/DisasterTypes.tex")
 
 
+######## Check if FEMA storms and NWS storms match ########
+
+# get fema storms
+fema.storms <- fema.disasters[incidentType %in% c("Tornado", "Hurricane", "Severe Storm(s)") &
+                                syDisaster %in% 2009:2018]
+fema.storms[, fips := as.numeric(paste0(fipsStateCode, fipsCountyCode))]
+fema.storms <- fema.storms[, .(fips, incidentBeginDate, incidentEndDate)]
+
+# read hurricanes 
+dat.hur <- fread("Raw Data/storm_data_search_results.csv")
+
+# exclude hurricanes with 0 damage and filter by time
+dat.hur <- dat.hur[DAMAGE_PROPERTY_NUM > 0]
+# filter by time and keep relevant columns only
+dat.hur[, BEGIN_DATE := as.Date(BEGIN_DATE, "%m/%d/%Y")]
+dat.hur <- dat.hur[BEGIN_DATE >= min(fema.storms$incidentBeginDate) &
+                     BEGIN_DATE <= max(fema.storms$incidentBeginDate)]
+# add fips variable
+dat.hur[, fips := as.numeric(dplyr::case_when(nchar(CZ_FIPS) == 3 ~ paste0(usmap::fips(STATE_ABBR), CZ_FIPS),
+                                              nchar(CZ_FIPS) == 2 ~ paste0(usmap::fips(STATE_ABBR), 0, CZ_FIPS),
+                                              nchar(CZ_FIPS) == 1 ~ paste0(usmap::fips(STATE_ABBR), "00", CZ_FIPS)))]
+
+# read tornado data
+dat.tor <- fread("Raw Data/1950-2020_all_tornadoes.csv")
+
+# filter by time
+dat.tor <- dat.tor[date >= min(fema.storms$incidentBeginDate) &
+                     date <= max(fema.storms$incidentBeginDate)]
+
+# exclude tornadoes with weak (0 or 1 on EF scale) or missing (-9) magnitude
+dat.tor <- dat.tor[mag %in% 2:5]
+
+# pivot county codes from wide to long
+dat.tor <- melt(dat.tor, id.vars = c("om", "date", "stf"),
+                measure.vars = c("f1", "f2", "f3", "f4"))
+
+dat.tor[, fips := as.numeric(dplyr::case_when(
+  nchar(value) == 3 ~ paste0(stf, value),
+  nchar(value) == 2 ~ paste0(stf, 0, value),
+  nchar(value) == 1 ~ paste0(stf, "00", value)
+))]
+
+# combine hurricanes and tornadoes to one dataset
+nws.storms <- data.table("fips" = c(dat.hur$fips, dat.tor$fips),
+                         "date" = c(dat.hur$BEGIN_DATE, dat.tor$date))
+
+
+# Check 
+sum(paste0(nws.storms$fips, nws.storms$date) %in% 
+      paste0(fema.storms$fips, fema.storms$date))
+
 
 ######## Parallel Trends Plots ########
 
