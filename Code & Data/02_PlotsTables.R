@@ -156,10 +156,31 @@ dat.tor[, fips := as.numeric(dplyr::case_when(
 nws.storms <- data.table("fips" = c(dat.hur$fips, dat.tor$fips),
                          "date" = c(dat.hur$BEGIN_DATE, dat.tor$date))
 
+# drop na fips
+nws.storms <- nws.storms[!is.na(fips)]
 
-# Check 
-sum(paste0(nws.storms$fips, nws.storms$date) %in% 
-      paste0(fema.storms$fips, fema.storms$date))
+# check for each nws storm whether it appears in the fema set
+matches <- sapply(1:nrow(nws.storms), function(i){
+  # see if the county is in the fema set
+  bool.fips <- fema.storms$fips == nws.storms[i, fips]
+  
+  # for mactching fips check the date
+  if(any(bool.fips)){
+    # check if the date matches
+    bool.date <- nws.storms[i, date] >= fema.storms[bool.fips, incidentBeginDate] & nws.storms[i, date] <= fema.storms[bool.fips, incidentEndDate]
+    
+    # return the row if any date matches
+    if(any(bool.date)) return(TRUE)
+  }
+  
+  return(FALSE)
+  
+})
+
+# get sum of matches
+sum(matches)
+
+
 
 
 ######## Parallel Trends Plots ########
