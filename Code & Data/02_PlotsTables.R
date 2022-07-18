@@ -189,7 +189,6 @@ matches <- sapply(1:nrow(nws.storms), function(i){
 # get sum of matches
 sum(matches)
 
-
 # what if we only match by state
 matches <- sapply(1:nrow(nws.storms), function(i){
   # now only match state fips
@@ -203,12 +202,13 @@ matches <- sapply(1:nrow(nws.storms), function(i){
     # return the row if any date matches
     if(any(bool.date)) return(TRUE)
   }
-  
   return(FALSE)
   
 })
 
 sum(matches)
+
+
 
 
 
