@@ -156,6 +156,15 @@ dat.tor[, fips := as.numeric(dplyr::case_when(
 nws.storms <- data.table("fips" = c(dat.hur$fips, dat.tor$fips),
                          "date" = c(dat.hur$BEGIN_DATE, dat.tor$date))
 
+# add state fips
+nws.storms[, stateFips := ifelse(nchar(fips) == 5,
+                                 substring(fips, 1, 2),
+                                 substring(fips, 1, 1))]
+fema.storms[, stateFips := ifelse(nchar(fips) == 5,
+                                  substring(fips, 1, 2),
+                                  substring(fips, 1, 1))]
+
+
 # drop na fips
 nws.storms <- nws.storms[!is.na(fips)]
 
@@ -180,6 +189,26 @@ matches <- sapply(1:nrow(nws.storms), function(i){
 # get sum of matches
 sum(matches)
 
+
+# what if we only match by state
+matches <- sapply(1:nrow(nws.storms), function(i){
+  # now only match state fips
+  bool.fips <- fema.storms$stateFips == nws.storms[i, stateFips]
+  
+  # for mactching fips check the date
+  if(any(bool.fips)){
+    # check if the date matches
+    bool.date <- nws.storms[i, date] >= fema.storms[bool.fips, incidentBeginDate] & nws.storms[i, date] <= fema.storms[bool.fips, incidentEndDate]
+    
+    # return the row if any date matches
+    if(any(bool.date)) return(TRUE)
+  }
+  
+  return(FALSE)
+  
+})
+
+sum(matches)
 
 
 
