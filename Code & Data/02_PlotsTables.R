@@ -55,7 +55,7 @@ tab <- t(mapply(function(f){
 rownames(tab) <- c("Mean", "Std. Dev.", "Min.", "Max.")
 
 writeLines(knitr::kable(tab, format = "latex", booktabs = TRUE, digits = 3,
-                        caption = "Summary statistics for dependent variables",
+                        caption = "Summary statistics for mean test scores by group",
                         label = "SumStats"),
            "../TeX Files/SumStats.tex")
 
