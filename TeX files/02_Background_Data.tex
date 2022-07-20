@@ -97,7 +97,22 @@ In addition to overall mean test scores, the data includes mean test scores for 
 
 The outcomes of interest are overall mean test scores by county, and mean test scores for white, black, hispanic, female, and, economically disadvantaged students. Figure \ref{DepVarsBoxplot} shows boxplots for the five outcomes of interest and Table \ref{tab:SumStats} provides summary statistics. Due to the way the scale is constructed, overall test scores are distributed symmetrically around zero, except for a few outliers. The mean scores for black, hispanic, and economically disadvantaged students tend to be lower than the overall means, while white students tend to perform slightly better than the overall average. Female mean scores are slightly above overall mean scores, meaning that female students perform slightly better than male students on average.
 
-\input{SumStats.tex}
+\begin{table}
+	\caption{Summary statistics for test scores by group}
+	\begin{subtable}{1\textwidth}
+		\caption{Mathematics}
+		\centering
+		\input{SumStatsMath.tex}
+	\end{subtable}
+
+	\bigskip
+	\begin{subtable}{1\textwidth}
+		\caption{RLA}
+		\centering
+		\input{SumStatsRLA.tex}
+	\end{subtable}
+\end{table}
+
 
 \begin{figure}[!h]
 	\centering

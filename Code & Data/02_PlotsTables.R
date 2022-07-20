@@ -43,21 +43,29 @@ dev.off()
 ######## Summary Statistics ########
 
 # summary table for dependent variables
-tab <- t(mapply(function(f){
-  sapply(dat[, .("Overall" = cs_mn_all,
-                 "White" = cs_mn_wht,
-                 "Black" = cs_mn_blk,
-                 "Hispanic" = cs_mn_hsp,
-                 "Female" = cs_mn_fem,
-                 "Econ. disadv." = cs_mn_ecd)], f, na.rm = TRUE)
-}, list(mean, sd, min, max)))
+tab <- lapply(c("mth", "rla"), function(sub){
+  # create table
+  tab.int <- t(mapply(function(f){
+    sapply(dat[subject == sub, .("Overall" = cs_mn_all,
+                   "White" = cs_mn_wht,
+                   "Black" = cs_mn_blk,
+                   "Hispanic" = cs_mn_hsp,
+                   "Female" = cs_mn_fem,
+                   "Econ. disadv." = cs_mn_ecd)], f, na.rm = TRUE)
+  }, list(mean, sd, min, max)))
+  
+  # add rownames
+  rownames(tab.int) <- c("Mean", "Std. Dev.", "Min.", "Max.")
+  
+  return(tab.int)
+})
+  
+# export as tex tables
+writeLines(knitr::kable(tab[[1]], format = "latex", booktabs = TRUE, digits = 3),
+           "../TeX Files/SumStatsMath.tex")
+writeLines(knitr::kable(tab[[2]], format = "latex", booktabs = TRUE, digits = 3),
+           "../TeX Files/SumStatsRLA.tex")
 
-rownames(tab) <- c("Mean", "Std. Dev.", "Min.", "Max.")
-
-writeLines(knitr::kable(tab, format = "latex", booktabs = TRUE, digits = 3,
-                        caption = "Summary statistics for mean test scores by group",
-                        label = "SumStats"),
-           "../TeX Files/SumStats.tex")
 
 
 # boxplots for dependent variables
