@@ -130,7 +130,7 @@ fema.storms <- fema.storms[, .(fips, incidentBeginDate, incidentEndDate)]
 dat.hur <- fread("Raw Data/storm_data_search_results.csv")
 
 # exclude hurricanes with 0 damage and filter by time
-#dat.hur <- dat.hur[DAMAGE_PROPERTY_NUM > 0]
+dat.hur <- dat.hur[DAMAGE_PROPERTY_NUM > 0]
 # filter by time and keep relevant columns only
 dat.hur[, BEGIN_DATE := as.Date(BEGIN_DATE, "%m/%d/%Y")]
 dat.hur <- dat.hur[BEGIN_DATE >= min(fema.storms$incidentBeginDate) &
@@ -148,7 +148,7 @@ dat.tor <- dat.tor[date >= min(fema.storms$incidentBeginDate) &
                      date <= max(fema.storms$incidentBeginDate)]
 
 # exclude tornadoes with weak (0 or 1 on EF scale) or missing (-9) magnitude
-#dat.tor <- dat.tor[mag %in% 2:5]
+dat.tor <- dat.tor[mag %in% 2:5]
 
 # pivot county codes from wide to long
 dat.tor <- melt(dat.tor, id.vars = c("om", "date", "stf"),
