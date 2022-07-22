@@ -130,7 +130,7 @@ fema.storms <- fema.storms[, .(fips, incidentBeginDate, incidentEndDate)]
 dat.hur <- fread("Raw Data/storm_data_search_results.csv")
 
 # exclude hurricanes with 0 damage and filter by time
-dat.hur <- dat.hur[DAMAGE_PROPERTY_NUM > 0]
+#dat.hur <- dat.hur[DAMAGE_PROPERTY_NUM > 0]
 # filter by time and keep relevant columns only
 dat.hur[, BEGIN_DATE := as.Date(BEGIN_DATE, "%m/%d/%Y")]
 dat.hur <- dat.hur[BEGIN_DATE >= min(fema.storms$incidentBeginDate) &
@@ -148,7 +148,7 @@ dat.tor <- dat.tor[date >= min(fema.storms$incidentBeginDate) &
                      date <= max(fema.storms$incidentBeginDate)]
 
 # exclude tornadoes with weak (0 or 1 on EF scale) or missing (-9) magnitude
-dat.tor <- dat.tor[mag %in% 2:5]
+#dat.tor <- dat.tor[mag %in% 2:5]
 
 # pivot county codes from wide to long
 dat.tor <- melt(dat.tor, id.vars = c("om", "date", "stf"),
@@ -184,8 +184,9 @@ matches <- sapply(1:nrow(nws.storms), function(i){
   # for mactching fips check the date
   if(any(bool.fips)){
     # check if the date matches
-    bool.date <- nws.storms[i, date] >= fema.storms[bool.fips, incidentBeginDate] & nws.storms[i, date] <= fema.storms[bool.fips, incidentEndDate]
-    
+    bool.date <- nws.storms[i, date] >= (fema.storms[bool.fips, incidentBeginDate] - as.difftime(21, units = "days")) &
+      nws.storms[i, date] <= (fema.storms[bool.fips, incidentBeginDate] + as.difftime(21, units = "days"))
+  
     # return the row if any date matches
     if(any(bool.date)) return(TRUE)
   }
@@ -205,7 +206,8 @@ matches <- sapply(1:nrow(nws.storms), function(i){
   # for mactching fips check the date
   if(any(bool.fips)){
     # check if the date matches
-    bool.date <- nws.storms[i, date] >= fema.storms[bool.fips, incidentBeginDate] & nws.storms[i, date] <= fema.storms[bool.fips, incidentEndDate]
+    bool.date <- nws.storms[i, date] >= (fema.storms[bool.fips, incidentBeginDate] - as.difftime(21, units = "days")) &
+      nws.storms[i, date] <= (fema.storms[bool.fips, incidentEndDate] + as.difftime(21, units = "days"))
     
     # return the row if any date matches
     if(any(bool.date)) return(TRUE)
@@ -217,7 +219,28 @@ matches <- sapply(1:nrow(nws.storms), function(i){
 sum(matches)
 
 
+# plot storms to see differences
+storms.cum <- Reduce(function(x, y) merge(x, y, by = "fips", all.x = TRUE, all.y = TRUE),
+                     list(data.table(fips = as.numeric(usmap::countypop[, "fips", drop = TRUE])),
+                          fema.storms[, .(FemaStorms = .N), by = .(fips)],
+                          nws.storms[, .(NwsStorms = .N), by = .(fips)]))
+storms.cum[, `:=`(FemaStorms = ifelse(is.na(FemaStorms), 0, FemaStorms),
+                  NwsStorms = ifelse(is.na(NwsStorms), 0, NwsStorms))]
+storms.cum[, StormsGrouped := factor(cut(FemaStorms, breaks = c(-Inf, 0, 2, 5, Inf)), labels = c("0", "1-2", "3-5", ">5"))]
 
+
+pdf("StormsFEMA.pdf",
+    width = wid, height = hei)
+
+plot_usmap(data = storms.cum, values = "StormsGrouped") +
+  scale_fill_manual(values = viridisLite::viridis(length(levels(storms.cum$StormsGrouped))), name = "") +
+  theme(legend.position = "right",
+        legend.key.size = grid::unit(1, "cm"),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14),
+        plot.margin= grid::unit(c(0,0,0,0), "mm"))
+
+dev.off()
 
 
 ######## Parallel Trends Plots ########
